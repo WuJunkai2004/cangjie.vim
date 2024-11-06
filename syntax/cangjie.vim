@@ -1,115 +1,90 @@
 " ---------------------------------------------------------
-" cangjie.vim: Syntax highlighting for the Cangjie language
+" CJ_.vim: Syntax highlighting for the CJ_ language
 " ---------------------------------------------------------
 
-" 1. Define basic syntax highlighting for the Cangjie language
+" 1. 定义关键字
 " ---------------------------------------------------------
+syntax keyword CJ_keyword break
+syntax keyword CJ_keyword class
+syntax keyword CJ_keyword const
+syntax keyword CJ_keyword continue
+syntax keyword CJ_keyword do
+syntax keyword CJ_keyword else
+syntax keyword CJ_keyword enum
+syntax keyword CJ_keyword extend
+syntax keyword CJ_keyword false
+syntax keyword CJ_keyword for
+syntax keyword CJ_keyword func
+syntax keyword CJ_keyword if
+syntax keyword CJ_keyword in
+syntax keyword CJ_keyword init
+syntax keyword CJ_keyword interface
+syntax keyword CJ_keyword let
+syntax keyword CJ_keyword operator
+syntax keyword CJ_keyword package
+syntax keyword CJ_keyword private
+syntax keyword CJ_keyword public
+syntax keyword CJ_keyword return
+syntax keyword CJ_keyword true
+syntax keyword CJ_keyword var
+syntax keyword CJ_keyword where
+syntax keyword CJ_keyword while
+highlight CJ_keyword ctermfg=Red guifg=Red
 
-" Keywords (Core keywords, control flow, and others)
-syntax keyword cangjieKeyword if else true false while do for in where break continue const func operator init enum class interface extend package
-highlight cangjieKeyword ctermfg=Red guifg=Red
 
+" 2. 定义标识符
 " ---------------------------------------------------------
-" 2. Define identifiers: Normal and raw identifiers
+syntax match CJ_Identifier /\v[a-zA-Z_][a-zA-Z0-9_]*/
+syntax match CJ_Identifier /\v`[a-zA-Z_][a-zA-Z0-9_]*`/
+highlight CJ_Identifier ctermfg=Yellow guifg=Yellow
+
+
+" 3. 高亮主函数和函数
 " ---------------------------------------------------------
+syntax match CJ_Function /\vmain\(\)/
+syntax match CJ_Function /\vfunc\s+[a-zA-Z_][a-zA-Z0-9_]*\s*\(/
+highlight CJ_Function ctermfg=Magenta guifg=Magenta
 
-" Normal identifiers (variables, function names, etc.)
-syntax match cangjieIdentifier /\v[a-zA-Z_][a-zA-Z0-9_]*/
-highlight cangjieIdentifier ctermfg=Yellow guifg=Yellow
 
-" Raw identifiers (with backticks, can be keywords)
-syntax match cangjieRawIdentifier /\v`[a-zA-Z_][a-zA-Z0-9_]*`/
-highlight cangjieRawIdentifier ctermfg=Green guifg=Green
-
+" 4. 定义类型
 " ---------------------------------------------------------
-" 3. Highlight the main function definition
+syntax keyword CJ_keyword Array
+syntax keyword CJ_keyword Bool
+syntax keyword CJ_keyword Float16
+syntax keyword CJ_keyword Float32
+syntax keyword CJ_keyword Float64
+syntax keyword CJ_keyword Int16
+syntax keyword CJ_keyword Int32
+syntax keyword CJ_keyword Int64
+syntax keyword CJ_keyword Int8
+syntax keyword CJ_keyword IntNative
+syntax keyword CJ_keyword Range
+syntax keyword CJ_keyword Rune
+syntax keyword CJ_keyword String
+syntax keyword CJ_keyword UInt16
+syntax keyword CJ_keyword UInt32
+syntax keyword CJ_keyword UInt64
+syntax keyword CJ_keyword UInt8
+syntax keyword CJ_keyword UIntNative
+syntax keyword CJ_keyword Unit
+syntax keyword CJ_keyword nothing
+highlight CJ_Type ctermfg=LightBlue guifg=LightBlue
+
+
+" 5. 定义数字
 " ---------------------------------------------------------
+syntax match CJ_Number /\v(0b|0B)[0-1]+|(0o|0O)[0-7]+|0x[0-9A-Fa-f]+|\d+/
+syntax match CJ_Number /\v\d+\.\d+/
+highlight CJ_Number ctermfg=Blue guifg=Blue
 
-" Main function definition (e.g. main())
-syntax match cangjieMainFunction /\vmain\(\)/
-highlight cangjieMainFunction ctermfg=Magenta guifg=Magenta
 
+" 6. 字符串, 字符, 注释
 " ---------------------------------------------------------
-" 4. Define variable declaration syntax highlighting
-" ---------------------------------------------------------
+syntax match CJ_Rune /\vr'.'/
+highlight CJ_Rune ctermfg=Cyan guifg=Cyan
 
-" Variable modifiers (let, var, private, public, static)
-syntax keyword cangjieVarModifier let var private public static
-highlight cangjieVarModifier ctermfg=Blue guifg=Blue
+syntax match CJ_String /".*"/
+highlight CJ_String ctermfg=Green guifg=Green
 
-" Data types (built-in types like Int8, Bool, etc.)
-syntax keyword cangjieType Int8 Int16 Int32 Int64 IntNative UInt8 UInt16 UInt32 UInt64 UIntNative Float16 Float32 Float64 Bool Rune String Array Range Unit nothing
-highlight cangjieType ctermfg=Purple guifg=Purple
-
-" Variable declaration (including modifiers, name, and types)
-syntax match cangjieVariable /\v(let|var|private|public|static)?\s+[a-zA-Z_][a-zA-Z0-9_]*(:\s*[a-zA-Z0-9]+)?\s*=\s*[^,;]*/
-highlight cangjieVariable ctermfg=Green guifg=Green
-
-" ---------------------------------------------------------
-" 5. Function definition syntax highlighting
-" ---------------------------------------------------------
-
-" Function definition (including func keyword, function name, parameters, return type)
-syntax match cangjieFuncDef /\vfunc\s+[a-zA-Z_][a-zA-Z0-9_]*\(\s*(.*)\)\s*(?::\s*[a-zA-Z_][a-zA-Z0-9_]*)?\s*\{/
-highlight cangjieFuncDef ctermfg=Yellow guifg=Yellow
-
-" ---------------------------------------------------------
-" 6. Literal values (Numbers, Booleans, Strings, and more)
-" ---------------------------------------------------------
-
-" Integer literals (supporting binary, octal, decimal, hex)
-syntax match cangjieInteger /\v(0b|0B)[0-1]+|(0o|0O)[0-7]+|0x[0-9A-Fa-f]+|\d+/
-highlight cangjieInteger ctermfg=Blue guifg=Blue
-
-" Floating-point literals
-syntax match cangjieFloat /\v\d+\.\d+/
-highlight cangjieFloat ctermfg=Magenta guifg=Magenta
-
-" Boolean literals (true, false)
-syntax keyword cangjieBool true false
-highlight cangjieBool ctermfg=LightBlue guifg=LightBlue
-
-" Rune literals (characters enclosed in single quotes)
-syntax match cangjieRune /\vr'.'/
-highlight cangjieRune ctermfg=Cyan guifg=Cyan
-
-" String literals (normal strings)
-syntax match cangjieString /".*"/
-highlight cangjieString ctermfg=Green guifg=Green
-
-" Multi-line raw string literals (using # and quotes)
-syntax match cangjieRawString /\v#('.*')+#/
-highlight cangjieRawString ctermfg=Yellow guifg=Yellow
-
-" ---------------------------------------------------------
-" 7. Special types (Array, Range, Unit, nothing)
-" ---------------------------------------------------------
-
-" Array type
-syntax keyword cangjieArray Array
-highlight cangjieArray ctermfg=LightYellow guifg=LightYellow
-
-" Range type
-syntax keyword cangjieRange Range
-highlight cangjieRange ctermfg=LightGreen guifg=LightGreen
-
-" Unit type (no side effects)
-syntax keyword cangjieUnit Unit
-highlight cangjieUnit ctermfg=Grey guifg=Grey
-
-" nothing type
-syntax keyword cangjieNothing nothing
-highlight cangjieNothing ctermfg=Grey guifg=Grey
-
-" ---------------------------------------------------------
-" 8. Control flow statements (if, for, while, break, continue)
-" ---------------------------------------------------------
-
-" Control flow statements
-syntax keyword cangjieControlFlow if else for while break continue
-highlight cangjieControlFlow ctermfg=Red guifg=Red
-
-" ---------------------------------------------------------
-" End of syntax highlighting for Cangjie language
-" ---------------------------------------------------------
-
+syntax match CJ_RawString /\v#('.*')+#/
+highlight CJ_RawString ctermfg=Yellow guifg=Yellow
