@@ -66,8 +66,8 @@ syntax match CJ_Identifier /\v[a-zA-Z_][a-zA-Z0-9_]*/
 highlight link CJ_Identifier Identifier
 
 " 特殊标识符 1，用``包裹的标识符 2，用``包裹的关键字
-syntax match  CJ_SP_Identifier /\v`[a-zA-Z_][a-zA-Z0-9_]*`/
-syntax region CJ_SP_Identifier start=/`/ end=/`/ contains=CJ_Keyword
+syntax region CJ_SP_Identifier start=/[`]/ end=/[`]/ contains=@CJ_Identifier
+syntax region CJ_SP_Identifier start=/[`]/ end=/[`]/ contains=@CJ_Keyword
 highlight link CJ_SP_Identifier Identifier
 
 
@@ -96,6 +96,13 @@ syntax keyword CJ_Type VArray
 highlight link CJ_Type Type
 
 
+" 4. 定义注释
+" ---------------------------------------------------------
+syntax match CJ_Comment /\v\/\/.*/
+syntax region CJ_Comment start=/\/\*/ end=/\*\//
+highlight link CJ_Comment Comment
+
+
 " 5. 定义数字
 " ---------------------------------------------------------
 syntax match CJ_Number /\v(0b|0B)[0-1]+|(0o|0O)[0-7]+|0x[0-9A-Fa-f]+|\d+/
@@ -103,7 +110,7 @@ syntax match CJ_Number /\v\d+\.\d+/
 highlight link CJ_Number Number
 
 
-" 6. 字符串, 字符, 注释
+" 6. 字符串, 字符
 " ---------------------------------------------------------
 syntax match CJ_Rune /\vr'.'/
 syntax match CJ_String /".*"/
@@ -111,3 +118,11 @@ syntax match CJ_RawString /\v#('.*')+#/
 highlight link CJ_Rune      String
 highlight link CJ_String    String
 highlight link CJ_RawString String
+
+
+" 7. Option 相关
+" ---------------------------------------------------------
+syntax keyword CJ_Builtin Option
+syntax keyword CJ_Builtin Some
+syntax keyword CJ_Builtin None
+highlight link CJ_Builtin Structure
