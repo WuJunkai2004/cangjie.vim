@@ -5,8 +5,6 @@ if exists("g:loaded_cangjie_syntax")
     finish
 endif
 let g:loaded_cangjie_syntax = 1
-  
-" 设置插件初始化命令
 
 " 自动设置 `.cj` 文件为 cangjie 文件类型，并启用语法高亮
 augroup cangjie_syntax
