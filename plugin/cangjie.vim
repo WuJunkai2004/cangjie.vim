@@ -13,3 +13,17 @@ augroup cangjie_syntax
 augroup END
 
 " 其他需要在 Vim 启动时加载的插件设置
+
+if v:version < 900
+    finish
+endif
+
+if !has('job')
+    finish
+endif
+
+augroup cangjie_lsp
+    autocmd!
+    " 当读取或新建一个 cangjie 文件时，初始化 LSP 客户端
+    autocmd BufRead,BufNewFile *.cj call LSP#init()
+augroup END
