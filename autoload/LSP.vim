@@ -37,6 +37,7 @@ function! LSP#did_open() abort
                 \     'text': join(getline(1, '$'), "\n")
                 \   }
                 \ })
+endfunction
 
 
 function! LSP#init() abort
@@ -73,6 +74,5 @@ function! LSP#init() abort
     call timer_start(5000, {-> LSP#chat('initialized', {})})
 
     " sleep 7000ms the did open
-    call timer_start(7000, {-> LSP#did_open()})
-    " Send the initialization message
+    call timer_start(7000, {-> LSP#did_open()})    
 endfunction

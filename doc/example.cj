@@ -1,3 +1,33 @@
+class console {
+    static public func say(msg: String): String{
+        const hello = "Hello, ";
+        return hello + msg;
+    }
+    init(){
+        println("Console initialized");
+    }
+    ~init(){
+        println("Console destroyed");
+    }
+    public func sayHello(): Unit{
+        println("Hello, World!");
+    }
+    public func log<T>(msg: T): Unit{
+        println((msg as String)??"Converted failed");
+    }
+}
+
+
+
 main(){
-    println("Hello, World!");
+    let printer = console();
+    printer.sayHello();
+    printer.log("Hello, World 2");
+    printer.log(123);
+    printer.log(r's')
+    if(console.say("World") == "Hello, World"){
+        println("Test passed");    
+    } else {
+        println("Test failed");
+    }
 }

@@ -1,0 +1,5 @@
+doc/.cache
+doc/default*
+doc/example
+
+test*

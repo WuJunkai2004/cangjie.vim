@@ -6,10 +6,11 @@ if exists("g:loaded_cangjie_syntax")
 endif
 let g:loaded_cangjie_syntax = 1
 
-" 自动设置 `.cj` 文件为 cangjie 文件类型，并启用语法高亮
+" 自动设置 `.cj` 文件为 cangjie 文件类型，并启用缩进规则
 augroup cangjie_syntax
     autocmd!
     autocmd BufRead,BufNewFile *.cj set filetype=cangjie
+    autocmd FileType cangjie setlocal cindent cinoptions={:0,}:0
 augroup END
 
 " 其他需要在 Vim 启动时加载的插件设置
