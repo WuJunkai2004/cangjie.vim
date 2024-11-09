@@ -82,8 +82,11 @@ endif
 " ---------------------------------------------------------
 syntax keyword CJ_Type Any
 syntax keyword CJ_Type Array
+syntax keyword CJ_Type ArrayList
 syntax keyword CJ_Type Bool
-syntax keyword CJ_Type Rune
+syntax keyword CJ_Type Byte
+syntax keyword CJ_Type HashMap
+syntax keyword CJ_Type HashSet
 syntax keyword CJ_Type Float16
 syntax keyword CJ_Type Float32
 syntax keyword CJ_Type Float64
@@ -92,7 +95,10 @@ syntax keyword CJ_Type Int16
 syntax keyword CJ_Type Int32
 syntax keyword CJ_Type Int64
 syntax keyword CJ_Type IntNative
+syntax keyword CJ_Type Iterable
 syntax keyword CJ_Type Nothing
+syntax keyword CJ_Type Range
+syntax keyword CJ_Type Rune
 syntax keyword CJ_Type String
 syntax keyword CJ_Type This
 syntax keyword CJ_Type Unit
@@ -122,7 +128,10 @@ highlight link CJ_Number Number
 " 6. 字符串, 字符
 " ---------------------------------------------------------
 syntax match CJ_Rune /\vr'.'/
-syntax match CJ_String /".*"/
+syntax region CJ_String start=/"/ skip=/\\\\\|\\"/ end=/"/ oneline
+syntax region CJ_String start=/'/ skip=/\\\\\|\\'/ end=/'/ oneline
+syntax region CJ_String start=/"""/ skip=/\\\\\|\\"/ end=/"""/
+syntax region CJ_String start=/'''/ skip=/\\\\\|\\'/ end=/'''/
 syntax match CJ_RawString /\v#('.*')+#/
 highlight link CJ_Rune      String
 highlight link CJ_String    String

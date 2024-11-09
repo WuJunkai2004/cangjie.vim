@@ -1,5 +1,8 @@
-doc/.cache
+.cache
+
 doc/default*
 doc/example
 
 test*
+
+log.txt
