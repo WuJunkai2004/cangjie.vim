@@ -26,4 +26,6 @@ augroup cangjie_lsp
     autocmd!
     " 当读取或新建一个 cangjie 文件时，初始化 LSP 客户端
     autocmd BufRead,BufNewFile *.cj call LSP#init()
+    " 当打开一个 cangjie 文件时，发送 `textDocument/didOpen` 请求
+    " autocmd BufRead *.cj call LSP#did_open()
 augroup END

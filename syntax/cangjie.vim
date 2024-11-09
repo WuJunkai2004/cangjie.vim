@@ -2,6 +2,12 @@
 " CJ_.vim: Syntax highlighting for the CJ_ language
 " ---------------------------------------------------------
 
+" 0. 查询设置
+function! s:Setting(item) abort
+    return get(g:, 'cangjie_' . a:item . '_color', 1)
+endfunction
+
+
 " 1. 定义关键字
 " ---------------------------------------------------------
 syntax keyword CJ_Keyword abstract
@@ -63,16 +69,18 @@ highlight link CJ_Keyword Keyword
 " 2. 定义标识符
 " ---------------------------------------------------------
 syntax match CJ_Identifier /\v[a-zA-Z_][a-zA-Z0-9_]*/
-highlight link CJ_Identifier Identifier
-
 " 特殊标识符 1，用``包裹的标识符 2，用``包裹的关键字
 syntax region CJ_SP_Identifier start=/[`]/ end=/[`]/ contains=@CJ_Identifier
 syntax region CJ_SP_Identifier start=/[`]/ end=/[`]/ contains=@CJ_Keyword
-highlight link CJ_SP_Identifier Identifier
+if s:Setting('identifier')
+    highlight link CJ_Identifier    Identifier
+    highlight link CJ_SP_Identifier Identifier
+endif
 
 
 " 3. 定义类型
 " ---------------------------------------------------------
+syntax keyword CJ_Type Any
 syntax keyword CJ_Type Array
 syntax keyword CJ_Type Bool
 syntax keyword CJ_Type Rune
@@ -85,6 +93,7 @@ syntax keyword CJ_Type Int32
 syntax keyword CJ_Type Int64
 syntax keyword CJ_Type IntNative
 syntax keyword CJ_Type Nothing
+syntax keyword CJ_Type String
 syntax keyword CJ_Type This
 syntax keyword CJ_Type Unit
 syntax keyword CJ_Type UInt8
