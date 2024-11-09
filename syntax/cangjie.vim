@@ -132,7 +132,8 @@ syntax region CJ_String start=/"/ skip=/\\\\\|\\"/ end=/"/ oneline
 syntax region CJ_String start=/'/ skip=/\\\\\|\\'/ end=/'/ oneline
 syntax region CJ_String start=/"""/ skip=/\\\\\|\\"/ end=/"""/
 syntax region CJ_String start=/'''/ skip=/\\\\\|\\'/ end=/'''/
-syntax match CJ_RawString /\v#('.*')+#/
+syntax region CJ_RawString start='\z(#*\)#"'  end='"#\z1'
+syntax region CJ_RawString start='\z(#*\)#\'' end='\'#\z1'
 highlight link CJ_Rune      String
 highlight link CJ_String    String
 highlight link CJ_RawString String

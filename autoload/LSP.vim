@@ -1,5 +1,7 @@
 " Set up the LSP client
 
+let s:NoIdMethods = ['initialized', 'exit', 'document/didOpen']
+
 function! LSP#chat(method, params) abort
     let g:lsp_id += 1
     let message_json = {
@@ -8,7 +10,7 @@ function! LSP#chat(method, params) abort
                 \ 'method': a:method,
                 \ 'params': a:params
                 \ }
-    if(a:method == 'initialized')
+    if(index(s:NoIdMethods, a:method) != -1)
         let message_json = {
                 \ 'jsonrpc': '2.0',
                 \ 'method': a:method,
