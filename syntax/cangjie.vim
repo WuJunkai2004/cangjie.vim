@@ -1,6 +1,11 @@
 " ---------------------------------------------------------
-" CJ_.vim: Syntax highlighting for the CJ_ language
+" cangjie.vim: Syntax highlighting for the Cangjie language
 " ---------------------------------------------------------
+
+" 0. define unicode characters
+" ---------------------------------------------------------
+syn match CJ_Encode
+
 
 " 0. 查询设置
 function! s:Setting(item) abort
@@ -63,7 +68,9 @@ syntax keyword CJ_Keyword unsafe
 syntax keyword CJ_Keyword var
 syntax keyword CJ_Keyword where
 syntax keyword CJ_Keyword while
-highlight link CJ_Keyword Keyword
+if s:Setting('keyword')
+    highlight link CJ_Keyword Keyword
+endif
 
 
 " 2. 定义标识符
@@ -108,21 +115,27 @@ syntax keyword CJ_Type UInt32
 syntax keyword CJ_Type UInt64
 syntax keyword CJ_Type UIntNative
 syntax keyword CJ_Type VArray
-highlight link CJ_Type Type
+if s:Setting('type')
+    highlight link CJ_Type Type
+endif
 
 
 " 4. 定义注释
 " ---------------------------------------------------------
 syntax match CJ_Comment /\v\/\/.*/
 syntax region CJ_Comment start=/\/\*/ end=/\*\//
-highlight link CJ_Comment Comment
+if s:Setting('comment')
+    highlight link CJ_Comment Comment
+endif
 
 
 " 5. 定义数字
 " ---------------------------------------------------------
 syntax match CJ_Number /\v(0b|0B)[0-1]+|(0o|0O)[0-7]+|0x[0-9A-Fa-f]+|\d+/
 syntax match CJ_Number /\v\d+\.\d+/
-highlight link CJ_Number Number
+if s:Setting('number')
+    highlight link CJ_Number Number
+endif
 
 
 " 6. 字符串, 字符
@@ -134,9 +147,11 @@ syntax region CJ_String start=/"""/ skip=/\\\\\|\\"/ end=/"""/
 syntax region CJ_String start=/'''/ skip=/\\\\\|\\'/ end=/'''/
 syntax region CJ_RawString start='\z(#*\)#"'  end='"#\z1'
 syntax region CJ_RawString start='\z(#*\)#\'' end='\'#\z1'
-highlight link CJ_Rune      String
-highlight link CJ_String    String
-highlight link CJ_RawString String
+if s:Setting('string')
+    highlight link CJ_Rune      String
+    highlight link CJ_String    String
+    highlight link CJ_RawString String
+endif
 
 
 " 7. Option 相关
@@ -144,4 +159,6 @@ highlight link CJ_RawString String
 syntax keyword CJ_Builtin Option
 syntax keyword CJ_Builtin Some
 syntax keyword CJ_Builtin None
-highlight link CJ_Builtin Structure
+if s:Setting('builtin')
+    highlight link CJ_Builtin Structure
+endif
