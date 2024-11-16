@@ -4,7 +4,6 @@
 
 " 0. define unicode characters
 " ---------------------------------------------------------
-syn match CJ_Encode
 
 
 " 0. 查询设置

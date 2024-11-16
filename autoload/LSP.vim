@@ -1,6 +1,8 @@
 " Set up the LSP client
 
-let s:NoIdMethods = ['initialized', 'exit', 'document/didOpen']
+let s:NoIdMethods = ['initialized', 'exit', 'textDocument/didOpen']
+
+let g:lsp_workspace = ''
 
 function! LSP#chat(method, params) abort
     let g:lsp_id += 1
@@ -42,6 +44,27 @@ function! LSP#did_open() abort
 endfunction
 
 
+function! LSP#did_change_workspace_folders() abort
+    call LSP#chat('workspace/didChangeWorkspaceFolders',
+                \ {
+                \   'event': {
+                \     'added': [{
+                \         'uri': 'file://' . expand(g:lsp_workspace),
+                \       }
+                \     ]
+                \   }
+                \ })
+endfunction
+
+
+function LSP#status() abort
+    if exists('g:lsp_client')
+        return 'running'
+    else
+        return 'stopped'
+    endif
+endfunction
+
 function! LSP#init() abort
     " Check if the client is already running
     if exists('g:lsp_client')
@@ -63,18 +86,55 @@ function! LSP#init() abort
                 \   'rootUri': 'file://' . expand('%:p:h'),
                 \   'capabilities': {
                 \     'textDocument': {
-                \       'completion': {
-                \         'completionItem': {
-                \           'snippetSupport': v:true
-                \         }
-                \       }
+                \       'completion': v:true,
+                \       'definition': v:true,
                 \     }
                 \   }
                 \ })
     
     " sleep 5000ms for the server to initialize
     call timer_start(5000, {-> LSP#chat('initialized', {})})
+endfunction
 
-    " sleep 7000ms the did open
-    call timer_start(7000, {-> LSP#did_open()})    
+
+function! LSP#cmdFileOpen() abort
+    " Check if the client is not running
+    if !exists('g:lsp_client')
+        call LSP#init()
+        call timer_start(7000, {-> LSP#FileOpen()})
+        return
+    endif
+    call LSP#did_change_workspace_folders()
+    call LSP#did_open()
+endfunction
+
+
+function! LSP#cmdFileClose() abort
+    call LSP#chat('textDocument/didClose',
+                \ {
+                \   'textDocument': {
+                \     'uri': 'file://' . expand('%:p'),
+                \   }
+                \ })
+endfunction
+
+
+function! LSP#add_workspace(workspace) abort
+    let g:lsp_workspace = a:workspace
+    call LSP#did_change_workspace_folders()
+endfunction
+
+
+function! LSP#open_document() abort
+    call LSP#did_open()
+endfunction
+
+
+function! LSP#stop() abort
+    if exists('g:lsp_client')
+        call job_stop(g:lsp_client)
+        unlet g:lsp_client
+        let g:lsp_id = 0
+        let g:lsp_workspace = ''
+    endif
 endfunction
