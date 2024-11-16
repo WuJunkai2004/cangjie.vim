@@ -22,6 +22,20 @@ Plugin 'https://gitcode.com/Neila/cangjie.vim.git'
 - [x] 多行字符串
 - [x] 注释
 - [ ] ......
+#### 不喜欢某些高亮？
+可以通过在`.vimrc`中添加如下如下代码来关闭某些高亮。
+```vim
+let g:cangjie_keyword_color=0
+```
+示例代码中关闭了关键字的高亮。
+可以被关闭的高亮有：
+- cangjie_keyword_color
+- cangjie_type_color
+- cangjie_identifier_color
+- cangjie_string_color
+- cangjie_number_color
+- cangjie_comment_color
+- cangjie_builtin_color
 
 ### LSP Server
 目前正在开发中
