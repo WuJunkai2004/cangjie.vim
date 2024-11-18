@@ -39,11 +39,13 @@ if !exists('g:CJ_lsp_config')
 endif
 
 if g:CJ_lsp_config == 'always'
-    call LSP#init()
+    call cangjie#init()
 endif
 
-augroup cangjie_lsp
-    autocmd!
-    " 当读取或新建一个 cangjie 文件时，初始化 LSP 客户端
-    autocmd BufRead,BufNewFile *.cj call cangjie#init()
-augroup END
+if g:CJ_lsp_config == 'intime'
+    augroup cangjie_lsp
+        autocmd!
+        " When read or create a cangjie file, initialize the LSP client
+        autocmd BufRead,BufNewFile *.cj call cangjie#init()
+    augroup END
+endif
