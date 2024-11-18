@@ -38,7 +38,7 @@ if !exists('g:CJ_lsp_config')
     let g:CJ_lsp_config = 'intime'
 endif
 
-if g:CJ_lsp_config ==# 'always'
+if g:CJ_lsp_config == 'always'
     call LSP#init()
 endif
 

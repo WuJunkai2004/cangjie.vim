@@ -1,5 +1,3 @@
-let s:cangjie_mainloop_id = v:null
-
 function! cangjie#cmd(option) abort
     if a:option == 'start'
         call cangjie#init()
@@ -16,16 +14,16 @@ endfunction
 
 
 function! cangjie#init() abort
-    if LSP#status() == 'stopped'
+    if LSP#status() == 'dead'
         call LSP#init()
         call timer_start(7000, {-> cangjie#init()})
         return
     endif
     call LSP#add_workspace(expand('%:p:h'))
-    call LSP#open_document(expand('%:p'))
+    call LSP#open_document()
 
-    " Start the main loop
-    let s:cangjie_mainloop_id = timer_start(200, {-> cangjie#mainloop()})
+    " band shortcut
+    inoremap . .<C-O>:call LSP#complete()<CR>
 endfunction
 
 
@@ -35,12 +33,4 @@ function! cangjie#stop() abort
         let s:cangjie_mainloop_id = v:null
     endif
     call LSP#stop()
-endfunction
-
-
-function! cangjie#mainloop() abort
-    if LSP#can_receive() == v:false
-        return
-    endif
-    let response = LSP#receive()
 endfunction

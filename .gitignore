@@ -6,3 +6,5 @@ doc/example
 test*
 
 log.txt
+
+*.sw*
