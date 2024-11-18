@@ -22,7 +22,7 @@ function! cangjie#init() abort
     call LSP#add_workspace(expand('%:p:h'))
     call LSP#open_document()
 
-    " band shortcut
+    " bind shortcut
     inoremap . .<C-O>:call LSP#complete()<CR>
 endfunction
 

@@ -2,7 +2,8 @@
 
 let s:NoIdMethods = ['initialized', 
                    \ 'exit', 
-                   \ 'textDocument/didOpen']
+                   \ 'textDocument/didOpen',
+                   \ 'textDocument/didChange']
 
 let g:cj_lsp_workspace = ''
 let g:cj_lsp_id = 0
@@ -10,6 +11,13 @@ let g:cj_lsp_id = 0
 let g:cj_lsp_history = ''
 
 let g:cj_file_version = {}
+
+
+function! LSP#log(msg) abort
+    " save to a file named lsp.log
+    let s:log_file = expand('./lsp.log')
+    call writefile([a:msg], s:log_file, 'a')
+endfunction
 
 
 function! s:ch_send(method, params) abort
@@ -116,7 +124,6 @@ endfunction
 
 
 function! LSP#change_document() abort
-    return
     let s:file = 'file://' . expand('%:p')
     if !has_key(g:cj_file_version, s:file)
         let g:cj_file_version[s:file] = 1
@@ -137,7 +144,7 @@ endfunction
 
 
 function! LSP#complete() abort
-    call LSP#did_open()
+    call LSP#change_document()
     call s:ch_send('textDocument/completion',
                 \ {
                 \   'textDocument': {
@@ -173,4 +180,5 @@ endfunction
 function! LSP#on_exit(channel, msg) abort
     unlet g:cj_lsp_client
     let g:cj_lsp_workspace = ''
+    let g:cj_lsp_id = 0
 endfunction
