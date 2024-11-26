@@ -11,7 +11,7 @@ let g:cj_lsp_id = 0
 let g:cj_lsp_history = ''
 
 let g:cj_file_version = {}
-
+let g:cj_chat_response = {}
 
 function! LSP#log(msg) abort
     " save to a file named lsp.log
@@ -28,6 +28,7 @@ function! s:ch_send(method, params) abort
     if(index(s:NoIdMethods, a:method) == -1)
         let g:cj_lsp_id = g:cj_lsp_id + 1
         let s:req.id = g:cj_lsp_id
+        let g:cj_chat_response[s:req.id] = a:method
     endif
     let s:json_req = json_encode(s:req)
     let s:header = 'Content-Length: ' . len(s:json_req) . "\r\n\r\n"
@@ -173,7 +174,26 @@ function! s:lsp_callback(channel, msg) abort
     if !ch_canread(g:cj_lsp_client)
         return
     endif
-    let g:get = ch_readraw(g:cj_lsp_client)
+    let s:response_text = ch_readraw(g:cj_lsp_client)
+    let s:response_json = json_decode(s:response_text)
+    if has_key(s:response_json, 'id')
+        let s:method = g:cj_chat_response[s:response_json.id]
+        if s:method == 'textDocument/completion'
+            call s:complete_callback(s:response_json.result)
+        endif
+        call remove(g:cj_chat_response, s:response_json.id)
+    endif
+endfunction
+
+function s:complete_callback(result) abort
+    let s:complete_content = []
+    for s:item in a:result
+        let s:word = s:item.filterText
+        if index(s:complete_content, s:word) == -1
+            call add(s:complete_content, s:word)
+        endif
+    endfor
+    call complete(col('.'), s:complete_content)
 endfunction
 
 
