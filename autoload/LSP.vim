@@ -1,9 +1,19 @@
-" Set up the LSP client
-
 let s:NoIdMethods = ['initialized', 
                    \ 'exit', 
                    \ 'textDocument/didOpen',
                    \ 'textDocument/didChange']
+
+let s:MethodInterval = {
+  \ 'initialize': 10,
+  \ 'initialized': 1,
+  \ 'textDocument/didOpen': 1,
+  \ 'textDocument/didChange': 0,
+\}
+
+let s:MethodPostQueue = []
+let s:MethodPostAwait = 0
+
+let g:cj_lsp_mainloop_id = v:null
 
 let g:cj_lsp_workspace = ''
 let g:cj_lsp_id = 0
@@ -13,10 +23,18 @@ let g:cj_lsp_history = ''
 let g:cj_file_version = {}
 let g:cj_chat_response = {}
 
-function! LSP#log(msg) abort
-    " save to a file named lsp.log
-    let s:log_file = expand('./lsp.log')
-    call writefile([a:msg], s:log_file, 'a')
+function! LSP#mainloop() abort
+    if len(s:MethodPostQueue) == 0
+        let s:MethodPostAwait = 0
+        return
+    endif
+    if s:MethodPostAwait != 0
+        let s:MethodPostAwait = s:MethodPostAwait - 1
+        return
+    endif
+    let s:post = remove(s:MethodPostQueue, 0)
+    call ch_sendraw(g:cj_lsp_client, s:post.raw)
+    let s:MethodPostAwait = s:post.interval
 endfunction
 
 
@@ -32,7 +50,11 @@ function! s:ch_send(method, params) abort
     endif
     let s:json_req = json_encode(s:req)
     let s:header = 'Content-Length: ' . len(s:json_req) . "\r\n\r\n"
-    call ch_sendraw(g:cj_lsp_client, s:header . s:json_req)
+    let s:raw = s:header . s:json_req
+    " find the interval for the method
+    let s:interval = get(s:MethodInterval, a:method, 3)
+    " add to the queue
+    call add(s:MethodPostQueue, {'raw': s:raw, 'interval': s:interval})
 endfunction
 
 
@@ -80,6 +102,7 @@ function! LSP#init() abort
     let s:opts['exit_cb'] = function('LSP#on_exit')
     let g:cj_lsp_client = job_start(s:cmd, s:opts)
     
+    " Post the initialize and initialized messages
     let s:init_params = {
                 \ 'processId': getpid(),
                 \ 'rootUri': 'file://' . expand(g:cj_lsp_workspace),
@@ -91,9 +114,10 @@ function! LSP#init() abort
                 \   }
                 \ }
     call s:ch_send('initialize', s:init_params)
-    
-    " sleep 5000ms for the server to initialize
-    call timer_start(5000, {-> s:ch_send('initialized', {})})
+    call s:ch_send('initialized', {})
+
+    " Start the main loop
+    let g:cj_lsp_mainloop_id = timer_start(500, { -> LSP#mainloop()}, {'repeat': -1})
 endfunction
 
 

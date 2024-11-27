@@ -19,11 +19,14 @@ function! cangjie#init() abort
         call timer_start(7000, {-> cangjie#init()})
         return
     endif
-    call LSP#add_workspace(expand('%:p:h'))
-    call LSP#open_document()
-
     " bind shortcut
     inoremap . .<C-O>:call LSP#complete()<CR>
+
+    inoremap <leader>] <C-O>:call LSP#jump_to_definition()<CR>
+    inoremap <leader>t <C-O>:call LSP#jump_back()<CR>
+
+    call LSP#add_workspace(expand('%:p:h'))
+    call LSP#open_document()
 endfunction
 
 
