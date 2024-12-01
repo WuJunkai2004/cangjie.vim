@@ -2,7 +2,7 @@ function! cangjie#cmd(option) abort
     if a:option == 'start'
         call cangjie#init()
     elseif a:option == 'stop'
-        call cangjie#stop()
+        call LSP#stop()
     elseif a:option == 'check'
         call LSP#check()
     elseif a:option == 'status'
@@ -27,13 +27,4 @@ function! cangjie#init() abort
 
     call LSP#add_workspace(expand('%:p:h'))
     call LSP#open_document()
-endfunction
-
-
-function! cangjie#stop() abort
-    if s:cangjie_mainloop_id != v:null
-        call timer_stop(s:cangjie_mainloop_id)
-        let s:cangjie_mainloop_id = v:null
-    endif
-    call LSP#stop()
 endfunction

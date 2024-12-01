@@ -187,6 +187,10 @@ function! LSP#stop() abort
     if exists('g:cj_lsp_client')
         call job_stop(g:cj_lsp_client)
     endif
+    if g:cj_lsp_mainloop_id != v:null
+        call timer_stop(g:cj_lsp_mainloop_id)
+        let g:cj_lsp_mainloop_id = v:null
+    endif
 endfunction
 
 
