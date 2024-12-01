@@ -13,9 +13,8 @@ augroup cangjie_syntax
     autocmd FileType cangjie setlocal cindent cinoptions={:0,}:0
 augroup END
 
-" 其他需要在 Vim 启动时加载的插件设置
-
-if v:version < 900
+" 过滤掉无法使用的 Vim 版本和缺少的特性
+if v:version < 820
     finish
 endif
 
@@ -28,7 +27,6 @@ endif
 " - stop: Stop the LSP server.
 " - check: Check the grammar of the cangjie file.
 " - status: Get the status of the LSP server.
-" 定义 CangjieLSP 命令，并使用 CJcmd 函数进行参数补全
 command! -nargs=1 -complete=customlist,s:CJcmd CangjieLSP call cangjie#cmd(<f-args>)
 function! s:CJcmd(base, line, cur)
     let commands = ['start', 'stop', 'check', 'status']
@@ -54,3 +52,6 @@ if g:CJ_lsp_config == 'intime'
         autocmd BufRead,BufNewFile *.cj call cangjie#init()
     augroup END
 endif
+
+" 当关闭vim时，手动调用回调函数
+autocmd VimLeavePre * call LSP#on_exit(0, 'exit')
