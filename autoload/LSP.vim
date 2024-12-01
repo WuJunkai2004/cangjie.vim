@@ -23,6 +23,8 @@ let g:cj_lsp_history = ''
 let g:cj_file_version = {}
 let g:cj_chat_response = {}
 
+let g:cj_lsp_log_path = ''
+
 function! LSP#mainloop() abort
     if len(s:MethodPostQueue) == 0
         let s:MethodPostAwait = 0
@@ -89,6 +91,9 @@ function! LSP#init() abort
     if exists('g:cj_lsp_client')
         return
     endif
+
+    " 在vim的运行目录下创建一个log.txt文件
+    let g:cj_lsp_log_path = getcwd() . '/log.txt'
 
     let g:cj_lsp_workspace = expand('%:p:h')
 
@@ -187,10 +192,6 @@ function! LSP#stop() abort
     if exists('g:cj_lsp_client')
         call job_stop(g:cj_lsp_client)
     endif
-    if g:cj_lsp_mainloop_id != v:null
-        call timer_stop(g:cj_lsp_mainloop_id)
-        let g:cj_lsp_mainloop_id = v:null
-    endif
 endfunction
 
 
@@ -229,4 +230,15 @@ function! LSP#on_exit(channel, msg) abort
     unlet g:cj_lsp_client
     let g:cj_lsp_workspace = ''
     let g:cj_lsp_id = 0
+    let g:cj_file_version = {}
+    let g:cj_chat_response = {}
+
+    if g:cj_lsp_mainloop_id != v:null
+        call timer_stop(g:cj_lsp_mainloop_id)
+        let g:cj_lsp_mainloop_id = v:null
+    endif
+
+    if !empty(g:cj_lsp_log_path)
+        call delete(g:cj_lsp_log_path)
+    endif
 endfunction
