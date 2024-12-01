@@ -28,7 +28,12 @@ endif
 " - stop: Stop the LSP server.
 " - check: Check the grammar of the cangjie file.
 " - status: Get the status of the LSP server.
-command! -nargs=1 CangjieLSP call cangjie#cmd(<f-args>)
+" 定义 CangjieLSP 命令，并使用 CJcmd 函数进行参数补全
+command! -nargs=1 -complete=customlist,s:CJcmd CangjieLSP call cangjie#cmd(<f-args>)
+function! s:CJcmd(base, line, cur)
+    let commands = ['start', 'stop', 'check', 'status']
+    return filter(commands, 'v:val =~ "^' . a:base . '"')
+endfunction
 
 " Cangjie LSP configure has the 3 options above:
 " - always: Always run the LSP server.
