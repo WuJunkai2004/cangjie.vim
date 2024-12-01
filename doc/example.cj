@@ -1,3 +1,5 @@
+import std.core
+
 class console {
     static public func say(msg: String): String{
         const hello = "Hello, ";

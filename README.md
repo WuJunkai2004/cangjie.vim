@@ -21,7 +21,7 @@ Plugin 'https://gitcode.com/Neila/cangjie.vim.git'
 - [x] 原始字符串
 - [x] 多行字符串
 - [x] 注释
-- [ ] 导入的包名
+- [x] 导入的包名
 - [ ] 待补充
 #### 不喜欢某些高亮？
 可以通过在`.vimrc`中添加如下如下代码来关闭某些高亮。
@@ -38,6 +38,7 @@ let g:cangjie_string_color     = 0
 let g:cangjie_number_color     = 0
 let g:cangjie_comment_color    = 0
 let g:cangjie_builtin_color    = 0
+let g:cangjie_package_color    = 0
 ```
 
 

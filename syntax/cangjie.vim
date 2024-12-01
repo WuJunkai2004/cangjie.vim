@@ -32,7 +32,7 @@ syntax keyword CJ_Keyword for
 syntax keyword CJ_Keyword foreign
 syntax keyword CJ_Keyword func
 syntax keyword CJ_Keyword if
-syntax keyword CJ_Keyword import
+" syntax keyword CJ_Keyword import
 syntax keyword CJ_Keyword in
 syntax keyword CJ_Keyword init
 syntax keyword CJ_Keyword interface
@@ -45,7 +45,7 @@ syntax keyword CJ_Keyword mut
 syntax keyword CJ_Keyword open
 syntax keyword CJ_Keyword operator
 syntax keyword CJ_Keyword override
-syntax keyword CJ_Keyword package
+" syntax keyword CJ_Keyword package
 syntax keyword CJ_Keyword private
 syntax keyword CJ_Keyword prop
 syntax keyword CJ_Keyword protected
@@ -160,4 +160,19 @@ syntax keyword CJ_Builtin Some
 syntax keyword CJ_Builtin None
 if s:Setting('builtin')
     highlight link CJ_Builtin Structure
+endif
+
+
+" 8. package 相关
+" ---------------------------------------------------------
+syntax match CJ_PackageKeyword /^\s*package/ contained
+syntax match CJ_ImportKeyword  /^\s*import/  contained
+syntax region CJ_Package start=/\s*package\s\+/ end=/$/ contains=CJ_PackageKeyword
+syntax region CJ_Package start=/\s*import\s\+/  end=/$/ contains=CJ_ImportKeyword
+if s:Setting('keyword')
+    highlight link CJ_PackageKeyword Keyword
+    highlight link CJ_ImportKeyword  Keyword
+endif
+if s:Setting('package')
+    highlight link CJ_Package  PreProc
 endif
