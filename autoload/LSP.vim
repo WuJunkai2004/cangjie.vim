@@ -227,7 +227,10 @@ endfunction
 
 
 function! LSP#on_exit(channel, msg) abort
-    unlet g:cj_lsp_client
+    if exists('g:cj_lsp_client')
+        unlet g:cj_lsp_client
+    endif
+
     let g:cj_lsp_workspace = ''
     let g:cj_lsp_id = 0
     let g:cj_file_version = {}
