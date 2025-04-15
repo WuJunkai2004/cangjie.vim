@@ -230,8 +230,8 @@ endfunction
 function s:complete_callback(result) abort
     let s:complete_content = []
     for s:item in a:result
-        let s:word = s:item.filterText
-        if index(s:complete_content, s:word) == -1
+        let s:word = s:item.insertText
+        if s:item.detail == '' && index(s:complete_content, s:word) == -1
             call add(s:complete_content, s:word)
         endif
     endfor
