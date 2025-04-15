@@ -23,7 +23,7 @@ let g:cj_lsp_history = ''
 let g:cj_file_version = {}
 let g:cj_chat_response = {}
 
-let g:cj_lsp_log_path = ''
+let g:cj_lsp_cache_dir = []
 
 function! LSP#mainloop() abort
     if len(s:MethodPostQueue) == 0
@@ -62,6 +62,11 @@ endfunction
 
 function! LSP#did_open() abort
     let s:file = 'file://' . expand('%:p')
+    if g:cj_lsp_cache_dir == []
+        let g:cj_lsp_cache_dir = [expand('%:p:h').'/.cache']
+    else
+        call add(g:cj_lsp_cache_dir, expand('%:p:h').'/.cache')
+    endif
     if !has_key(g:cj_file_version, s:file)
         let g:cj_file_version[s:file] = 1
     else
@@ -92,10 +97,15 @@ function! LSP#init() abort
         return
     endif
 
-    " 在vim的运行目录下创建一个log.txt文件
-    let g:cj_lsp_log_path = getcwd() . '/log.txt'
-
     let g:cj_lsp_workspace = expand('%:p:h')
+    
+    " Save work directory
+    let s:work_dir = getcwd()
+    " Change to the $home/.cache/cangjie/
+    if !isdirectory($HOME . '/.cache/cangjie/')
+        call mkdir($HOME . '/.cache/cangjie/', 'p')
+    endif
+    call chdir($HOME . '/.cache/cangjie/')
 
     " Start the client
     let s:cmd = 'LSPServer'
@@ -106,6 +116,9 @@ function! LSP#init() abort
     let s:opts['out_cb']  = function('s:lsp_callback')
     let s:opts['exit_cb'] = function('LSP#on_exit')
     let g:cj_lsp_client = job_start(s:cmd, s:opts)
+
+    " Restore work directory
+    call chdir(s:work_dir)
     
     " Post the initialize and initialized messages
     let s:init_params = {
@@ -241,7 +254,17 @@ function! LSP#on_exit(channel, msg) abort
         let g:cj_lsp_mainloop_id = v:null
     endif
 
-    if !empty(g:cj_lsp_log_path)
-        call delete(g:cj_lsp_log_path)
-    endif
+    for s:dir in g:cj_lsp_cache_dir
+        if isdirectory(s:dir)
+            if isdirectory(s:dir . '/astdata')
+                call delete(s:dir . '/astdata', 'rf')
+            endif
+            if isdirectory(s:dir . '/index')
+                call delete(s:dir . '/index', 'rf')
+            endif
+            if len(glob(s:dir . '/*')) == 0
+                call delete(s:dir, 'rf')
+            endif
+        endif
+    endfor
 endfunction
