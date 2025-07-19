@@ -3,7 +3,7 @@
 使 `vim` 支持 `cangjie` 语法
 
 - [x] 语法高亮
-- [ ] LSP Server
+- [x] 简单的LSP Server
 
 ## 使用方法
 ### 使用插件管理器
@@ -45,7 +45,7 @@ let g:cangjie_package_color    = 0
 ### LSP Server
 > 仅在高于`vim8.2`的版本中支持。  
 
-目前正在开发中，已支持`.`后的补全。  
+目前正在开发中  
 #### todolist
 - [x] 补全 / complete
 - [x] 跳转定义 / jump to definition

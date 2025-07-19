@@ -256,7 +256,6 @@ function s:complete_callback(result) abort
 endfunction
 
 function s:jump_to_definition_callback(result) abort
-    " result is a dict, first check if range is its key
     if !has_key(a:result, 'range')
         return
     endif
@@ -270,10 +269,10 @@ function s:jump_to_definition_callback(result) abort
     " check if in normal mode
     if mode() == 'i'
         execute 'normal! \<Esc>'
-        call cursor(10, 5)
+        call cursor(s:lin, s:col)
         execute 'startinsert'
     else
-        call cursor(10, 5)
+        call cursor(s:lin, s:col)
     endif
 endfunction
 
