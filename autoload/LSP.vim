@@ -161,6 +161,21 @@ function! LSP#add_workspace(workspace) abort
 endfunction
 
 
+function! LSP#jump_to_definition() abort
+    call LSP#change_document()
+    call s:ch_send('textDocument/definition',
+                \ {
+                \   'textDocument': {
+                \     'uri': 'file://' . expand('%:p'),
+                \   },
+                \   'position': {
+                \     'line': line('.') - 1,
+                \     'character': col('.'),
+                \   }
+                \ })
+endfunction
+
+
 function! LSP#open_document() abort
     call LSP#did_open()
 endfunction
@@ -222,6 +237,8 @@ function! s:lsp_callback(channel, msg) abort
         let s:method = g:cj_chat_response[s:response_json.id]
         if s:method == 'textDocument/completion'
             call s:complete_callback(s:response_json.result)
+        elseif s:method == 'textDocument/definition'
+            call s:jump_to_definition_callback(s:response_json.result)
         endif
         call remove(g:cj_chat_response, s:response_json.id)
     endif
@@ -237,6 +254,29 @@ function s:complete_callback(result) abort
     endfor
     call complete(col('.'), s:complete_content)
 endfunction
+
+function s:jump_to_definition_callback(result) abort
+    " result is a dict, first check if range is its key
+    if !has_key(a:result, 'range')
+        return
+    endif
+    let s:range = a:result.range
+    if !has_key(s:range, 'start')
+        return
+    endif
+    let s:start = s:range.start
+    let s:lin = s:start.line + 1
+    let s:col = s:start.character + 1
+    " check if in normal mode
+    if mode() == 'i'
+        execute 'normal! \<Esc>'
+        call cursor(10, 5)
+        execute 'startinsert'
+    else
+        call cursor(10, 5)
+    endif
+endfunction
+
 
 
 function! LSP#on_exit(channel, msg) abort

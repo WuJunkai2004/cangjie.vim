@@ -25,6 +25,9 @@ function! cangjie#init() abort
     inoremap <leader>] <C-O>:call LSP#jump_to_definition()<CR>
     inoremap <leader>t <C-O>:call LSP#jump_back()<CR>
 
+    " use F12 to jump to definition
+    noremap <F12> :call LSP#jump_to_definition()<CR>
+
     call LSP#add_workspace(expand('%:p:h'))
     call LSP#open_document()
 endfunction
