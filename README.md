@@ -48,8 +48,11 @@ let g:cangjie_package_color    = 0
 目前正在开发中，已支持`.`后的补全。  
 #### todolist
 - [x] 补全 / complete
-- [ ] 跳转定义 / jump to definition
+- [x] 跳转定义 / jump to definition
 - [ ] 浏览定义 / preview definition
+- [ ] 语法检查 / syntax check
+- [ ] 代码格式化 / code format
+- [ ] 重命名符号 / rename symbol
 
 #### 配置项与配置命令
 ##### 启动配置
