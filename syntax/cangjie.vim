@@ -2,8 +2,10 @@
 " cangjie.vim: Syntax highlighting for the Cangjie language
 " ---------------------------------------------------------
 
-" 0. define unicode characters
-" ---------------------------------------------------------
+" LSP support(error, warning, hint)
+highlight CJ_Error   cterm=undercurl ctermfg=red gui=undercurl guisp=red
+highlight CJ_Warning cterm=undercurl ctermfg=yellow gui=undercurl guisp=yellow
+highlight CJ_Hint    cterm=underline ctermfg=blue gui=underline guifg=blue
 
 
 " 0. 查询设置
