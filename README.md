@@ -1,6 +1,7 @@
 # cangjie.vim
 
-使 `vim` 支持 `cangjie` 语法
+使 `vim` 支持 `cangjie` 语法  
+如果有帮助的话，请点个`star`吧~
 
 - [x] 语法高亮
 - [x] 简单的LSP Server
@@ -72,5 +73,5 @@ let g:CJ_lsp_config = 'always'
 CangjieLPS start        " 无视配置项，强制开启LSP
 CangjieLPS stop         " 无视配置项，强制关闭LSP
 CangjieLPS status       " 查看当前LSP状态
-CangjieLPS check        " 对当前文件进行语法检查(未实现)
+CangjieLPS check        " 对当前文件进行语法检查
 ```

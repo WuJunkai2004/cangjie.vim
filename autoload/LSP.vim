@@ -138,6 +138,24 @@ function! LSP#init() abort
     let g:cj_lsp_mainloop_id = timer_start(500, { -> LSP#mainloop()}, {'repeat': -1})
 endfunction
 
+function! LSP#check() abort
+    " Check if the type is cangjie
+    if &filetype != 'cangjie'
+        echoerr 'Not a cangjie file.'
+        return
+    endif
+    " just post the didChange message
+    call LSP#change_document()
+    " Post the textDocument/publishDiagnostics message
+    call s:ch_send('textDocument/publishDiagnostics',
+                \ {
+                \   'textDocument': {
+                \     'uri': 'file://' . expand('%:p'),
+                \   },
+                \   'diagnostics': [],
+                \ })
+endfunction
+
 
 function! LSP#add_workspace(workspace) abort
     let s:old_workspace = g:cj_lsp_workspace
@@ -241,6 +259,11 @@ function! s:lsp_callback(channel, msg) abort
             call s:jump_to_definition_callback(s:response_json.result)
         endif
         call remove(g:cj_chat_response, s:response_json.id)
+    elseif has_key(s:response_json, 'method')
+        let s:method = s:response_json.method
+        if s:method == 'textDocument/publishDiagnostics'
+            call s:diagnostics_callback(s:response_json.params)
+        endif
     endif
 endfunction
 
@@ -276,6 +299,11 @@ function s:jump_to_definition_callback(result) abort
     endif
 endfunction
 
+function s:diagnostics_callback(result) abort
+    " the result is a json object
+    " save to the log.json file
+    call writefile([json_encode(a:result)], expand('%:p:h') . '/log.json', 'a')
+endfunction
 
 
 function! LSP#on_exit(channel, msg) abort
