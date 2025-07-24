@@ -51,7 +51,7 @@ let g:cangjie_package_color    = 0
 - [x] 补全 / complete
 - [x] 跳转定义 / jump to definition
 - [ ] 浏览定义 / preview definition
-- [ ] 语法检查 / syntax check
+- [x] 语法检查 / syntax check
 - [ ] 代码格式化 / code format
 - [ ] 重命名符号 / rename symbol
 
