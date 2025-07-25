@@ -48,12 +48,14 @@ let g:cangjie_package_color    = 0
 
 目前正在开发中  
 #### todolist
-- [x] 补全 / complete
-- [x] 跳转定义 / jump to definition
-- [ ] 浏览定义 / preview definition
-- [x] 语法检查 / syntax check
-- [ ] 代码格式化 / code format
-- [ ] 重命名符号 / rename symbol
+| status | description | shortcut key | working function
+| ------ | --- | --- | ---
+| √ | 补全 | (auto working after dot) | LSP#complete
+| √ | 跳转定义 | F12 | LSP#jump_to_definition
+|   | 浏览定义 | | 
+| √ | 语法检查 | :CangjieLPS check | LSP#check
+|   | 代码格式化 | | 
+|   | 重命名符号 | | 
 
 #### 配置项与配置命令
 ##### 启动配置
@@ -73,5 +75,5 @@ let g:CJ_lsp_config = 'always'
 CangjieLPS start        " 无视配置项，强制开启LSP
 CangjieLPS stop         " 无视配置项，强制关闭LSP
 CangjieLPS status       " 查看当前LSP状态
-CangjieLPS check        " 对当前文件进行语法检查
+CangjieLPS check        " 对当前文件进行语法检查(回调函数疑似存在错误)
 ```
