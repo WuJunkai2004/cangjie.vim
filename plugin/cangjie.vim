@@ -22,6 +22,10 @@ if !has('job')
     finish
 endif
 
+if !executable('LSPServer')
+    finish
+endif
+
 " CangjieLSP has the 4 options above:
 " - start: Start the LSP server, whatever the configuration is.
 " - stop: Stop the LSP server.
