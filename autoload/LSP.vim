@@ -18,8 +18,6 @@ let g:cj_lsp_mainloop_id = v:null
 let g:cj_lsp_workspace = ''
 let g:cj_lsp_id = 0
 
-let g:cj_lsp_history = ''
-
 let g:cj_file_version = {}
 let g:cj_chat_response = {}
 
@@ -242,8 +240,7 @@ endfunction
 
 
 function! s:lsp_callback(channel, msg) abort
-    if len(a:msg) != 0
-        let g:cj_lsp_history = g:cj_lsp_history . a:msg
+    if empty(a:msg)
         return
     endif
     if !ch_canread(g:cj_lsp_client)
