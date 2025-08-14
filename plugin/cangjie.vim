@@ -9,7 +9,6 @@ let g:loaded_cangjie_syntax = 1
 " 自动设置 `.cj` 文件为 cangjie 文件类型，并启用缩进规则
 augroup cangjie_syntax
     autocmd!
-    autocmd BufRead,BufNewFile *.cj set filetype=cangjie
     autocmd FileType cangjie setlocal cindent cinoptions={:0,}:0
 augroup END
 
@@ -41,9 +40,8 @@ endfunction
 " - always: Always run the LSP server.
 " - intime: Only run in the file type is cangjie. default value.
 " - never: Never run the LSP server.
-if !exists('g:CJ_lsp_config')
-    let g:CJ_lsp_config = 'intime'
-endif
+let g:CJ_lsp_config = get(g:, 'CJ_lsp_config', 'intime')
+let g:CJ_lsp_config = tolower(g:CJ_lsp_config)
 
 if g:CJ_lsp_config == 'always'
     call cangjie#init()
@@ -54,8 +52,7 @@ if g:CJ_lsp_config == 'intime'
         autocmd!
         " When read or create a cangjie file, initialize the LSP client
         autocmd BufRead,BufNewFile *.cj call cangjie#init()
+        " When close the vim, call the exit function
+        autocmd VimLeavePre * call LSP#on_exit(0, 'exit')
     augroup END
 endif
-
-" 当关闭vim时，手动调用回调函数
-autocmd VimLeavePre * call LSP#on_exit(0, 'exit')

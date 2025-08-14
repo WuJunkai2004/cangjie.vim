@@ -1,0 +1,1 @@
+autocmd BufRead,BufNewFile *.cj set filetype=cangjie
