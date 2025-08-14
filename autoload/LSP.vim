@@ -113,6 +113,7 @@ function! LSP#init() abort
     let s:opts['err_io']  = 'pipe'
     let s:opts['out_cb']  = function('s:lsp_callback')
     let s:opts['exit_cb'] = function('LSP#on_exit')
+    let s:opts['out_mode'] = 'raw'
     let g:cj_lsp_client = job_start(s:cmd, s:opts)
 
     " Restore work directory
@@ -243,10 +244,7 @@ function! s:lsp_callback(channel, msg) abort
     if empty(a:msg)
         return
     endif
-    if !ch_canread(g:cj_lsp_client)
-        return
-    endif
-    let s:response_text = ch_readraw(g:cj_lsp_client)
+    let s:response_text = split(a:msg, "\r\n\r\n")[1]
     let s:response_json = json_decode(s:response_text)
     if has_key(s:response_json, 'id')
         let s:method = g:cj_chat_response[s:response_json.id]
@@ -297,7 +295,6 @@ function s:jump_to_definition_callback(result) abort
 endfunction
 
 function s:diagnostics_callback(result) abort
-    call writefile([json_encode(a:result)], expand('%:p:h') . '/log.json', 'a')
     if !has_key(a:result, 'diagnostics')
         return
     endif
