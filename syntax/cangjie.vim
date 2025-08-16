@@ -37,7 +37,8 @@ syn match   cjComment /\v\/\/.*/				contains=cjTodo
 syn region  cjComment start=/\/\*/ end=/\*\//	contains=cjTodo,@Spell
 syn cluster cjCommentCluster contains=cjComment,cjTodo
 if s:enabled('comment')
-    hi def link cjComment Comment
+	hi def link cjTodo		Todo
+    hi def link cjComment	Comment
 endif
 
 " 2. keywords
@@ -52,11 +53,15 @@ syn keyword cjVariable		const let var
 syn keyword cjOption		Option Some None
 syn cluster cjKeywordCluster	contains=cjDeclaration,cjStatement,cjIdentlike,cjVariable,cjOption
 if s:enabled('keyword')
-    hi def link cjKeywordCluster Keyword
+    hi def link cjDeclaration	Keyword
+	hi def link cjStatement		Keyword
+	hi def link cjIdentlike		Keyword
+	hi def link cjVariable		Keyword
+	hi def link cjOption		Keyword
 endif
 
 " 3. specail identifiers
-syn region cjSP_Identifier start=/[`]/ end=/[`]
+syn region cjSP_Identifier start=/[`]/ end=/[`]/ contains=ALL
 if s:enabled('identifier')
     hi def link cjSP_Identifier Identifier
 endif
@@ -71,28 +76,37 @@ syn keyword cjIntType		Int8 Int16 Int32 Int64 IntNative
 syn keyword cjUIntType		UInt8 UInt16 UInt32 UInt64 UIntNative
 syn cluster cjTypeCluster contains=cjSpType,cjArrayType,cjHashType,cjCommonType,cjFloatType,cjIntType,cjUIntType
 if s:enabled('type')
-    hi def link cjTypeCluster Type
+    hi def link cjSpType		Type
+	hi def link cjArrayType		Type
+	hi def link cjHashType		Type
+	hi def link cjCommonType	Type
+	hi def link cjFloatType		Type
+	hi def link cjIntType		Type
+	hi def link cjUIntType		Type
 endif
-
 
 " 5. number
-syn match cjBinaryNumber	/\v(0b|0B)[0-1]+/
-syn match cjOctalNumber		/\v(0o|0O)[0-7]+/
-syn match cjHexNumber		/\v0x[0-9A-Fa-f]+/
-syn match cjDecimalNumber	/\v\d+/
-syn match cjFloatNumber		/\v\d+\.\d+/
-syn cluster cjNumberCluster contains=cjBinaryNumber,cjOctalNumber,cjHexNumber,cjDecimalNumber,cjFloatNumber
+syn match cjDecimalNumber	/\v\<\d+/
+syn match cjScienceNumber	/\v\<\d+(\.\d+)?([eE][+-]?\d+)?/
+syn match cjFloatNumber		/\v\<\d+\.\d+/
+syn match cjBinaryNumber	/\v\<(0b|0B)[0-1]+/
+syn match cjOctalNumber		/\v\<(0o|0O)[0-7]+/
+syn match cjHexNumber		/\v\<0x[0-9A-Fa-f]+/
+syn cluster cjNumberCluster contains=cjBinaryNumber,cjOctalNumber,cjHexNumber,cjDecimalNumber,cjFloatNumber,cjScienceNumber
 if s:enabled('number')
-    hi def link cjNumber Number
+    hi def link cjBinaryNumber	Number
+	hi def link cjOctalNumber	Number
+	hi def link cjHexNumber		Number
+	hi def link cjDecimalNumber	Number
+	hi def link cjFloatNumber	Float
+	hi def link cjScienceNumber	Float
 endif
-
 
 " 6. package and import
 syn match cjPackageKeyword /^\s*package/ contained
 syn match cjImportKeyword  /^\s*import/  contained
 syn region cjPackage start=/\s*package\s\+/ end=/$/ contains=cjPackageKeyword
 syn region cjPackage start=/\s*import\s\+/  end=/$/ contains=cjImportKeyword
-syn cluster cjPackageCluster contains=cjPackageKeyword,cjImportKeyword,cjPackage
 if s:enabled('keyword')
     hi def link cjPackageKeyword Keyword
     hi def link cjImportKeyword  Keyword
@@ -101,9 +115,19 @@ if s:enabled('package')
     hi def link cjPackage  PreProc
 endif
 
+" 7. operators
+syn match cjOperator /\v(\|\|\=)|(\&\&\=)|(\>\>\=)|(\<\<\=)|(\*\*\=)|(\.\.\=)/
+syn match cjOperator /\v(\|\=)|(\^\=)|(\&\=)|(\-\=)|(\+\=)|(\%\=)|(\/\=)|(\*\=)/
+syn match cjOperator /\v(\~\>)|(\|\>)|(\?\?)|(\<\<)|(\>\>)|(\*\*)|(\-\-)|(\+\+)/
+syn match cjOperator /\v(\!\=)|(\=\=)|(\>\=)|(\<\=)|(\.\.)|(\>)|(\<)/
+syn match cjOperator /\v(\=)|(\|)|(\^)|(\&)|(\-)|(\+)|(\%)|(\/)|(\*)/
+syn match cjOperator /\v(\!)|(\?)|(\.)|(\@)/
+if s:enabled('operator')
+	hi def link cjOperator		Operator
+endif
 
-" 6. character and strings, the interpolated string is a difficult part
-syn cluster cjInterpolatedPart contains=cjCommentCluster,cjKeywordCluster,cjSP_Identifier,cjTypeCluster,cjNumberCluster,cjPackageCluster
+" 8. character and strings, the interpolated string is a difficult part
+syn cluster cjInterpolatedPart contains=@cjKeywordCluster,cjSP_Identifier,@cjTypeCluster,@cjNumberCluster,cjOperator,cjComment
 syn region  cjInterpolation contained keepend start=/\${/ end=/}/ contains=@cjInterpolatedPart matchgroup=cjInterpolationDelimiter
 syn match cjRune /\vr'.'/
 syn region cjString start=/"/ skip=/\\\\\|\\"/ end=/"/ oneline contains=cjInterpolation
@@ -116,7 +140,7 @@ if s:enabled('string')
     hi def link cjRune		Character
     hi def link cjString	String
     hi def link cjRawString	String
-	hi def link cjInterpolationDelimiter	Delimiter
+	hi def link cjInterpolationDelimiter	Operator
 endif
 
 let b:current_syntax = "cangjie"
