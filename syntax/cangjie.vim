@@ -120,8 +120,8 @@ syn match cjOperator /\v(\|\|\=)|(\&\&\=)|(\>\>\=)|(\<\<\=)|(\*\*\=)|(\.\.\=)/
 syn match cjOperator /\v(\|\=)|(\^\=)|(\&\=)|(\-\=)|(\+\=)|(\%\=)|(\/\=)|(\*\=)/
 syn match cjOperator /\v(\~\>)|(\|\>)|(\?\?)|(\<\<)|(\>\>)|(\*\*)|(\-\-)|(\+\+)/
 syn match cjOperator /\v(\!\=)|(\=\=)|(\>\=)|(\<\=)|(\.\.)|(\>)|(\<)/
-syn match cjOperator /\v(\=)|(\|)|(\^)|(\&)|(\-)|(\+)|(\%)|(\/)|(\*)/
-syn match cjOperator /\v(\!)|(\?)|(\.)|(\@)/
+syn match cjOperator /\v(\=)|(\|)|(\^)|(\&)|(\-)|(\+)|(\%)|(\*)/
+syn match cjOperator /\v(\/([\/]|\*)\@!)|(\!)|(\?)|(\.)|(\@)/
 if s:enabled('operator')
 	hi def link cjOperator		Operator
 endif
