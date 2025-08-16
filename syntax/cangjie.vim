@@ -142,6 +142,14 @@ if s:enabled('string')
     hi def link cjRawString	String
 endif
 
+" some errors
+syn match cjOctalError		display "\<0\o*[89]\d*\>"
+syn match cjCommentError	display "\*/"
+if s:enabled('error')
+	hi def link cjOctalError		Error
+	hi def link cjCommentError		Error
+endif
+
 let b:current_syntax = "cangjie"
 
 let &cpo = s:save_cpo
