@@ -61,7 +61,7 @@ if s:enabled('keyword')
 endif
 
 " 3. specail identifiers
-syn region cjSP_Identifier start=/[`]/ end=/[`]/ contains=ALL
+syn region cjSP_Identifier start=/[`]/ end=/[`]/ contains=@spell
 if s:enabled('identifier')
     hi def link cjSP_Identifier Identifier
 endif
@@ -86,12 +86,12 @@ if s:enabled('type')
 endif
 
 " 5. number
-syn match cjDecimalNumber	/\v\<\d+/
-syn match cjScienceNumber	/\v\<\d+(\.\d+)?([eE][+-]?\d+)?/
-syn match cjFloatNumber		/\v\<\d+\.\d+/
-syn match cjBinaryNumber	/\v\<(0b|0B)[0-1]+/
-syn match cjOctalNumber		/\v\<(0o|0O)[0-7]+/
-syn match cjHexNumber		/\v\<0x[0-9A-Fa-f]+/
+syn match cjScienceNumber	/\v\<\d+(\.\d+)?([eE][+-]?\d+)\>/
+syn match cjFloatNumber		/\v\<\d+\.\d+\>/
+syn match cjBinaryNumber	/\v\<(0b|0B)[0-1_]+\>/
+syn match cjOctalNumber		/\v\<(0o|0O)[0-7_]+\>/
+syn match cjHexNumber		/\v\<0x[0-9A-Fa-f_]+\>/
+syn match cjDecimalNumber	/\v\<\d+\>/
 syn cluster cjNumberCluster contains=cjBinaryNumber,cjOctalNumber,cjHexNumber,cjDecimalNumber,cjFloatNumber,cjScienceNumber
 if s:enabled('number')
     hi def link cjBinaryNumber	Number
@@ -140,7 +140,6 @@ if s:enabled('string')
     hi def link cjRune		Character
     hi def link cjString	String
     hi def link cjRawString	String
-	hi def link cjInterpolationDelimiter	Operator
 endif
 
 let b:current_syntax = "cangjie"
