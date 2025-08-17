@@ -55,7 +55,7 @@ main() {
     PI 的值约等于 ${PI}。
     """
     let raw_string = #"原始字符串 C:\Users\Admin 不会转义 \"#
-    
+
     // 5. 控制流语句
     if(age >= 18 && is_core) {
         println("已成年")

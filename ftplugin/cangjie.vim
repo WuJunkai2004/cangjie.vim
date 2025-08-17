@@ -31,8 +31,10 @@ if executable('cjfmt') && ( executable('python3') || executable('python') )
     else
         let s:python_cmd = 'python'
     endif
-    let &l:equalprg  = s:python_cmd . ' ' . shellescape(s:formatter_path)
-    let &l:formatprg = s:python_cmd . ' ' . shellescape(s:formatter_path)
+    if filereadable(s:formatter_path)
+        let &l:equalprg  = s:python_cmd . ' ' . shellescape(s:formatter_path)
+        let &l:formatprg = s:python_cmd . ' ' . shellescape(s:formatter_path)
+    endif
 endif
 
 " compile setting
