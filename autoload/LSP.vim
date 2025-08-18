@@ -23,12 +23,14 @@ let g:cj_chat_response = {}
 
 let g:cj_lsp_cache_dir = []
 
+let g:cj_lsp_buffer = ''
+
 function! LSP#mainloop() abort
-    if len(s:MethodPostQueue) == 0
+    if empty(s:MethodPostQueue)
         let s:MethodPostAwait = 0
         return
     endif
-    if s:MethodPostAwait != 0
+    if s:MethodPostAwait
         let s:MethodPostAwait = s:MethodPostAwait - 1
         return
     endif
@@ -244,7 +246,19 @@ function! s:lsp_callback(channel, msg) abort
     if empty(a:msg)
         return
     endif
-    let s:response_text = split(a:msg, "\r\n\r\n")[1]
+    let g:cj_lsp_buffer .= a:msg
+    " Get the length of the header
+    let s:length_str = matchstr(g:cj_lsp_buffer, '\zs\d\+\r\n\r\n')[:-4]
+    let s:length = str2nr(s:length_str)
+    let s:response_text = split(g:cj_lsp_buffer, "\r\n\r\n")[1]
+    if  len(s:response_text) < s:length
+        " Not enough data, wait for more
+        return
+    else
+        " Remove the processed part
+        let g:cj_lsp_buffer = s:response_text[s:length:]
+        let s:response_text = s:response_text[:s:length - 1]
+    endif
     let s:response_json = json_decode(s:response_text)
     if has_key(s:response_json, 'id')
         let s:method = g:cj_chat_response[s:response_json.id]
