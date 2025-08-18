@@ -45,6 +45,19 @@ main() {
     let hex_num = 0xFF_AB
     let binary_num = 0b1010_0101
     let octal_num = 0o755
+    var a = 100i8  // a is 100 with type Int8
+    var b = 0x10u64 // b is 16 with type UInt64
+    var c = 0o432i32  // c is 282 with type Int32
+    var d = r'x' // d is 120 with type UInt8
+    var e = r'\n' // e is 10 with type UInt8
+    var f = r'\u{78}' // f is 120 with type UInt8
+    let g: Float32 = 3.14f64
+    let h: Float32 = 2e3
+    let i: Float32 = 2.4e-1
+    let j: Float64 = .123e2
+    let k: Float64 = 0x1.1p0
+    let l: Float64 = 0x1p2
+    let m: Float64 = 0x.2p4
 
     // 4. 字符串和插值
     // NOTE: 根据你的语法文件，${} 符号本身可能不会高亮，但内部的表达式会
