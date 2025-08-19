@@ -98,18 +98,16 @@ function! LSP#init() abort
     endif
 
     let g:cj_lsp_workspace = expand('%:p:h')
-    
-    " Save work directory
-    let s:work_dir = getcwd()
-    " Change to the $home/.cache/cangjie/
-    if !isdirectory($HOME . '/.cache/cangjie/')
-        call mkdir($HOME . '/.cache/cangjie/', 'p')
+
+    let s:log_dir = $HOME . '/.cache/cangjie/'
+    if !isdirectory(s:log_dir)
+        call mkdir(s:log_dir, 'p')
     endif
-    call chdir($HOME . '/.cache/cangjie/')
 
     " Start the client
-    let s:cmd = 'LSPServer'
+    let s:cmd = ['LSPServer', '--enable-log=false']
     let s:opts = {}
+    let s:opts['cwd']     = s:log_dir
     let s:opts['in_io']   = 'pipe'
     let s:opts['out_io']  = 'pipe'
     let s:opts['err_io']  = 'pipe'
@@ -117,9 +115,6 @@ function! LSP#init() abort
     let s:opts['exit_cb'] = function('LSP#on_exit')
     let s:opts['out_mode'] = 'raw'
     let g:cj_lsp_client = job_start(s:cmd, s:opts)
-
-    " Restore work directory
-    call chdir(s:work_dir)
     
     " Post the initialize and initialized messages
     let s:init_params = {
@@ -329,6 +324,9 @@ function s:diagnostics_callback(result) abort
         let s:oid = s:highlight(s:group,
             \ diag.range['start'].line, diag.range['start'].character,
             \ diag.range['end'].line, diag.range['end'].character)
+        if s:oid > 0
+            call add(g:cj_lsp_diagnostics, s:oid)
+        endif
     endfor
 endfunction
 
@@ -343,7 +341,7 @@ function! LSP#on_exit(channel, msg) abort
     let g:cj_file_version = {}
     let g:cj_chat_response = {}
 
-    if g:cj_lsp_mainloop_id != v:null
+    if g:cj_lsp_mainloop_id
         call timer_stop(g:cj_lsp_mainloop_id)
         let g:cj_lsp_mainloop_id = v:null
     endif
