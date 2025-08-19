@@ -16,7 +16,9 @@ Plugin 'https://gitcode.com/Neila/cangjie.vim.git'
 
 ### 语法高亮
 目前已经支持`类型、关键字、符号`等基础高亮。  
-> 当前正在修改`cangjie.vim`的语法高亮规则，以期并入`vim`主分支。  
+本项目的语法高亮文件`syntax/cangjie.vim`，于 `vim 9.1.1647` 版本开始在`vim`中内置。  
+稍后应该会在`neovim`中进行同步。  
+> 本项目的语法高亮文件将暂停更新，除非有错误。
 #### todolist
 - [x] 数字
 - [x] 字符串
@@ -31,18 +33,19 @@ Plugin 'https://gitcode.com/Neila/cangjie.vim.git'
 #### 不喜欢某些高亮？
 可以通过在`.vimrc`中添加如下如下代码来关闭某些高亮。
 ```vim
-let g:cangjie_keyword_color=0
+let g:cangjie_keyword_color = 0
 ```
 示例代码中关闭了关键字的高亮。
 可以被关闭的高亮有：
 ```vim
-let g:cangjie_keyword_color    = 0
-let g:cangjie_type_color       = 0
-let g:cangjie_string_color     = 0
-let g:cangjie_number_color     = 0
-let g:cangjie_comment_color    = 0
-let g:cangjie_builtin_color    = 0
-let g:cangjie_package_color    = 0
+let g:cangjie_comment_color = 0
+let g:cangjie_identifier_color = 0
+let g:cangjie_keyword_color = 0
+let g:cangjie_macro_color = 0
+let g:cangjie_number_color = 0
+let g:cangjie_operator_color = 0
+let g:cangjie_string_color = 0
+let g:cangjie_type_color = 0
 ```
 
 
