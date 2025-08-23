@@ -149,17 +149,12 @@ endfunction
 
 function! cangjie#lsp#didSave() abort
     let s:file = 'file://' . expand('%:p')
-    if !has_key(g:cj_file_version, s:file)
-        let g:cj_file_version[s:file] = 1
-    else
-        let g:cj_file_version[s:file] = g:cj_file_version[s:file] + 1
-    endif
     call s:ch_send('textDocument/didSave',
                 \ {
                 \   'textDocument': {
-                \     'uri': s:file,
-                \     'version': g:cj_file_version[s:file]
-                \   }
+                \     'uri': s:file
+                \   },
+                \   'text': join(getline(1, '$'), "\n")
                 \ })
 endfunction
 
