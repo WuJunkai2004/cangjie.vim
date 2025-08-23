@@ -54,6 +54,7 @@ function! cangjie#util#start_lsp() abort
         return
     endif
 
+    echom 'did open'
     call cangjie#lsp#didOpen()
 endfunction
 
@@ -65,7 +66,9 @@ function! cangjie#util#mapping() abort
 
     augroup cangjie_lsp_cmd
         autocmd!
-        autocmd BufWritePost <buffer> call cangjie#lsp#didChange()
+        autocmd CursorHoldI  <buffer> call cangjie#lsp#didChange()
+        autocmd CursorHold   <buffer> call cangjie#lsp#didChange()
+        autocmd BufWritePost <buffer> call cangjie#lsp#didSave()
     augroup END
 endfunction
 

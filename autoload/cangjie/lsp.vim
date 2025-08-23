@@ -1,7 +1,9 @@
 let s:NoIdMethods = ['initialized', 
                    \ 'exit', 
                    \ 'textDocument/didOpen',
-                   \ 'textDocument/didChange']
+                   \ 'textDocument/didChange',
+                   \ 'textDocument/didSave',
+                   \]
 
 let s:CallbackFuns = {
     \ 'initialize': function('cangjie#callback#initialize'),
@@ -32,6 +34,9 @@ function! s:ch_send(method, params) abort
         let g:cj_chat_response[s:req.id] = a:method
     endif
     let s:json_req = json_encode(s:req)
+    if exists('g:cj_lsp_debug') && g:cj_lsp_debug
+        call writefile(["==> Server", s:json_req], $HOME . '/.cache/cangjie/lsp.log', 'a')
+    endif
     let s:header = 'Content-Length: ' . len(s:json_req) . "\r\n\r\n"
     let s:raw = s:header . s:json_req
     call ch_sendraw(g:cj_lsp_client, s:raw)
@@ -122,21 +127,6 @@ function! cangjie#lsp#didOpen() abort
 endfunction
 
 
-function! cangjie#lsp#jump_to_definition() abort
-    call cangjie#lsp#didChange()
-    call s:ch_send('textDocument/definition',
-                \ {
-                \   'textDocument': {
-                \     'uri': 'file://' . expand('%:p'),
-                \   },
-                \   'position': {
-                \     'line': line('.') - 1,
-                \     'character': virtcol('.') - 1,
-                \   }
-                \ })
-endfunction
-
-
 function! cangjie#lsp#didChange() abort
     let s:file = 'file://' . expand('%:p')
     if !has_key(g:cj_file_version, s:file)
@@ -153,6 +143,38 @@ function! cangjie#lsp#didChange() abort
                 \   'contentChanges': [{
                 \     'text': join(getline(1, '$'), "\n")
                 \   }]
+                \ })
+endfunction
+
+
+function! cangjie#lsp#didSave() abort
+    let s:file = 'file://' . expand('%:p')
+    if !has_key(g:cj_file_version, s:file)
+        let g:cj_file_version[s:file] = 1
+    else
+        let g:cj_file_version[s:file] = g:cj_file_version[s:file] + 1
+    endif
+    call s:ch_send('textDocument/didSave',
+                \ {
+                \   'textDocument': {
+                \     'uri': s:file,
+                \     'version': g:cj_file_version[s:file]
+                \   }
+                \ })
+endfunction
+
+
+function! cangjie#lsp#definition() abort
+    call cangjie#lsp#didChange()
+    call s:ch_send('textDocument/definition',
+                \ {
+                \   'textDocument': {
+                \     'uri': 'file://' . expand('%:p'),
+                \   },
+                \   'position': {
+                \     'line': line('.') - 1,
+                \     'character': virtcol('.') - 1,
+                \   }
                 \ })
 endfunction
 

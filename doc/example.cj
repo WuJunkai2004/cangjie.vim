@@ -18,6 +18,7 @@ struct Point {
     init(x: Float64, y: Float64) {
         this.x = x
         this.y = y
+        this.
     }
 }
 
