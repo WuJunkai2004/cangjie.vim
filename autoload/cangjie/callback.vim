@@ -1,3 +1,8 @@
+function! cangjie#callback#initialize(result) abort
+    echom 'Cangjie LSP Server initialized.'
+endfunction
+
+
 function! cangjie#callback#completion(result) abort
     if !a:result || empty(a:result)
         return
@@ -110,4 +115,12 @@ function! s:highlight(group, start_line, start_char, end_line, end_char) abort
     else
         return -1
     endif
+endfunction
+
+
+function! cangjie#callback#hover(result) abort
+    if !a:result
+        return
+    endif
+    echom 'I do not sure Cangjie LSP server support hover yet.'
 endfunction

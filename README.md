@@ -56,13 +56,17 @@ let g:cangjie_type_color = 0
 #### todolist
 | status | description | shortcut key | working function
 | ------ | --- | --- | ---
-| - | 补全 | vim default shortcut, or after dot | cangjie#lsp#complete
-| - | 跳转定义 | F12 | cangjie#lsp#jump_to_definition
-|   | 浏览定义 | | 
-| - | 语法检查 | auto, can view quickfix for details | cangjie#lsp#check
+| - | 代码补全 | vim default shortcut, or after dot | cangjie#lsp#completion
+| - | 跳转到定义 | F12 | cangjie#lsp#definition
+|   | 浏览定义 | work with 悬浮提示 | 
+| - | 语法检查 | auto, can view quickfix for details |
 | √ | 代码格式化 | vim default shortcut | outer script `/plugin/fmt.py` 
 |   | 重命名符号 | not in plan | 
-|   | 浮窗显示提示 | wip |
+| - | 悬浮提示 | K, 鼠标悬浮 | cangjie#lsp#hover, cangjie#util#hover
+|   | 查找引用 | gr | 
+|   | 文档符号 | not in plan, but may be supported in future |
+|   | 工作区符号 | not in plan |
+|   | 签名帮助 | auto |
 
 #### 配置项与配置命令
 ##### 启动配置

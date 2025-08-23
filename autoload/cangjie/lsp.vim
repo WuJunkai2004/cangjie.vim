@@ -4,9 +4,11 @@ let s:NoIdMethods = ['initialized',
                    \ 'textDocument/didChange']
 
 let s:CallbackFuns = {
+    \ 'initialize': function('cangjie#callback#initialize'),
     \ 'textDocument/completion': function('cangjie#callback#completion'),
     \ 'textDocument/definition': function('cangjie#callback#definition'),
     \ 'textDocument/publishDiagnostics': function('cangjie#callback#publishDiagnostics'),
+    \ 'textDocument/hover': function('cangjie#callback#hover'),
 \}
 
 let g:cj_lsp_workspace = ''
@@ -44,30 +46,6 @@ function! cangjie#lsp#available() abort
 endfunction
 
 
-function! cangjie#lsp#did_open() abort
-    let s:file = 'file://' . expand('%:p')
-    if g:cj_lsp_cache_dir == []
-        let g:cj_lsp_cache_dir = [expand('%:p:h').'/.cache']
-    else
-        call add(g:cj_lsp_cache_dir, expand('%:p:h').'/.cache')
-    endif
-    if !has_key(g:cj_file_version, s:file)
-        let g:cj_file_version[s:file] = 1
-    else
-        let g:cj_file_version[s:file] = g:cj_file_version[s:file] + 1
-    endif
-    call s:ch_send('textDocument/didOpen',
-                \ {
-                \   'textDocument': {
-                \     'uri': s:file,
-                \     'languageId': 'Cangjie',
-                \     'version': g:cj_file_version[s:file],
-                \     'text': join(getline(1, '$'), "\n")
-                \   }
-                \ })
-endfunction
-
-
 function! cangjie#lsp#status() abort
     if !exists('g:cj_lsp_client')
         return 'dead'
@@ -99,30 +77,52 @@ function! cangjie#lsp#start_server() abort
     let s:opts['exit_cb'] = function('cangjie#lsp#on_exit')
     let s:opts['out_mode'] = 'raw'
     let g:cj_lsp_client = job_start(s:cmd, s:opts)
-    
+
     " Post the initialize and initialized messages
     let s:init_params = {
-                \ 'processId': getpid(),
-                \ 'rootUri': 'file://' . expand(g:cj_lsp_workspace),
-                \ 'capabilities': {
-                \   'textDocument': {
-                \     'completion': v:true,
-                \     'definition': v:true,
-                \     }
-                \   }
-                \ }
+                \  'processId': getpid(),
+                \  'rootUri': 'file://' . expand(g:cj_lsp_workspace),
+                \  'capabilities': {
+                \    'textDocument': {
+                \      'completion': v:true,
+                \      'definition': v:true,
+                \      'hover': v:true,
+                \    }
+                \  }
+                \}
     call s:ch_send('initialize', s:init_params)
     call s:ch_send('initialized', {})
 endfunction
 
-function! cangjie#lsp#check() abort
-    " Check if the type is cangjie
-    if &filetype != 'cangjie'
-        echoerr 'Not a cangjie file.'
-        return
+
+function! cangjie#lsp#stop_server() abort
+    if exists('g:cj_lsp_client')
+        call job_stop(g:cj_lsp_client)
     endif
-    " just post the didChange message
-    call cangjie#lsp#change_document()
+endfunction
+
+
+function! cangjie#lsp#did_open() abort
+    let s:file = 'file://' . expand('%:p')
+    if g:cj_lsp_cache_dir == []
+        let g:cj_lsp_cache_dir = [expand('%:p:h').'/.cache']
+    else
+        call add(g:cj_lsp_cache_dir, expand('%:p:h').'/.cache')
+    endif
+    if !has_key(g:cj_file_version, s:file)
+        let g:cj_file_version[s:file] = 1
+    else
+        let g:cj_file_version[s:file] = g:cj_file_version[s:file] + 1
+    endif
+    call s:ch_send('textDocument/didOpen',
+                \ {
+                \   'textDocument': {
+                \     'uri': s:file,
+                \     'languageId': 'Cangjie',
+                \     'version': g:cj_file_version[s:file],
+                \     'text': join(getline(1, '$'), "\n")
+                \   }
+                \ })
 endfunction
 
 
@@ -157,7 +157,7 @@ function! cangjie#lsp#jump_to_definition() abort
                 \   },
                 \   'position': {
                 \     'line': line('.') - 1,
-                \     'character': col('.'),
+                \     'character': virtcol('.') - 1,
                 \   }
                 \ })
 endfunction
@@ -192,16 +192,24 @@ function! cangjie#lsp#complete() abort
                 \   },
                 \   'position': {
                 \     'line': line('.') - 1,
-                \     'character': col('.'),
+                \     'character': virtcol('.') - 1,
                 \   }
                 \ })
 endfunction
 
 
-function! cangjie#lsp#stop_server() abort
-    if exists('g:cj_lsp_client')
-        call job_stop(g:cj_lsp_client)
-    endif
+function! cangjie#lsp#hover() abort
+    call cangjie#lsp#change_document()
+    call s:ch_send('textDocument/hover',
+                \ {
+                \   'textDocument': {
+                \     'uri': 'file://' . expand('%:p'),
+                \   },
+                \   'position': {
+                \     'line': line('.') - 1,
+                \     'character': virtcol('.') - 1,
+                \   }
+                \ })
 endfunction
 
 

@@ -54,13 +54,9 @@ function! cangjie#util#start_lsp() abort
         return
     endif
     " bind shortcut
-    inoremap . .<Cmd>:call cangjie#lsp#complete()<CR>
-
-    inoremap <leader>] <Cmd>:call cangjie#lsp#jump_to_definition()<CR>
-    inoremap <leader>t <Cmd>:call cangjie#lsp#jump_back()<CR>
-
-    " use F12 to jump to definition
-    noremap <F12> :call cangjie#lsp#jump_to_definition()<CR>
+    inoremap <buffer><silent> . .<Cmd>:call cangjie#lsp#complete()<CR>
+    inoremap <buffer><silent> ` `<Cmd>:call cangjie#lsp#complete()<CR>
+    nnoremap <buffer><silent> K :call cangjie#lsp#hover()<CR>
 
     call cangjie#lsp#add_workspace(expand('%:p:h'))
     call cangjie#lsp#did_open()
@@ -107,4 +103,27 @@ function! cangjie#util#hover() abort
     endfor
 
     return join(s:found_messages, "\n")
+endfunction
+
+
+function! cangjie#util#popup(text) abort
+    if empty(a:text)
+        return
+    endif
+    let s:lines = split(a:text, "\n", 1)
+    let s:max_width = max(map(s:lines, 'strwidth(v:val)'))
+    let s:lines = split(a:text, "\n", 1)
+    let s:opts = {
+                \ 'line': 'cursor+1',
+                \ 'col': 'cursor',
+                \ 'minwidth': s:max_width,
+                \ 'padding': [1, 1, 1, 1],
+                \ 'border':  [0, 0, 0, 0],
+                \ 'zindex': 200,
+                \ 'wrap': 0,
+                \ 'moved': 'WORD',
+                \ 'close': 'click',
+                \ }
+    let s:popup_id = popup_create(s:lines, s:opts)
+    return s:popup_id
 endfunction
