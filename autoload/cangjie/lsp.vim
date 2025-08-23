@@ -30,7 +30,7 @@ function! s:ch_send(method, params) abort
 endfunction
 
 
-function! LSP#did_open() abort
+function! cangjie#lsp#did_open() abort
     let s:file = 'file://' . expand('%:p')
     if g:cj_lsp_cache_dir == []
         let g:cj_lsp_cache_dir = [expand('%:p:h').'/.cache']
@@ -54,14 +54,14 @@ function! LSP#did_open() abort
 endfunction
 
 
-function! LSP#status() abort
+function! cangjie#lsp#status() abort
     if !exists('g:cj_lsp_client')
         return 'dead'
     endif
     return job_status(g:cj_lsp_client)
 endfunction
 
-function! LSP#init() abort
+function! cangjie#lsp#start_lsp() abort
     " Check if the client is already running
     if exists('g:cj_lsp_client')
         return
@@ -82,7 +82,7 @@ function! LSP#init() abort
     let s:opts['out_io']  = 'pipe'
     let s:opts['err_io']  = 'pipe'
     let s:opts['out_cb']  = function('s:lsp_callback')
-    let s:opts['exit_cb'] = function('LSP#on_exit')
+    let s:opts['exit_cb'] = function('cangjie#lsp#on_exit')
     let s:opts['out_mode'] = 'raw'
     let g:cj_lsp_client = job_start(s:cmd, s:opts)
     
@@ -101,26 +101,18 @@ function! LSP#init() abort
     call s:ch_send('initialized', {})
 endfunction
 
-function! LSP#check() abort
+function! cangjie#lsp#check() abort
     " Check if the type is cangjie
     if &filetype != 'cangjie'
         echoerr 'Not a cangjie file.'
         return
     endif
     " just post the didChange message
-    call LSP#change_document()
-    " Post the textDocument/publishDiagnostics message
-    call s:ch_send('textDocument/publishDiagnostics',
-                \ {
-                \   'textDocument': {
-                \     'uri': 'file://' . expand('%:p'),
-                \   },
-                \   'diagnostics': [],
-                \ })
+    call cangjie#lsp#change_document()
 endfunction
 
 
-function! LSP#add_workspace(workspace) abort
+function! cangjie#lsp#add_workspace(workspace) abort
     let s:old_workspace = g:cj_lsp_workspace
     let g:cj_lsp_workspace = a:workspace
     if s:old_workspace == g:cj_lsp_workspace
@@ -142,8 +134,8 @@ function! LSP#add_workspace(workspace) abort
 endfunction
 
 
-function! LSP#jump_to_definition() abort
-    call LSP#change_document()
+function! cangjie#lsp#jump_to_definition() abort
+    call cangjie#lsp#change_document()
     call s:ch_send('textDocument/definition',
                 \ {
                 \   'textDocument': {
@@ -157,12 +149,7 @@ function! LSP#jump_to_definition() abort
 endfunction
 
 
-function! LSP#open_document() abort
-    call LSP#did_open()
-endfunction
-
-
-function! LSP#change_document() abort
+function! cangjie#lsp#change_document() abort
     let s:file = 'file://' . expand('%:p')
     if !has_key(g:cj_file_version, s:file)
         let g:cj_file_version[s:file] = 1
@@ -182,8 +169,8 @@ function! LSP#change_document() abort
 endfunction
 
 
-function! LSP#complete() abort
-    call LSP#change_document()
+function! cangjie#lsp#complete() abort
+    call cangjie#lsp#change_document()
     call s:ch_send('textDocument/completion',
                 \ {
                 \   'textDocument': {
@@ -197,7 +184,7 @@ function! LSP#complete() abort
 endfunction
 
 
-function! LSP#stop() abort
+function! cangjie#lsp#stop_lsp() abort
     if exists('g:cj_lsp_client')
         call job_stop(g:cj_lsp_client)
     endif
@@ -305,7 +292,7 @@ function s:diagnostics_callback(result) abort
 endfunction
 
 
-function! LSP#on_exit(channel, msg) abort
+function! cangjie#lsp#on_exit(channel, msg) abort
     if exists('g:cj_lsp_client')
         unlet g:cj_lsp_client
     endif

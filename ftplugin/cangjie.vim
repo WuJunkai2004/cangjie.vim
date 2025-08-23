@@ -16,7 +16,7 @@ setlocal comments=sr:/*,mb:*,ex:*/,://,b:#,b:>,b:+,b:-
 setlocal formatoptions=tcqjro
 
 " for completion (both omnifunc and keyword completion)
-setlocal omnifunc=cangjie#completion
+setlocal omnifunc=cangjie#lsp#completion
 setlocal complete=.,w,t,i
 
 setlocal completeopt=menuone,noselect
@@ -39,3 +39,14 @@ endif
 
 " compile setting
 setlocal makeprg=cjpm\ build
+
+" cangjie indent settings
+setlocal indentkeys=0{,0},0(,0),o,O
+setlocal indentexpr=cangjie#util#indent()
+
+" lsp diagnostics hint
+if has('balloon_eval') || has('balloon_eval_term')
+    setlocal ballooneval
+    setlocal balloonevalterm
+    setlocal balloonexpr=cangjie#lsp#GetHover()
+endif

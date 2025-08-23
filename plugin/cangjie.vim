@@ -1,13 +1,13 @@
 " plugin/cangjie.vim
 
 " 确保插件只加载一次，避免重复
-if exists("g:loaded_cangjie_syntax")
+if exists("g:loaded_cangjie_plugin")
     finish
 endif
-let g:loaded_cangjie_syntax = 1
+let g:loaded_cangjie_plugin = 1
 
 " 自动设置 `.cj` 文件为 cangjie 文件类型，并启用缩进规则
-augroup cangjie_syntax
+augroup cangjie_indent
     autocmd!
     autocmd FileType cangjie setlocal cindent cinoptions={:0,}:0
 augroup END
@@ -30,9 +30,9 @@ endif
 " - stop: Stop the LSP server.
 " - check: Check the grammar of the cangjie file.
 " - status: Get the status of the LSP server.
-command! -nargs=1 -complete=customlist,s:CJcmd CangjieLSP call cangjie#cmd(<f-args>)
+command! -nargs=1 -complete=customlist,s:CJcmd CangjieLSP call cangjie#util#cmd(<f-args>)
 function! s:CJcmd(base, line, cur)
-    let commands = ['start', 'stop', 'check', 'status']
+    let commands = ['start', 'stop', 'status']
     return filter(commands, 'v:val =~ "^' . a:base . '"')
 endfunction
 
@@ -44,15 +44,15 @@ let g:CJ_lsp_config = get(g:, 'CJ_lsp_config', 'intime')
 let g:CJ_lsp_config = tolower(g:CJ_lsp_config)
 
 if g:CJ_lsp_config == 'always'
-    call cangjie#init()
+    call cangjie#util#start_lsp()
 endif
 
 if g:CJ_lsp_config == 'intime'
     augroup cangjie_lsp
         autocmd!
         " When read or create a cangjie file, initialize the LSP client
-        autocmd BufRead,BufNewFile *.cj call cangjie#init()
+        autocmd BufRead,BufNewFile *.cj call cangjie#util#start_lsp()
         " When close the vim, call the exit function
-        autocmd VimLeavePre * call LSP#on_exit(0, 'exit')
+        autocmd VimLeavePre * call cangjie#lsp#on_exit(0, 'exit')
     augroup END
 endif
