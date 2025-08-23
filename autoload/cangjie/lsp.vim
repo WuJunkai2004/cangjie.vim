@@ -122,28 +122,6 @@ function! cangjie#lsp#didOpen() abort
 endfunction
 
 
-function! cangjie#lsp#didChangeWorkspaceFolders(workspace) abort
-    if g:cj_lsp_workspace == a:workspace
-        return
-    endif
-    let s:old_workspace = g:cj_lsp_workspace
-    let g:cj_lsp_workspace = a:workspace
-    call s:ch_send('workspace/didChangeWorkspaceFolders',
-                \ {
-                \   'event': {
-                \     'added': [{
-                \         'uri': 'file://' . expand(g:cj_lsp_workspace),
-                \       }
-                \     ],
-                \     'removed': [{
-                \         'uri': 'file://' . expand(s:old_workspace),
-                \       }
-                \     ]
-                \   }
-                \ })
-endfunction
-
-
 function! cangjie#lsp#jump_to_definition() abort
     call cangjie#lsp#didChange()
     call s:ch_send('textDocument/definition',

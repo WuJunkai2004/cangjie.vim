@@ -38,14 +38,16 @@ let g:CJ_lsp_config = tolower(g:CJ_lsp_config)
 
 if g:CJ_lsp_config == 'always'
     call cangjie#util#start_lsp()
+    augroup cangjie_lsp
+        autocmd!
+        autocmd VimLeavePre * call cangjie#lsp#on_exit(0, 'exit')
+    augroup END
 endif
 
 if g:CJ_lsp_config == 'intime'
     augroup cangjie_lsp
         autocmd!
-        " When read or create a cangjie file, initialize the LSP client
         autocmd BufRead,BufNewFile *.cj call cangjie#util#start_lsp()
-        " When close the vim, call the exit function
         autocmd VimLeavePre * call cangjie#lsp#on_exit(0, 'exit')
     augroup END
 endif

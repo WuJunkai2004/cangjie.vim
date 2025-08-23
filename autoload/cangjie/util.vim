@@ -53,13 +53,20 @@ function! cangjie#util#start_lsp() abort
         call timer_start(7000, {-> cangjie#util#start_lsp()})
         return
     endif
-    " bind shortcut
+
+    call cangjie#lsp#didOpen()
+endfunction
+
+
+function! cangjie#util#mapping() abort
     inoremap <buffer><silent> . .<Cmd>:call cangjie#lsp#completion()<CR>
     inoremap <buffer><silent> ` `<Cmd>:call cangjie#lsp#completion()<CR>
     nnoremap <buffer><silent> K :call cangjie#lsp#hover()<CR>
 
-    call cangjie#lsp#didChangeWorkspaceFolders(expand('%:p:h'))
-    call cangjie#lsp#didOpen()
+    augroup cangjie_lsp_cmd
+        autocmd!
+        autocmd BufWritePost <buffer> call cangjie#lsp#didChange()
+    augroup END
 endfunction
 
 
@@ -74,7 +81,6 @@ function! cangjie#util#hover() abort
 
     let s:line_text = getline(v:beval_lnum)
 
-    " 3. 遍历当前缓冲区的所有诊断信息
     let s:found_messages = []
     for s:diag in g:cj_diagnostics_by_buf[s:bufnum]
         let s:start = s:diag.range.start
