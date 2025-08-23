@@ -4,13 +4,13 @@ endfunction
 
 
 function! cangjie#callback#completion(result) abort
-    if !a:result || empty(a:result)
+    if empty(a:result) || a:result == v:null
         return
     endif
     let s:complete_content = []
     for s:item in a:result
         let s:word = s:item.insertText
-        if s:item.detail == '' && index(s:complete_content, s:word) == -1
+        if s:item.insertTextFormat == 1 && index(s:complete_content, s:word) == -1
             call add(s:complete_content, s:word)
         endif
     endfor
