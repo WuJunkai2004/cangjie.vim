@@ -54,12 +54,12 @@ function! cangjie#util#start_lsp() abort
         return
     endif
     " bind shortcut
-    inoremap <buffer><silent> . .<Cmd>:call cangjie#lsp#complete()<CR>
-    inoremap <buffer><silent> ` `<Cmd>:call cangjie#lsp#complete()<CR>
+    inoremap <buffer><silent> . .<Cmd>:call cangjie#lsp#completion()<CR>
+    inoremap <buffer><silent> ` `<Cmd>:call cangjie#lsp#completion()<CR>
     nnoremap <buffer><silent> K :call cangjie#lsp#hover()<CR>
 
-    call cangjie#lsp#add_workspace(expand('%:p:h'))
-    call cangjie#lsp#did_open()
+    call cangjie#lsp#didChangeWorkspaceFolders(expand('%:p:h'))
+    call cangjie#lsp#didOpen()
 endfunction
 
 

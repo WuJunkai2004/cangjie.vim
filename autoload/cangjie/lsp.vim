@@ -102,13 +102,9 @@ function! cangjie#lsp#stop_server() abort
 endfunction
 
 
-function! cangjie#lsp#did_open() abort
+function! cangjie#lsp#didOpen() abort
     let s:file = 'file://' . expand('%:p')
-    if g:cj_lsp_cache_dir == []
-        let g:cj_lsp_cache_dir = [expand('%:p:h').'/.cache']
-    else
-        call add(g:cj_lsp_cache_dir, expand('%:p:h').'/.cache')
-    endif
+    call add(g:cj_lsp_cache_dir, expand('%:p:h').'/.cache')
     if !has_key(g:cj_file_version, s:file)
         let g:cj_file_version[s:file] = 1
     else
@@ -126,7 +122,7 @@ function! cangjie#lsp#did_open() abort
 endfunction
 
 
-function! cangjie#lsp#add_workspace(workspace) abort
+function! cangjie#lsp#didChangeWorkspaceFolders(workspace) abort
     if g:cj_lsp_workspace == a:workspace
         return
     endif
@@ -149,7 +145,7 @@ endfunction
 
 
 function! cangjie#lsp#jump_to_definition() abort
-    call cangjie#lsp#change_document()
+    call cangjie#lsp#didChange()
     call s:ch_send('textDocument/definition',
                 \ {
                 \   'textDocument': {
@@ -163,7 +159,7 @@ function! cangjie#lsp#jump_to_definition() abort
 endfunction
 
 
-function! cangjie#lsp#change_document() abort
+function! cangjie#lsp#didChange() abort
     let s:file = 'file://' . expand('%:p')
     if !has_key(g:cj_file_version, s:file)
         let g:cj_file_version[s:file] = 1
@@ -183,8 +179,8 @@ function! cangjie#lsp#change_document() abort
 endfunction
 
 
-function! cangjie#lsp#complete() abort
-    call cangjie#lsp#change_document()
+function! cangjie#lsp#completion() abort
+    call cangjie#lsp#didChange()
     call s:ch_send('textDocument/completion',
                 \ {
                 \   'textDocument': {
@@ -199,7 +195,7 @@ endfunction
 
 
 function! cangjie#lsp#hover() abort
-    call cangjie#lsp#change_document()
+    call cangjie#lsp#didChange()
     call s:ch_send('textDocument/hover',
                 \ {
                 \   'textDocument': {
@@ -254,11 +250,6 @@ function! cangjie#lsp#on_exit(channel, msg) abort
         unlet g:cj_lsp_client
     endif
 
-    let g:cj_lsp_workspace = ''
-    let g:cj_lsp_id = 0
-    let g:cj_file_version = {}
-    let g:cj_chat_response = {}
-
     for s:dir in g:cj_lsp_cache_dir
         if isdirectory(s:dir)
             if isdirectory(s:dir . '/astdata')
@@ -272,4 +263,10 @@ function! cangjie#lsp#on_exit(channel, msg) abort
             endif
         endif
     endfor
+
+    let g:cj_lsp_workspace = ''
+    let g:cj_lsp_id = 0
+    let g:cj_lsp_cache_dir = []
+    let g:cj_file_version = {}
+    let g:cj_chat_response = {}
 endfunction
