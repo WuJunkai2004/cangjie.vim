@@ -3,6 +3,12 @@ let s:NoIdMethods = ['initialized',
                    \ 'textDocument/didOpen',
                    \ 'textDocument/didChange']
 
+let s:CallbackFuns = {
+    \ 'textDocument/completion': function('cangjie#callback#completion'),
+    \ 'textDocument/definition': function('cangjie#callback#definition'),
+    \ 'textDocument/publishDiagnostics': function('cangjie#callback#publishDiagnostics'),
+\}
+
 let g:cj_lsp_workspace = ''
 let g:cj_lsp_id = 0
 
@@ -222,21 +228,16 @@ function! s:lsp_callback(channel, msg) abort
     let s:response_json = json_decode(s:response_text)
     if has_key(s:response_json, 'id')
         let s:method = g:cj_chat_response[s:response_json.id]
-        if s:method == 'textDocument/completion'
-            call s:complete_callback(s:response_json.result)
-        elseif s:method == 'textDocument/definition'
-            call s:jump_to_definition_callback(s:response_json.result)
-        else
-            echom 'LSP response for method ' . s:method . ' is not handled.'
-        endif
+        let s:params = s:response_json.result
         call remove(g:cj_chat_response, s:response_json.id)
     elseif has_key(s:response_json, 'method')
         let s:method = s:response_json.method
-        if s:method == 'textDocument/publishDiagnostics'
-            call s:diagnostics_callback(s:response_json.params)
-        else
-            echom 'LSP notification for method ' . s:method . ' is not handled.'
-        endif
+        let s:params = s:response_json.params
+    endif
+    if has_key(s:CallbackFuns, s:method)
+        call s:CallbackFuns[s:method](s:params)
+    else
+        echom 'LSP response for method ' . s:method . ' is not handled.'
     endif
 endfunction
 

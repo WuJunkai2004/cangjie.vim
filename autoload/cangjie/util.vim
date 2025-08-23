@@ -65,3 +65,46 @@ function! cangjie#util#start_lsp() abort
     call cangjie#lsp#add_workspace(expand('%:p:h'))
     call cangjie#lsp#did_open()
 endfunction
+
+
+function! cangjie#util#hover() abort
+    if !exists('g:cj_diagnostics_by_buf')
+        let g:cj_diagnostics_by_buf = {}
+    endif
+    let s:bufnum = bufnr('%')
+    if !has_key(g:cj_diagnostics_by_buf, s:bufnum) || empty(g:cj_diagnostics_by_buf[s:bufnum])
+        return ''
+    endif
+
+    let s:line_text = getline(v:beval_lnum)
+
+    " 3. 遍历当前缓冲区的所有诊断信息
+    let s:found_messages = []
+    for s:diag in g:cj_diagnostics_by_buf[s:bufnum]
+        let s:start = s:diag.range.start
+        let s:end = s:diag.range.end
+
+        " check if the current line is within the diagnostic range
+        if (v:beval_lnum - 1) >= s:start.line && (v:beval_lnum - 1) <= s:end.line
+            let s:start_char = ((v:beval_lnum - 1) == s:start.line) ? s:start.character : 0
+            let s:end_char = ((v:beval_lnum - 1) == s:end.line) ? s:end.character : strchars(s:line_text)
+
+            " 将LSP的 0-based 字符列 转换为 Vim 的 1-based 字节列
+            let s:start_byte_col = byteidx(s:line_text, s:start_char) + 1
+            " LSP 的 end 是 exclusive (不包含), byteidx 正好需要这个值来获取结束位置
+            let s:end_byte_col = byteidx(s:line_text, s:end_char) + 1
+
+            " 如果结束位置超出本行，byteidx 返回 -1，我们将其修正到行尾
+            if s:end_byte_col <= 0
+                let s:end_byte_col = len(s:line_text) + 2
+            endif
+
+            " 判断悬停的字节列是否在诊断的字节范围内 [start, end)
+            if v:beval_col >= s:start_byte_col && v:beval_col <= s:end_byte_col
+                call add(s:found_messages, s:diag.message)
+            endif
+        endif
+    endfor
+
+    return join(s:found_messages, "\n")
+endfunction

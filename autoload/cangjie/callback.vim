@@ -36,19 +36,23 @@ endfunction
 
 
 function! cangjie#callback#publishDiagnostics(result) abort
+    if !exists('g:cj_diagnostics_by_buf')
+        let g:cj_diagnostics_by_buf = {}
+    endif
     if !has_key(a:result, 'diagnostics')
         return
     endif
-    let s:diagnostics = a:result.diagnostics
-
-    if !exists('g:cj_lsp_diagnostics')
-        let g:cj_lsp_diagnostics = []
-    else
-        for ids in g:cj_lsp_diagnostics
-            call matchdelete(ids)
+    let s:bufnum = bufnr('%')
+    if has_key(g:cj_diagnostics_by_buf, s:bufnum)
+        for s:old_diag in g:cj_diagnostics_by_buf[s:bufnum]
+            if has_key(s:old_diag, 'match_id')
+                call matchdelete(s:old_diag.match_id)
+            endif
         endfor
-        let g:cj_lsp_diagnostics = []
     endif
+
+    let g:cj_diagnostics_by_buf[s:bufnum] = []
+    let s:diagnostics = a:result.diagnostics
 
     for diag in s:diagnostics
         let s:groups = ['', 'CJ_Error', 'CJ_Warning', '', 'CJ_Hint']
@@ -56,22 +60,26 @@ function! cangjie#callback#publishDiagnostics(result) abort
         let s:oid = s:highlight(s:group,
             \ diag.range['start'].line, diag.range['start'].character,
             \ diag.range['end'].line, diag.range['end'].character)
-        if s:oid > 0
-            call add(g:cj_lsp_diagnostics, s:oid)
-        endif
+        let s:diag_entry = {
+            \ 'message': diag.message,
+            \ 'range': diag.range,
+            \ 'match_id': s:oid
+            \ }
+        call add(g:cj_diagnostics_by_buf[s:bufnum], s:diag_entry)
     endfor
 endfunction
 
 " util functions
 function! s:highlight(group, start_line, start_char, end_line, end_char) abort
     let positions = []
-    
-    " 循环处理每一行，从起始行到结束行
+
     for the_line in range(a:start_line, a:end_line)
-        let vim_lnum = the_line + 1 " LSP 行号转 Vim 行号
+        let vim_lnum = the_line + 1
         let line_text = getline(vim_lnum)
 
         let current_start_char = (the_line == a:start_line) ? a:start_char : 0
+
+        " 我们需要将结束位置视为 end + 1 (即不包含的位置)，以便计算长度。
         let current_end_char = (the_line == a:end_line) ? a:end_char + 1 : strchars(line_text)
 
         if current_start_char >= strchars(line_text) || current_start_char >= current_end_char
@@ -79,20 +87,24 @@ function! s:highlight(group, start_line, start_char, end_line, end_char) abort
         endif
 
         " 将字符列转换为字节列
-        let start_byte_col = byteidx(line_text, current_start_char) + 1
-        let end_byte_col = byteidx(line_text, current_end_char)
+        let start_byte_index = byteidx(line_text, current_start_char)
+        let end_byte_index = byteidx(line_text, current_end_char)
 
-        if start_byte_col < 0 || end_byte_col < 0
+        if start_byte_index < 0
             continue
         endif
-        
-        let byte_len = end_byte_col - (start_byte_col - 1)
+        if end_byte_index < 0
+            let end_byte_index = len(line_text)
+        endif
+
+        let start_byte_col = start_byte_index + 1
+        let byte_len = end_byte_index - start_byte_index
+
         if byte_len > 0
             call add(positions, [vim_lnum, start_byte_col, byte_len])
         endif
     endfor
 
-    " 如果有有效的位置，就调用 matchaddpos
     if !empty(positions)
         return matchaddpos(a:group, positions)
     else

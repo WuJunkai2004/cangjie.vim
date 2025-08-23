@@ -48,5 +48,5 @@ setlocal indentexpr=cangjie#util#indent()
 if cangjie#lsp#available() && ( has('balloon_eval') || has('balloon_eval_term') )
     setlocal ballooneval
     setlocal balloonevalterm
-    setlocal balloonexpr=cangjie#lsp#GetHover()
+    setlocal balloonexpr=cangjie#util#hover()
 endif
