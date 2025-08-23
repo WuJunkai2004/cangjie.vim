@@ -45,7 +45,7 @@ setlocal indentkeys=0{,0},0(,0),o,O
 setlocal indentexpr=cangjie#util#indent()
 
 " lsp diagnostics hint
-if has('balloon_eval') || has('balloon_eval_term')
+if cangjie#lsp#available() && ( has('balloon_eval') || has('balloon_eval_term') )
     setlocal ballooneval
     setlocal balloonevalterm
     setlocal balloonexpr=cangjie#lsp#GetHover()

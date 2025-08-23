@@ -30,6 +30,14 @@ function! s:ch_send(method, params) abort
 endfunction
 
 
+function! cangjie#lsp#available() abort
+    if v:version < 820 || !has('job') || !executable('LSPServer')
+        return v:false
+    endif
+    return v:true
+endfunction
+
+
 function! cangjie#lsp#did_open() abort
     let s:file = 'file://' . expand('%:p')
     if g:cj_lsp_cache_dir == []
@@ -61,7 +69,7 @@ function! cangjie#lsp#status() abort
     return job_status(g:cj_lsp_client)
 endfunction
 
-function! cangjie#lsp#start_lsp() abort
+function! cangjie#lsp#start_server() abort
     " Check if the client is already running
     if exists('g:cj_lsp_client')
         return
@@ -113,11 +121,11 @@ endfunction
 
 
 function! cangjie#lsp#add_workspace(workspace) abort
-    let s:old_workspace = g:cj_lsp_workspace
-    let g:cj_lsp_workspace = a:workspace
-    if s:old_workspace == g:cj_lsp_workspace
+    if g:cj_lsp_workspace == a:workspace
         return
     endif
+    let s:old_workspace = g:cj_lsp_workspace
+    let g:cj_lsp_workspace = a:workspace
     call s:ch_send('workspace/didChangeWorkspaceFolders',
                 \ {
                 \   'event': {
@@ -207,6 +215,9 @@ function! s:lsp_callback(channel, msg) abort
         " Remove the processed part
         let g:cj_lsp_buffer = s:response_text[s:length:]
         let s:response_text = s:response_text[:s:length - 1]
+    endif
+    if exists('g:cj_lsp_debug') && g:cj_lsp_debug
+        call writefile([s:response_text], $HOME . '/.cache/cangjie/lsp.log', 'a')
     endif
     let s:response_json = json_decode(s:response_text)
     if has_key(s:response_json, 'id')

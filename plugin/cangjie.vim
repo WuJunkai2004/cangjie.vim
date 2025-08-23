@@ -6,12 +6,6 @@ if exists("g:loaded_cangjie_plugin")
 endif
 let g:loaded_cangjie_plugin = 1
 
-" 自动设置 `.cj` 文件为 cangjie 文件类型，并启用缩进规则
-augroup cangjie_indent
-    autocmd!
-    autocmd FileType cangjie setlocal cindent cinoptions={:0,}:0
-augroup END
-
 " 过滤掉无法使用的 Vim 版本和缺少的特性
 if v:version < 820
     finish
@@ -28,7 +22,6 @@ endif
 " CangjieLSP has the 4 options above:
 " - start: Start the LSP server, whatever the configuration is.
 " - stop: Stop the LSP server.
-" - check: Check the grammar of the cangjie file.
 " - status: Get the status of the LSP server.
 command! -nargs=1 -complete=customlist,s:CJcmd CangjieLSP call cangjie#util#cmd(<f-args>)
 function! s:CJcmd(base, line, cur)

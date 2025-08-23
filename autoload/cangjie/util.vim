@@ -48,20 +48,20 @@ endfunction
 
 
 function! cangjie#util#start_lsp() abort
-    if LSP#status() == 'dead'
-        call LSP#init()
-        call timer_start(7000, {-> cangjie#init()})
+    if cangjie#lsp#status() == 'dead'
+        call cangjie#lsp#start_server()
+        call timer_start(7000, {-> cangjie#util#start_lsp()})
         return
     endif
     " bind shortcut
-    inoremap . .<Cmd>:call LSP#complete()<CR>
+    inoremap . .<Cmd>:call cangjie#lsp#complete()<CR>
 
-    inoremap <leader>] <Cmd>:call LSP#jump_to_definition()<CR>
-    inoremap <leader>t <Cmd>:call LSP#jump_back()<CR>
+    inoremap <leader>] <Cmd>:call cangjie#lsp#jump_to_definition()<CR>
+    inoremap <leader>t <Cmd>:call cangjie#lsp#jump_back()<CR>
 
     " use F12 to jump to definition
-    noremap <F12> :call LSP#jump_to_definition()<CR>
+    noremap <F12> :call cangjie#lsp#jump_to_definition()<CR>
 
-    call LSP#add_workspace(expand('%:p:h'))
-    call LSP#open_document()
+    call cangjie#lsp#add_workspace(expand('%:p:h'))
+    call cangjie#lsp#did_open()
 endfunction
