@@ -29,6 +29,7 @@ Plugin 'https://gitcode.com/Neila/cangjie.vim.git'
 - [x] 注释中的提示
 - [x] 导入的包名
 - [x] 宏
+- [ ] 带指数的数字
 - [ ] 待补充
 #### 不喜欢某些高亮？
 可以通过在`.vimrc`中添加如下如下代码来关闭某些高亮。
@@ -51,17 +52,17 @@ let g:cangjie_type_color = 0
 
 ### LSP Server
 仅在高于`vim8.2`的版本中支持。  
-> 目前正在开发中, 若有需求请联系我。  
+> 目前正在重构结构中, 若有需求请联系我。  
 #### todolist
 | status | description | shortcut key | working function
 | ------ | --- | --- | ---
-| √ | 补全 | vim default shortcut, or after dot | LSP#complete
-| √ | 跳转定义 | F12 | LSP#jump_to_definition
+| - | 补全 | vim default shortcut, or after dot | cangjie#lsp#complete
+| - | 跳转定义 | F12 | cangjie#lsp#jump_to_definition
 |   | 浏览定义 | | 
-| √ | 语法检查 | :CangjieLPS check | LSP#check
-| √ | 代码格式化 | vim default shortcut gg=G | outer script `/plugin/fmt.py` 
-|   | 重命名符号 | | 
-|   | 浮窗显示提示 | |
+| - | 语法检查 | auto, can view quickfix for details | cangjie#lsp#check
+| √ | 代码格式化 | vim default shortcut | outer script `/plugin/fmt.py` 
+|   | 重命名符号 | not in plan | 
+|   | 浮窗显示提示 | wip |
 
 #### 配置项与配置命令
 ##### 启动配置
@@ -82,5 +83,4 @@ let g:CJ_lsp_config = 'always'
 CangjieLPS start        " 无视配置项，强制开启LSP
 CangjieLPS stop         " 无视配置项，强制关闭LSP
 CangjieLPS status       " 查看当前LSP状态
-CangjieLPS check        " 对当前文件进行语法检查
 ```

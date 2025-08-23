@@ -2,7 +2,7 @@ function! cangjie#util#cmd(option) abort
     if a:option == 'start'
         call cangjie#util#start_lsp()
     elseif a:option == 'stop'
-        call cangjie#util#stop_lsp()
+        call cangjie#lsp#stop_server()
     elseif a:option == 'status'
         echo cangjie#lsp#status()
     else
