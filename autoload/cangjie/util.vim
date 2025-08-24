@@ -54,12 +54,11 @@ function! cangjie#util#start_lsp() abort
         return
     endif
 
-    echom 'did open'
-    call cangjie#lsp#didOpen()
+    doautocmd User CangjieLspServerReady
 endfunction
 
 
-function! cangjie#util#mapping() abort
+function! cangjie#util#setup_for_buffer() abort
     inoremap <buffer><silent> . .<Cmd>:call cangjie#lsp#completion()<CR>
     inoremap <buffer><silent> ` `<Cmd>:call cangjie#lsp#completion()<CR>
     nnoremap <buffer><silent> K :call cangjie#lsp#hover()<CR>
@@ -70,6 +69,8 @@ function! cangjie#util#mapping() abort
         autocmd CursorHold   <buffer> call cangjie#lsp#didChange()
         autocmd BufWritePost <buffer> call cangjie#lsp#didSave()
     augroup END
+
+    call cangjie#lsp#didOpen()
 endfunction
 
 
@@ -135,4 +136,78 @@ function! cangjie#util#popup(text) abort
                 \ }
     let s:popup_id = popup_create(s:lines, s:opts)
     return s:popup_id
+endfunction
+
+
+function! cangjie#util#highlight(group, start_line, start_char, end_line, end_char) abort
+    let positions = []
+
+    for the_line in range(a:start_line, a:end_line)
+        let vim_lnum = the_line + 1
+        let line_text = getline(vim_lnum)
+
+        let current_start_char = (the_line == a:start_line) ? a:start_char : 0
+
+        " 我们需要将结束位置视为 end + 1 (即不包含的位置)，以便计算长度。
+        let current_end_char = (the_line == a:end_line) ? a:end_char + 1 : strchars(line_text)
+
+        if current_start_char >= strchars(line_text) || current_start_char >= current_end_char
+            continue
+        endif
+
+        " 将字符列转换为字节列
+        let start_byte_index = byteidx(line_text, current_start_char)
+        let end_byte_index = byteidx(line_text, current_end_char)
+
+        if start_byte_index < 0
+            continue
+        endif
+        if end_byte_index < 0
+            let end_byte_index = len(line_text)
+        endif
+
+        let start_byte_col = start_byte_index + 1
+        let byte_len = end_byte_index - start_byte_index
+
+        if byte_len > 0
+            call add(positions, [vim_lnum, start_byte_col, byte_len])
+        endif
+    endfor
+
+    if !empty(positions)
+        return matchaddpos(a:group, positions)
+    else
+        return -1
+    endif
+endfunction
+
+
+function cangjie#util#clear_highlight(bufnum) abort
+    if !exists('g:cj_diagnostics_by_buf') || !has_key(g:cj_diagnostics_by_buf, a:bufnum)
+        return
+    endif
+    
+    for diag in g:cj_diagnostics_by_buf[a:bufnum]
+        if has_key(diag, 'match_id')
+            call matchdelete(diag.match_id)
+            unlet diag.match_id
+        endif
+    endfor
+endfunction
+
+
+function! cangjie#util#redraw_highlight() abort
+    let s:bufnum = bufnr('%')
+    if !exists('g:cj_diagnostics_by_buf') || !has_key(g:cj_diagnostics_by_buf, s:bufnum)
+        return
+    endif
+
+    for diag in g:cj_diagnostics_by_buf[s:bufnum]
+        let s:groups = ['', 'CJ_Error', 'CJ_Warning', '', 'CJ_Hint']
+        let s:group = get(s:groups, diag.severity, 'CJ_Error')
+        let s:oid = cangjie#util#highlight(s:group,
+            \ diag.range['start'].line, diag.range['start'].character,
+            \ diag.range['end'].line, diag.range['end'].character)
+        let diag.match_id = s:oid
+    endfor
 endfunction

@@ -1,5 +1,6 @@
 function! cangjie#callback#initialize(result) abort
     echom 'Cangjie LSP Server initialized.'
+    doautocmd User CangjieLspServerReady
 endfunction
 
 
@@ -62,59 +63,17 @@ function! cangjie#callback#publishDiagnostics(result) abort
     for diag in s:diagnostics
         let s:groups = ['', 'CJ_Error', 'CJ_Warning', '', 'CJ_Hint']
         let s:group = get(s:groups, diag.severity, 'CJ_Error')
-        let s:oid = s:highlight(s:group,
+        let s:oid = cangjie#util#highlight(s:group,
             \ diag.range['start'].line, diag.range['start'].character,
             \ diag.range['end'].line, diag.range['end'].character)
         let s:diag_entry = {
             \ 'message': diag.message,
             \ 'range': diag.range,
+            \ 'severity': diag.severity,
             \ 'match_id': s:oid
             \ }
         call add(g:cj_diagnostics_by_buf[s:bufnum], s:diag_entry)
     endfor
-endfunction
-
-" util functions
-function! s:highlight(group, start_line, start_char, end_line, end_char) abort
-    let positions = []
-
-    for the_line in range(a:start_line, a:end_line)
-        let vim_lnum = the_line + 1
-        let line_text = getline(vim_lnum)
-
-        let current_start_char = (the_line == a:start_line) ? a:start_char : 0
-
-        " 我们需要将结束位置视为 end + 1 (即不包含的位置)，以便计算长度。
-        let current_end_char = (the_line == a:end_line) ? a:end_char + 1 : strchars(line_text)
-
-        if current_start_char >= strchars(line_text) || current_start_char >= current_end_char
-            continue
-        endif
-
-        " 将字符列转换为字节列
-        let start_byte_index = byteidx(line_text, current_start_char)
-        let end_byte_index = byteidx(line_text, current_end_char)
-
-        if start_byte_index < 0
-            continue
-        endif
-        if end_byte_index < 0
-            let end_byte_index = len(line_text)
-        endif
-
-        let start_byte_col = start_byte_index + 1
-        let byte_len = end_byte_index - start_byte_index
-
-        if byte_len > 0
-            call add(positions, [vim_lnum, start_byte_col, byte_len])
-        endif
-    endfor
-
-    if !empty(positions)
-        return matchaddpos(a:group, positions)
-    else
-        return -1
-    endif
 endfunction
 
 
