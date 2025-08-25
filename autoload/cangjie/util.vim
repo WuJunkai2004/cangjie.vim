@@ -50,15 +50,12 @@ endfunction
 function! cangjie#util#start_lsp() abort
     if cangjie#lsp#status() == 'dead'
         call cangjie#lsp#start_server()
-        call timer_start(7000, {-> cangjie#util#start_lsp()})
-        return
     endif
-
-    doautocmd User CangjieLspServerReady
 endfunction
 
 
 function! cangjie#util#setup_for_buffer() abort
+    echom "setup_for_buffer"
     inoremap <buffer><silent> . .<Cmd>:call cangjie#lsp#completion()<CR>
     inoremap <buffer><silent> ` `<Cmd>:call cangjie#lsp#completion()<CR>
     nnoremap <buffer><silent> K :call cangjie#lsp#hover()<CR>

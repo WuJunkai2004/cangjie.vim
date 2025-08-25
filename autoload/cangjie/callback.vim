@@ -66,6 +66,9 @@ function! cangjie#callback#publishDiagnostics(result) abort
         let s:oid = cangjie#util#highlight(s:group,
             \ diag.range['start'].line, diag.range['start'].character,
             \ diag.range['end'].line, diag.range['end'].character)
+        if s:oid == -1
+            continue
+        endif
         let s:diag_entry = {
             \ 'message': diag.message,
             \ 'range': diag.range,

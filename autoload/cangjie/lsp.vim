@@ -113,7 +113,7 @@ function! cangjie#lsp#didOpen() abort
     if !has_key(g:cj_file_version, s:file)
         let g:cj_file_version[s:file] = 1
     else
-        let g:cj_file_version[s:file] = g:cj_file_version[s:file] + 1
+        return
     endif
     call s:ch_send('textDocument/didOpen',
                 \ {

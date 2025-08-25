@@ -40,6 +40,7 @@ if g:CJ_lsp_config == 'always'
     call cangjie#util#start_lsp()
     augroup cangjie_lsp
         autocmd!
+        autocmd BufRead,BufNewFile *.cj call cangjie#util#setup_for_buffer()
         autocmd VimLeavePre * call cangjie#lsp#on_exit(0, 'exit')
     augroup END
 endif
@@ -48,6 +49,7 @@ if g:CJ_lsp_config == 'intime'
     augroup cangjie_lsp
         autocmd!
         autocmd BufRead,BufNewFile *.cj call cangjie#util#start_lsp()
+        autocmd BufRead,BufNewFile *.cj call cangjie#util#setup_for_buffer()
         autocmd VimLeavePre * call cangjie#lsp#on_exit(0, 'exit')
     augroup END
 endif
