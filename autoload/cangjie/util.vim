@@ -55,7 +55,6 @@ endfunction
 
 
 function! cangjie#util#setup_for_buffer() abort
-    echom "setup_for_buffer"
     inoremap <buffer><silent> . .<Cmd>:call cangjie#lsp#completion()<CR>
     inoremap <buffer><silent> ` `<Cmd>:call cangjie#lsp#completion()<CR>
     nnoremap <buffer><silent> K :call cangjie#lsp#hover()<CR>
@@ -196,9 +195,9 @@ function cangjie#util#clear_highlight(bufnum) abort
     for diag in g:cj_diagnostics_by_buf[a:bufnum]
         if has_key(diag, 'match_id') && diag.match_id > 0 && has_key(diag, 'win_id')
             call matchdelete(diag.match_id, diag.win_id)
-            unlet diag.match_id
-            unlet diag.win_id
         endif
+        silent! unlet diag.match_id
+        silent! unlet diag.win_id
     endfor
 endfunction
 
@@ -210,6 +209,9 @@ function! cangjie#util#redraw_highlight() abort
     endif
 
     for diag in g:cj_diagnostics_by_buf[s:bufnum]
+        if has_key(diag, 'match_id')
+            continue
+        endif
         let s:groups = ['', 'CJ_Error', 'CJ_Warning', '', 'CJ_Hint']
         let s:group = get(s:groups, diag.severity, 'CJ_Error')
         let s:win_id = win_getid()
