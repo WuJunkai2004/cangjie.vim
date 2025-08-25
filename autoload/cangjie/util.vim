@@ -194,9 +194,10 @@ function cangjie#util#clear_highlight(bufnum) abort
     endif
     
     for diag in g:cj_diagnostics_by_buf[a:bufnum]
-        if has_key(diag, 'match_id')
-            call matchdelete(diag.match_id)
+        if has_key(diag, 'match_id') && diag.match_id > 0 && has_key(diag, 'win_id')
+            call matchdelete(diag.match_id, diag.win_id)
             unlet diag.match_id
+            unlet diag.win_id
         endif
     endfor
 endfunction
@@ -211,9 +212,11 @@ function! cangjie#util#redraw_highlight() abort
     for diag in g:cj_diagnostics_by_buf[s:bufnum]
         let s:groups = ['', 'CJ_Error', 'CJ_Warning', '', 'CJ_Hint']
         let s:group = get(s:groups, diag.severity, 'CJ_Error')
+        let s:win_id = win_getid()
         let s:oid = cangjie#util#highlight(s:group,
             \ diag.range['start'].line, diag.range['start'].character,
             \ diag.range['end'].line, diag.range['end'].character)
         let diag.match_id = s:oid
+        let diag.win_id = s:win_id
     endfor
 endfunction

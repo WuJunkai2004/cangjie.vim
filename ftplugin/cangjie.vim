@@ -49,7 +49,7 @@ if cangjie#lsp#available()
     augroup cangjie_lsp_buffer_display
         autocmd!
         autocmd BufEnter <buffer> call cangjie#util#redraw_highlight()
-        autocmd BufLeave <buffer> call cangjie#util#clear_highlight(expand('<abuf>'))
+        autocmd BufLeave <buffer> call cangjie#util#clear_highlight(str2nr(expand('<abuf>')))
     augroup END
 endif
 

@@ -62,6 +62,7 @@ function! cangjie#callback#publishDiagnostics(result) abort
     for diag in s:diagnostics
         let s:groups = ['', 'CJ_Error', 'CJ_Warning', '', 'CJ_Hint']
         let s:group = get(s:groups, diag.severity, 'CJ_Error')
+        let s:win_id = win_getid()
         let s:oid = cangjie#util#highlight(s:group,
             \ diag.range['start'].line, diag.range['start'].character,
             \ diag.range['end'].line, diag.range['end'].character)
@@ -72,7 +73,8 @@ function! cangjie#callback#publishDiagnostics(result) abort
             \ 'message': diag.message,
             \ 'range': diag.range,
             \ 'severity': diag.severity,
-            \ 'match_id': s:oid
+            \ 'match_id': s:oid,
+            \ 'win_id': s:win_id,
             \ }
         call add(g:cj_diagnostics_by_buf[s:bufnum], s:diag_entry)
     endfor
