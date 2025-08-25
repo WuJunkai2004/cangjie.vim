@@ -88,10 +88,31 @@ function! cangjie#lsp#start_server() abort
                 \  'processId': getpid(),
                 \  'rootUri': 'file://' . expand(g:cj_lsp_workspace),
                 \  'capabilities': {
+                \    'workspace': {
+                \      'symbol': {}
+                \    },
                 \    'textDocument': {
-                \      'completion': v:true,
-                \      'definition': v:true,
-                \      'hover': v:true,
+                \      'synchronization': {
+                \        'didSave': v:true
+                \      },
+                \      'completion': {
+                \        'completionItem': {
+                \          'documentationFormat': ['plaintext']
+                \        }
+                \      },
+                \      'definition': {},
+                \      'references': {},
+                \      'documentSymbol': {},
+                \      'formatting': {},
+                \      'rename': {},
+                \      'hover': {
+                \        'contentFormat': ['plaintext']
+                \      },
+                \      'signatureHelp': {
+                \        'signatureInformation': {
+                \          'documentationFormat': ['plaintext']
+                \        }
+                \      }
                 \    }
                 \  }
                 \}

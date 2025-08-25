@@ -82,8 +82,12 @@ endfunction
 
 
 function! cangjie#callback#hover(result) abort
-    if !a:result
+    if a:result == v:null
         return
     endif
-    echom 'I do not sure Cangjie LSP server support hover yet.'
+    if !has_key(a:result, 'contents') || !has_key(a:result.contents, 'value')
+        return
+    endif
+    let l:msg = a:result.contents.value
+    call cangjie#util#popup(l:msg)
 endfunction
