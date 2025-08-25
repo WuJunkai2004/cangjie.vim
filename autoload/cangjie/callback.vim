@@ -1,6 +1,5 @@
 function! cangjie#callback#initialize(result) abort
     echom 'Cangjie LSP Server initialized.'
-    doautocmd User CangjieLspServerReady
 endfunction
 
 

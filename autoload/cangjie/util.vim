@@ -67,6 +67,15 @@ function! cangjie#util#setup_for_buffer() abort
         autocmd BufWritePost <buffer> call cangjie#lsp#didSave()
     augroup END
 
+    call cangjie#util#open()
+endfunction
+
+function! cangjie#util#open() abort
+    if cangjie#lsp#status() == 'dead'
+        call cangjie#lsp#start_server()
+        call timer_start(1000, {-> cangjie#util#open()})
+        return
+    endif
     call cangjie#lsp#didOpen()
 endfunction
 

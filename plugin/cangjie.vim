@@ -7,19 +7,11 @@ endif
 let g:loaded_cangjie_plugin = 1
 
 " 过滤掉无法使用的 Vim 版本和缺少的特性
-if v:version < 820
+if !cangjie#lsp#available()
     finish
 endif
 
-if !has('job')
-    finish
-endif
-
-if !executable('LSPServer')
-    finish
-endif
-
-" CangjieLSP has the 4 options above:
+" CangjieLSP has the 3 options above:
 " - start: Start the LSP server, whatever the configuration is.
 " - stop: Stop the LSP server.
 " - status: Get the status of the LSP server.

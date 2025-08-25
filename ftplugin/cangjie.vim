@@ -46,11 +46,6 @@ setlocal indentexpr=cangjie#util#indent()
 
 " lsp settings
 if cangjie#lsp#available()
-    augroup cangjie_lsp_buffer_setup
-        autocmd!
-        autocmd User CangjieLspServerReady call cangjie#util#setup_for_buffer()
-    augroup END
-
     augroup cangjie_lsp_buffer_display
         autocmd!
         autocmd BufEnter <buffer> call cangjie#util#redraw_highlight()
