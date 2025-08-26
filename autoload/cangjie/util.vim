@@ -55,14 +55,11 @@ endfunction
 
 
 function! cangjie#util#setup_for_buffer() abort
-    inoremap <buffer><silent> . .<Cmd>:call cangjie#lsp#completion()<CR>
-    inoremap <buffer><silent> ` `<Cmd>:call cangjie#lsp#completion()<CR>
     nnoremap <buffer><silent> K :call cangjie#lsp#hover()<CR>
 
     augroup cangjie_lsp_cmd
         autocmd!
-        autocmd CursorHoldI  <buffer> call cangjie#lsp#didChange()
-        autocmd CursorHold   <buffer> call cangjie#lsp#didChange()
+        autocmd InsertCharPre <buffer> call cangjie#util#trigger_shortkey()
         autocmd BufWritePost <buffer> call cangjie#lsp#didSave()
     augroup END
 
@@ -76,6 +73,16 @@ function! cangjie#util#open() abort
         return
     endif
     call cangjie#lsp#didOpen()
+endfunction
+
+
+function! cangjie#util#trigger_shortkey() abort
+    let l:char = v:char
+    if l:char == '.' || l:char == '`'
+        call timer_start(0, { -> cangjie#lsp#completion() })
+    elseif l:char == '(' || l:char == ','
+        call timer_start(0, { -> cangjie#lsp#signatureHelp(l:char) })
+    endif
 endfunction
 
 

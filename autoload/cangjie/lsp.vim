@@ -11,6 +11,7 @@ let s:CallbackFuns = {
     \ 'textDocument/definition': function('cangjie#callback#definition'),
     \ 'textDocument/publishDiagnostics': function('cangjie#callback#publishDiagnostics'),
     \ 'textDocument/hover': function('cangjie#callback#hover'),
+    \ 'textDocument/signatureHelp': function('cangjie#callback#signatureHelp'),
 \}
 
 let g:cj_lsp_workspace = ''
@@ -225,6 +226,26 @@ function! cangjie#lsp#hover() abort
 endfunction
 
 
+function! cangjie#lsp#signatureHelp(char) abort
+    call cangjie#lsp#didChange()
+    call s:ch_send('textDocument/signatureHelp',
+                \ {
+                \   'textDocument': {
+                \     'uri': 'file://' . expand('%:p'),
+                \   },
+                \   'position': {
+                \     'line': line('.') - 1,
+                \     'character': virtcol('.') - 1,
+                \   },
+                \   'context': {
+                \     'triggerCharacter': a:char,
+                \     'isRetrigger': v:true,
+                \     'triggerKind': 1,
+                \   }
+                \ })
+endfunction
+
+
 function! s:lsp_callback(channel, msg) abort
     if empty(a:msg)
         return
@@ -258,6 +279,7 @@ function! s:lsp_callback(channel, msg) abort
         call s:CallbackFuns[s:method](s:params)
     else
         echom 'LSP response for method ' . s:method . ' is not handled.'
+        echom 'response => ' . s:response_text
     endif
 endfunction
 

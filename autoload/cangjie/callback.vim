@@ -4,7 +4,7 @@ endfunction
 
 
 function! cangjie#callback#completion(result) abort
-    if empty(a:result) || a:result == v:null
+    if empty(a:result)
         return
     endif
     let s:complete_content = []
@@ -82,12 +82,29 @@ endfunction
 
 
 function! cangjie#callback#hover(result) abort
-    if a:result == v:null
-        return
-    endif
-    if !has_key(a:result, 'contents') || !has_key(a:result.contents, 'value')
+    if empty(a:result) || !has_key(a:result, 'contents') || !has_key(a:result.contents, 'value')
         return
     endif
     let l:msg = a:result.contents.value
     call cangjie#util#popup(l:msg)
+endfunction
+
+
+function! cangjie#callback#signatureHelp(result) abort
+    if empty(a:result) || empty(a:result.signatures)
+        return
+    endif
+
+    let s:total_sigs = len(a:result.signatures)
+    let s:active_sig_index = get(a:result, 'activeSignature', 0)
+    let s:active_signature = a:result.signatures[s:active_sig_index]
+    let s:signature_label = s:active_signature.label
+
+    let s:display_lines = []
+    call add(s:display_lines, s:signature_label)
+    if s:total_sigs > 1
+        call add(s:display_lines, printf("(%d/%d)", s:active_sig_index + 1, s:total_sigs))
+    endif
+
+    call cangjie#util#popup(join(s:display_lines, "\n"))
 endfunction

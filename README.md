@@ -30,6 +30,7 @@ Plugin 'https://gitcode.com/Neila/cangjie.vim.git'
 - [x] 导入的包名
 - [x] 宏
 - [ ] 带指数的数字
+- [ ] 被``包裹的标识符
 - [ ] 待补充
 #### 不喜欢某些高亮？
 可以通过在`.vimrc`中添加如下如下代码来关闭某些高亮。
@@ -56,17 +57,17 @@ let g:cangjie_type_color = 0
 #### todolist
 | status | description | shortcut key | working function
 | ------ | --- | --- | ---
-| - | 代码补全 | vim default shortcut, or after dot | cangjie#lsp#completion
+| √ | 代码补全 | vim default shortcut, or after dot | cangjie#lsp#completion
 | - | 跳转到定义 | F12 | cangjie#lsp#definition
-|   | 浏览定义 | work with 悬浮提示和签名帮助 | 
+| - | 浏览定义 | work with 悬浮提示和签名帮助 | 
 | - | 语法检查 | auto, can view quickfix for details |
 | √ | 代码格式化 | vim default shortcut | outer script `/plugin/fmt.py` 
-|   | 重命名符号 | not in plan | 
+|   | 重命名符号 | wip | 
 | √ | 悬浮提示 | K, 鼠标悬浮 | cangjie#lsp#hover, cangjie#util#hover
 |   | 查找引用 | gr | 
 |   | 文档符号 | not in plan, but may be supported in future |
 |   | 工作区符号 | not in plan |
-|   | 签名帮助 | auto |
+| - | 签名帮助 | auto |
 
 #### 配置项与配置命令
 ##### 启动配置
@@ -84,7 +85,8 @@ let g:CJ_lsp_config = 'always'
 
 ##### 配置命令
 ```vim
-CangjieLPS start        " 无视配置项，强制开启LSP
-CangjieLPS stop         " 无视配置项，强制关闭LSP
-CangjieLPS status       " 查看当前LSP状态
+CangjieLSP start        " 无视配置项，强制开启LSP
+CangjieLSP stop         " 无视配置项，强制关闭LSP
+CangjieLSP status       " 查看当前LSP状态
+CangjieLSP rename [new] " 重命名符号，将当前光标所在符号重命名为[new]，未实现
 ```

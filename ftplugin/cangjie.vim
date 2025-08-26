@@ -19,7 +19,7 @@ setlocal formatoptions=tcqjro
 setlocal omnifunc=cangjie#lsp#completion
 setlocal complete=.,w,t,i
 
-setlocal completeopt=menuone,noselect
+setlocal completeopt=menuone
 
 " formatting tools and commands
 if executable('cjfmt') && ( executable('python3') || executable('python') )
