@@ -31,6 +31,7 @@ Plugin 'https://gitcode.com/Neila/cangjie.vim.git'
 - [x] 宏
 - [ ] 带指数的数字
 - [ ] 被``包裹的标识符
+- [ ] 字符串内的转义字符
 - [ ] 待补充
 #### 不喜欢某些高亮？
 可以通过在`.vimrc`中添加如下如下代码来关闭某些高亮。
@@ -86,7 +87,8 @@ let g:CJ_lsp_config = 'always'
 ##### 配置命令
 ```vim
 CangjieLSP start        " 无视配置项，强制开启LSP
-CangjieLSP stop         " 无视配置项，强制关闭LSP
+CangjieLSP kill         " 无视配置项，强制关闭LSP
 CangjieLSP status       " 查看当前LSP状态
+CangjieLSP check        " 语法检查
 CangjieLSP rename [new] " 重命名符号，将当前光标所在符号重命名为[new]，未实现
 ```

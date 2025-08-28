@@ -17,7 +17,7 @@ endif
 " - status: Get the status of the LSP server.
 command! -nargs=1 -complete=customlist,s:CJcmd CangjieLSP call cangjie#util#cmd(<f-args>)
 function! s:CJcmd(base, line, cur)
-    let commands = ['start', 'stop', 'status']
+    let commands = ['check', 'kill', 'rename', 'start', 'status']
     return filter(commands, 'v:val =~ "^' . a:base . '"')
 endfunction
 

@@ -12,6 +12,7 @@ let s:CallbackFuns = {
     \ 'textDocument/publishDiagnostics': function('cangjie#callback#publishDiagnostics'),
     \ 'textDocument/hover': function('cangjie#callback#hover'),
     \ 'textDocument/signatureHelp': function('cangjie#callback#signatureHelp'),
+    \ 'textDocument/semanticTokens/full': function('cangjie#callback#noResponse'),
 \}
 
 let g:cj_lsp_workspace = ''

@@ -108,3 +108,7 @@ function! cangjie#callback#signatureHelp(result) abort
 
     call cangjie#util#popup(join(s:display_lines, "\n"))
 endfunction
+
+
+function! cangjie#callback#noResponse(result) abort
+endfunction

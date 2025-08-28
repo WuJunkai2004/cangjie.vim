@@ -1,10 +1,12 @@
 function! cangjie#util#cmd(option) abort
     if a:option == 'start'
         call cangjie#util#start_lsp()
-    elseif a:option == 'stop'
+    elseif a:option == 'kill'
         call cangjie#lsp#stop_server()
     elseif a:option == 'status'
         echo cangjie#lsp#status()
+    elseif a:option == 'check'
+        call cangjie#lsp#semanticTokens_full()
     else
         echoerr 'Unknown option: ' . a:option
     endif

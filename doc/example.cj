@@ -18,7 +18,7 @@ struct Point {
     init(x: Float64, y: Float64) {
         this.x = x
         this.y = y
-        this.
+        this.y = 0.0
     }
 }
 
@@ -52,7 +52,7 @@ main() {
     var d = r'x' // d is 120 with type UInt8
     var e = r'\n' // e is 10 with type UInt8
     var f = r'\u{78}' // f is 120 with type UInt8
-    let g: Float32 = 3.14f64
+    let g: Float32 = 3.14f32
     let h: Float32 = 2e3
     let i: Float32 = 2.4e-1
     let j: Float64 = .123e2
