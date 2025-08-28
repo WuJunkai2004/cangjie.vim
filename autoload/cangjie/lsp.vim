@@ -246,6 +246,17 @@ function! cangjie#lsp#signatureHelp(char) abort
 endfunction
 
 
+function! cangjie#lsp#semanticTokens_full() abort
+    call cangjie#lsp#didChange()
+    call s:ch_send('textDocument/semanticTokens/full',
+                \ {
+                \   'textDocument': {
+                \     'uri': 'file://' . expand('%:p'),
+                \   }
+                \ })
+endfunction
+
+
 function! s:lsp_callback(channel, msg) abort
     if empty(a:msg)
         return
