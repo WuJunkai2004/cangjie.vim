@@ -28,6 +28,10 @@ endfunction
 let g:CJ_lsp_config = get(g:, 'CJ_lsp_config', 'intime')
 let g:CJ_lsp_config = tolower(g:CJ_lsp_config)
 
+" The configurations of Cangjie's syntax check
+let g:CJ_lsp_auto_check        = get(g:, 'CJ_lsp_auto_check', 0)
+let g:CJ_lsp_auto_open_loclist = get(g:, 'CJ_lsp_auto_open_loclist', 0)
+
 if g:CJ_lsp_config == 'always'
     call cangjie#util#start_lsp()
     augroup cangjie_lsp

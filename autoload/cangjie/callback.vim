@@ -58,6 +58,7 @@ function! cangjie#callback#publishDiagnostics(result) abort
 
     let g:cj_diagnostics_by_buf[s:bufnum] = []
     let s:diagnostics = a:result.diagnostics
+    let s:loclist_items = []
 
     for diag in s:diagnostics
         let s:groups = ['', 'CJ_Error', 'CJ_Warning', '', 'CJ_Hint']
@@ -77,7 +78,21 @@ function! cangjie#callback#publishDiagnostics(result) abort
             \ 'win_id': s:win_id,
             \ }
         call add(g:cj_diagnostics_by_buf[s:bufnum], s:diag_entry)
+        let s:types = ['E', 'E', 'W', 'I', 'I']
+        let s:loclist_item = {
+            \ 'bufnr': s:bufnum,
+            \ 'lnum': diag.range.start.line + 1,
+            \ 'col': diag.range.start.character + 1,
+            \ 'text': diag.message,
+            \ 'type': get(s:types, diag.severity, 'E'),
+            \ }
+        call add(s:loclist_items, s:loclist_item)
     endfor
+    if !empty(s:loclist_items)
+        call setloclist(0, s:loclist_items, 'r')
+    else
+        call setloclist(0, [], 'r')
+    endif
 endfunction
 
 
