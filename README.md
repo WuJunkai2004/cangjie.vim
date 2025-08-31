@@ -32,6 +32,7 @@ Plugin 'https://gitcode.com/Neila/cangjie.vim.git'
 - [ ] 带指数的数字
 - [ ] 被``包裹的标识符
 - [ ] 字符串内的转义字符
+- [ ] 由双引号包裹的Rune字面量
 - [ ] 待补充
 #### 不喜欢某些高亮？
 可以通过在`.vimrc`中添加如下如下代码来关闭某些高亮。
@@ -59,7 +60,7 @@ let g:cangjie_type_color = 0
 | status | description | shortcut key | working function
 | ------ | --- | --- | ---
 | √ | 代码补全 | vim default shortcut, or after dot | cangjie#lsp#completion
-| - | 跳转到定义 | F12 | cangjie#lsp#definition
+|   | 跳转到定义 | F12 | cangjie#lsp#definition
 | √ | 浏览定义 | work with 悬浮提示和签名帮助 | 
 | √ | 语法检查 | use `CangjieLSP check`, can view loclist for details |
 | √ | 代码格式化 | vim default shortcut | outer script `/plugin/fmt.py` 

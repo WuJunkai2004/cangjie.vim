@@ -90,6 +90,9 @@ function! cangjie#callback#publishDiagnostics(result) abort
     endfor
     if !empty(s:loclist_items)
         call setloclist(0, s:loclist_items, 'r')
+        if g:CJ_lsp_auto_open_loclist
+            lopen
+        endif
     else
         call setloclist(0, [], 'r')
     endif

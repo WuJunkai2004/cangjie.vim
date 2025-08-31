@@ -18,7 +18,7 @@ struct Point {
     init(x: Float64, y: Float64) {
         this.x = x
         this.y = y
-        this.y = 0.0
+        this.y = 0
     }
 }
 
@@ -68,7 +68,7 @@ main() {
     这是一个多行字符串。
     PI 的值约等于 ${PI}。
     """
-    let raw_string = #"原始字符串 C:\Users\Admin 不会转义 \"#
+    let raw_string = #"原始字符串 C:\Users\Admin ${PI} 不会转义 \"#
 
     // 5. 控制流语句
     if(age >= 18 && is_core) {
@@ -105,7 +105,7 @@ main() {
     // 7. 函数调用
     let p = Point(1.0, 2.0)
     let description = describe(p)
-    println(description)
+    println(description.toString())
 }
 
 // 一个简单的函数，展示参数和返回类型
