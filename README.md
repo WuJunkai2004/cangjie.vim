@@ -86,7 +86,7 @@ let g:CJ_lsp_config = 'always'
 默认配置为`intime`。
 
 ##### 语法检查配置
-```
+```vim
 " 在光标静止5秒后，自动触发语法检查
 " 由于性能原因，默认关闭，1为开启
 let g:CJ_lsp_auto_check = 1

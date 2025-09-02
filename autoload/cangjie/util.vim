@@ -16,7 +16,6 @@ endfunction
 function! cangjie#util#indent() abort
     " 获取当前行号
     let lnum = v:lnum
-
     if lnum == 1
         return 0
     endif
@@ -25,7 +24,6 @@ function! cangjie#util#indent() abort
     if prev_lnum == 0
         return 0
     endif
-
     let indent = indent(prev_lnum)
     let prev_line = getline(prev_lnum)
 
@@ -44,7 +42,6 @@ function! cangjie#util#indent() abort
     if indent < 0
         let indent = 0
     endif
-
     return indent
 endfunction
 
@@ -85,6 +82,19 @@ function! cangjie#util#trigger_shortkey() abort
     elseif l:char == '(' || l:char == ','
         call timer_start(0, { -> cangjie#lsp#signatureHelp(l:char) })
     endif
+
+    call cangjie#util#auto_diag()
+endfunction
+
+
+function! cangjie#util#auto_diag() abort
+    if !exist('g:CJ_lsp_auto_check') || g:CJ_lsp_auto_check == 0
+        return
+    endif
+    if exist('g:cj_delay_diagnostics_timer')
+        call timer_stop(g:cj_delay_diagnostics_timer)
+    endif
+    let g:cj_delay_diagnostics_timer = timer_start(5000, {-> cangjie#lsp#semanticTokens_full()})
 endfunction
 
 
