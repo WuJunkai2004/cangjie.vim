@@ -19,17 +19,13 @@ endfunction
 
 
 function! cangjie#callback#definition(result) abort
-    if !has_key(a:result, 'range')
+    if empty(a:result) || !has_key(a:result, 'range') || !has_key(a:result.range,'start')
         return
     endif
-    let s:range = a:result.range
-    if !has_key(s:range, 'start')
-        return
-    endif
-    let s:start = s:range.start
+    let s:start = a:result.range.start
     let s:lin = s:start.line + 1
     let s:col = s:start.character + 1
-    " check if in normal mode
+    normal! m'
     if mode() == 'i'
         stopinsert
         call cursor(s:lin, s:col)

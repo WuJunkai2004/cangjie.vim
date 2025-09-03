@@ -55,6 +55,8 @@ endfunction
 
 function! cangjie#util#setup_for_buffer() abort
     nnoremap <buffer><silent> K :call cangjie#lsp#hover()<CR>
+    nnoremap <buffer><silent> gd :call cangjie#lsp#definition()<CR>
+    nnoremap <buffer><silent> <C-T> <C-O>
 
     augroup cangjie_lsp_cmd
         autocmd!
