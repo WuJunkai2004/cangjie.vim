@@ -36,7 +36,7 @@ function! s:ch_send(method, params) abort
         let g:cj_chat_response[s:req.id] = a:method
     endif
     let s:json_req = json_encode(s:req)
-    if exists('g:cj_lsp_debug') && g:cj_lsp_debug
+    if exists('g:CJ_lsp_debug') && g:CJ_lsp_debug
         call writefile(["==> Server", s:json_req], $HOME . '/.cache/cangjie/lsp.log', 'a')
     endif
     let s:header = 'Content-Length: ' . len(s:json_req) . "\r\n\r\n"

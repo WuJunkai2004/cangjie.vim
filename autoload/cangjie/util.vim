@@ -56,6 +56,7 @@ endfunction
 function! cangjie#util#setup_for_buffer() abort
     nnoremap <buffer><silent> K :call cangjie#lsp#hover()<CR>
     nnoremap <buffer><silent> gd :call cangjie#lsp#definition()<CR>
+    nnoremap <buffer><silent> gr :call cangjie#lsp#references()<CR>
     nnoremap <buffer><silent> <C-T> <C-O>
 
     augroup cangjie_lsp_cmd
@@ -90,10 +91,10 @@ endfunction
 
 
 function! cangjie#util#auto_diag() abort
-    if !exist('g:CJ_lsp_auto_check') || g:CJ_lsp_auto_check == 0
+    if !exists('g:CJ_lsp_auto_check') || g:CJ_lsp_auto_check == 0
         return
     endif
-    if exist('g:cj_delay_diagnostics_timer')
+    if exists('g:cj_delay_diagnostics_timer')
         call timer_stop(g:cj_delay_diagnostics_timer)
     endif
     let g:cj_delay_diagnostics_timer = timer_start(5000, {-> cangjie#lsp#semanticTokens_full()})
