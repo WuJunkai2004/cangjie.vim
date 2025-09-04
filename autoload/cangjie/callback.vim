@@ -36,6 +36,10 @@ function! cangjie#callback#definition(result) abort
 endfunction
 
 
+function! cangjie#callback#references(result) abort
+endfunction
+
+
 function! cangjie#callback#publishDiagnostics(result) abort
     if !exists('g:cj_diagnostics_by_buf')
         let g:cj_diagnostics_by_buf = {}

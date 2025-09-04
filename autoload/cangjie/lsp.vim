@@ -12,6 +12,7 @@ let s:CallbackFuns = {
     \ 'textDocument/publishDiagnostics': function('cangjie#callback#publishDiagnostics'),
     \ 'textDocument/hover': function('cangjie#callback#hover'),
     \ 'textDocument/signatureHelp': function('cangjie#callback#signatureHelp'),
+    \ 'textDocument/references': function('cangjie#callback#references'),
     \ 'textDocument/semanticTokens/full': function('cangjie#callback#noResponse'),
 \}
 
@@ -192,6 +193,24 @@ function! cangjie#lsp#definition() abort
                 \   'position': {
                 \     'line': line('.') - 1,
                 \     'character': virtcol('.') - 1,
+                \   }
+                \ })
+endfunction
+
+
+function! cangjie#lsp#references() abort
+    call cangjie#lsp#didChange()
+    call s:ch_send('textDocument/references',
+                \ {
+                \   'textDocument': {
+                \     'uri': 'file://' . expand('%:p'),
+                \   },
+                \   'position': {
+                \     'line': line('.') - 1,
+                \     'character': virtcol('.') - 1,
+                \   },
+                \   'context': {
+                \     'includeDeclaration': v:false
                 \   }
                 \ })
 endfunction

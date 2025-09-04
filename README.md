@@ -60,7 +60,7 @@ let g:cangjie_type_color = 0
 | status | description | shortcut key | working function
 | ------ | --- | --- | ---
 | √ | 代码补全 | vim default shortcut, or after dot | cangjie#lsp#completion
-|   | 跳转到定义 | F12 | cangjie#lsp#definition
+| √ | 跳转到定义 | gd | cangjie#lsp#definition
 | √ | 浏览定义 | work with 悬浮提示和签名帮助 | 
 | √ | 语法检查 | use `CangjieLSP check`, can view loclist for details |
 | √ | 代码格式化 | vim default shortcut | outer script `/plugin/fmt.py` 
