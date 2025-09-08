@@ -244,3 +244,15 @@ function! cangjie#util#redraw_highlight() abort
         let diag.win_id = s:win_id
     endfor
 endfunction
+
+
+function! cangjie#util#uri_to_path(uri) abort
+    let s:path = a:uri
+    if s:path =~# '^file://'
+        let s:path = s:path[7:]
+        if has('win32') && s:path =~# '/\a:'
+            let s:path = s:path[1:]
+        endif
+    endif
+    return fnamemodify(s:path, ':.')
+endfunction

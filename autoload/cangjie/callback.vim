@@ -37,6 +37,29 @@ endfunction
 
 
 function! cangjie#callback#references(result) abort
+    if empty(a:result)
+        return
+    endif
+    echom json_encode(a:result)
+    let s:ref_list = []
+    for s:item in a:result
+        let s:path = cangjie#util#uri_to_path(s:item.uri)
+        if bufadd(s:path) < 0
+            continue
+        endif
+        let s:str_line = getbufline(s:path, s:item.range.start.line + 1)
+        if empty(s:str_line)
+            let s:str_line = ['']
+        endif
+        let s:ref_item = {
+            \ 'filename': s:path,
+            \ 'lnum': s:item.range.start.line + 1,
+            \ 'col': s:item.range.start.character + 1,
+            \ 'text': s:str_line[0]
+            \ }
+        call add(s:ref_list, s:ref_item)
+    endfor
+    call setqflist(s:ref_list, 'r')
 endfunction
 
 
