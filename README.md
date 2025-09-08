@@ -55,7 +55,6 @@ let g:cangjie_type_color = 0
 
 ### LSP Server
 仅在高于`vim8.2`的版本中支持。  
-> 目前正在重构结构中, 若有需求请联系我。  
 #### todolist
 | status | description | shortcut key | working function
 | ------ | --- | --- | ---
@@ -66,7 +65,7 @@ let g:cangjie_type_color = 0
 | √ | 代码格式化 | vim default shortcut | outer script `/plugin/fmt.py` 
 |   | 重命名符号 | wip | 
 | √ | 悬浮提示 | K, 鼠标悬浮 | cangjie#lsp#hover, cangjie#util#hover
-|   | 查找引用 | gr | 
+| √ | 查找引用 | gr | 
 |   | 文档符号 | not in plan, but may be supported in future |
 |   | 工作区符号 | not in plan |
 | √ | 签名帮助 | auto |
@@ -94,6 +93,18 @@ let g:CJ_lsp_auto_check = 1
 " 语法检查时，是否自动打开loclist窗口
 " 默认关闭，1为开启
 let g:CJ_lsp_auto_open_loclist = 1
+```
+
+##### 引用查找配置
+```vim
+" 查找引用时自动打开quickfix窗口
+" 默认开启，0为关闭
+let g:CJ_lsp_refer_open_qflist = 0
+
+" 查找引用时仅显示当前文件内的引用
+" 会影响 quickfix 窗口的显示内容
+" 默认关闭，1为开启
+let g:CJ_lsp_refer_current_file = 0
 ```
 
 ##### 配置命令
