@@ -49,6 +49,9 @@ function! cangjie#callback#references(result) abort
         endif
         let s:str_line = getbufline(s:path, s:item.range.start.line + 1)
         if empty(s:str_line)
+            if g:CJ_lsp_refer_current_file
+                continue
+            endif
             let s:str_line = ['']
         endif
         let s:ref_item = {
@@ -60,6 +63,9 @@ function! cangjie#callback#references(result) abort
         call add(s:ref_list, s:ref_item)
     endfor
     call setqflist(s:ref_list, 'r')
+    if g:CJ_lsp_refer_open_qflist
+        copen
+    endif
 endfunction
 
 
