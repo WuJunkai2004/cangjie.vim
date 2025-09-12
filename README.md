@@ -64,7 +64,7 @@ let g:cangjie_type_color = 0
 | √ | 浏览定义 | work with 悬浮提示和签名帮助 | 
 | √ | 语法检查 | use `CangjieLSP check`, can view loclist for details |
 | √ | 代码格式化 | vim default shortcut | outer script `/plugin/fmt.py` 
-|   | 重命名符号 | wip | 
+| - | 重命名符号 | :CangjieLSP rename [new] | 
 | √ | 悬浮提示 | K, 鼠标悬浮 | cangjie#lsp#hover, cangjie#util#hover
 | √ | 查找引用 | gr | 
 |   | 文档符号 | not in plan, but may be supported in future |

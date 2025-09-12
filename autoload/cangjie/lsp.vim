@@ -14,6 +14,7 @@ let s:CallbackFuns = {
     \ 'textDocument/signatureHelp': function('cangjie#callback#signatureHelp'),
     \ 'textDocument/references': function('cangjie#callback#references'),
     \ 'textDocument/semanticTokens/full': function('cangjie#callback#noResponse'),
+    \ 'textDocument/rename': function('cangjie#callback#noResponse'),
 \}
 
 let g:cj_lsp_workspace = ''
@@ -273,6 +274,22 @@ function! cangjie#lsp#semanticTokens_full() abort
                 \   'textDocument': {
                 \     'uri': 'file://' . expand('%:p'),
                 \   }
+                \ })
+endfunction
+
+
+function! cangjie#lsp#rename(new_name) abort
+    call cangjie#lsp#didChange()
+    call s:ch_send('textDocument/rename',
+                \ {
+                \   'textDocument': {
+                \     'uri': 'file://' . expand('%:p'),
+                \   },
+                \   'position': {
+                \     'line': line('.') - 1,
+                \     'character': virtcol('.') - 1,
+                \   },
+                \   'newName': a:new_name
                 \ })
 endfunction
 

@@ -40,7 +40,6 @@ function! cangjie#callback#references(result) abort
     if empty(a:result)
         return
     endif
-    echom json_encode(a:result)
     let s:ref_list = []
     for s:item in a:result
         let s:path = cangjie#util#uri_to_path(s:item.uri)

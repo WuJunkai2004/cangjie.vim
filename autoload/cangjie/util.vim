@@ -7,6 +7,12 @@ function! cangjie#util#cmd(option) abort
         echo cangjie#lsp#status()
     elseif a:option == 'check'
         call cangjie#lsp#semanticTokens_full()
+    elseif a:option =~# '^rename\s'
+        let s:opts = split(a:option)
+        if len(s:opts) != 2
+            echoerr 'Invalid option: '. a:option
+        endif
+        call cangjie#lsp#rename(s:opts[1])
     else
         echoerr 'Unknown option: ' . a:option
     endif
