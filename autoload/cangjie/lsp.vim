@@ -14,7 +14,7 @@ let s:CallbackFuns = {
     \ 'textDocument/signatureHelp': function('cangjie#callback#signatureHelp'),
     \ 'textDocument/references': function('cangjie#callback#references'),
     \ 'textDocument/semanticTokens/full': function('cangjie#callback#noResponse'),
-    \ 'textDocument/rename': function('cangjie#callback#noResponse'),
+    \ 'textDocument/rename': function('cangjie#callback#rename'),
 \}
 
 let g:cj_lsp_workspace = ''

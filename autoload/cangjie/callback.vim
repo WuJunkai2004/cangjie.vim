@@ -156,5 +156,50 @@ function! cangjie#callback#signatureHelp(result) abort
 endfunction
 
 
+function! cangjie#callback#rename(result) abort
+    if empty(a:result) || !has_key(a:result, 'documentChanges')
+        return
+    endif
+
+    let s:all_edits_by_uri = {}
+    let s:total_edits = 0
+    for s:doc_edit in a:result.documentChanges
+        let s:uri = s:doc_edit.textDocument.uri
+        let s:edits = s:doc_edit.edits
+        let s:all_edits_by_uri[s:uri] = s:edits
+        let s:total_edits += len(s:edits)
+    endfor
+    let s:file_count = len(keys(s:all_edits_by_uri))
+
+    for [s:uri, s:edits] in items(s:all_edits_by_uri)
+        let s:path = cangjie#util#uri_to_path(s:uri)
+        let s:bufnr = bufnr(s:path)
+
+        if s:bufnr > 0 && bufloaded(s:bufnr)
+            let s:lines = getbufline(s:bufnr, 1, '$')
+            for s:edit in reverse(s:edits)
+                let s:start_line = s:edit.range.start.line
+                let s:start_byte = byteidx(s:lines[s:start_line], s:edit.range.start.character)
+                let s:end_byte = byteidx(s:lines[s:edit.range.start.line], s:edit.range.end.character)
+                let s:line_content = s:lines[s:start_line]
+                let s:lines[s:start_line] = s:line_content[:s:start_byte-1] . s:edit.newText . s:line_content[s:end_byte:]
+            endfor
+            call setbufline(s:bufnr, 1, s:lines)
+        else
+            if !filereadable(s:path) | continue | endif " 安全檢查
+            let s:lines = readfile(s:path)
+            for s:edit in reverse(s:edits)
+                let s:start_line = s:edit.range.start.line
+                let s:start_byte = byteidx(s:lines[s:start_line], s:edit.range.start.character)
+                let s:end_byte = byteidx(s:lines[s:edit.range.start.line], s:edit.range.end.character)
+                let s:line_content = s:lines[s:start_line]
+                let s:lines[s:start_line] = s:line_content[:s:start_byte-1] . s:edit.newText . s:line_content[s:end_byte:]
+            endfor
+            call writefile(s:lines, s:path)
+        endif
+    endfor
+endfunction
+
+
 function! cangjie#callback#noResponse(result) abort
 endfunction
