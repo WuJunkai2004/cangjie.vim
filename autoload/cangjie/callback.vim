@@ -157,7 +157,7 @@ endfunction
 
 
 function! cangjie#callback#rename(result) abort
-    if empty(a:result) || !has_key(a:result, 'documentChanges')
+    if empty(a:result) || !has_key(a:result, 'documentChanges') || empty(a:result.documentChanges)
         return
     endif
 
