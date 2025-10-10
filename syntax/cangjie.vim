@@ -1,7 +1,8 @@
 " Vim syntax file
 " Language: Cangjie
 " Maintainer: Wu Junkai <wu.junkai@qq.com>
-" Last Change: 2025 Aug 17
+" Github Repo: https://github.com/WuJunkai2004/cangjie.vim
+" Last Change: 2025 Oct 11
 "
 " The Cangjie programming language is a new-generation programming
 " language oriented to full-scenario intelligence. It features
@@ -72,6 +73,7 @@ syn cluster cangjieTypeCluster contains=cangjieSpType,cangjieArrayType,cangjieHa
 syn cluster cangjieInterpolatedPart contains=@cangjieKeywordCluster,cangjieSpIdentifier,@cangjieTypeCluster,@cangjieNumberCluster,cangjieOperator
 syn region  cangjieInterpolation contained keepend start=/\${/ end=/}/ contains=@cangjieInterpolatedPart matchgroup=cangjieInterpolationDelimiter
 syn region cangjieRune   start=/r'/ skip=/\\\\\|\\'/ end=/'/ oneline
+syn region cangjieRune   start=/r"/ skip=/\\\\\|\\"/ end=/"/ oneline
 syn region cangjieRune   start=/b'/ skip=/\\\\\|\\'/ end=/'/ oneline
 syn region cangjieString start=/"/ skip=/\\\\\|\\"/ end=/"/ oneline contains=cangjieInterpolation
 syn region cangjieString start=/'/ skip=/\\\\\|\\'/ end=/'/ oneline contains=cangjieInterpolation
