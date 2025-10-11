@@ -7,11 +7,23 @@ function! cangjie#callback#completion(result) abort
     if empty(a:result)
         return
     endif
+    let s:line_str = getline('.')
+    let s:col = col('.')
+    let s:has_front_tick = (s:line_str[s:col - 2] == '`')
+    let s:has_back_tick =  (s:line_str[s:col - 1] == '`')
     let s:complete_content = []
+    let s:complete_content_dict = {}
     for s:item in a:result
         let s:word = s:item.insertText
-        if s:item.insertTextFormat == 1 && index(s:complete_content, s:word) == -1
+        if s:has_front_tick && s:word[0] == '`'
+            let s:word = s:word[1:]
+        endif
+        if s:has_back_tick && matchstr(s:word, '.$') == '`'
+            let s:word = s:word[:-2]
+        endif
+        if s:item.insertTextFormat == 1 && !has_key(s:complete_content_dict, s:word)
             call add(s:complete_content, s:word)
+            let s:complete_content_dict[s:word] = 1
         endif
     endfor
     call complete(col('.'), s:complete_content)

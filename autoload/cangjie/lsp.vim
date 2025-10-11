@@ -229,6 +229,7 @@ function! cangjie#lsp#completion() abort
                 \     'character': virtcol('.') - 1,
                 \   }
                 \ })
+    return []
 endfunction
 
 
