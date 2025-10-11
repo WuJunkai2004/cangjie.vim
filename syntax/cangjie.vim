@@ -72,12 +72,15 @@ syn cluster cangjieTypeCluster
 	\ contains=cangjieSpType,cangjieArrayType,cangjieHashType,cangjieCommonType,cangjieFloatType,cangjieIntType,cangjieUIntType
 
 " 7. character and strings
-syn cluster cangjieInterpolatedPart contains=@cangjieKeywordCluster,cangjieSpIdentifier,@cangjieTypeCluster,@cangjieNumberCluster,cangjieOperator
+syn cluster cangjieInterpolatedPart
+	\ contains=@cangjieKeywordCluster,cangjieSpIdentifier,@cangjieTypeCluster,@cangjieNumberCluster,cangjieOperator
 syn region  cangjieInterpolation contained keepend start=/\${/ end=/}/ contains=@cangjieInterpolatedPart
-syn match  cangjieEscape /\v\\u\{[0-9a-fA-F]{1,8}\}|\\./ contained
-syn region cangjieRune   start=/r'/ skip=/\\\\\|\\'/ end=/'/ oneline contains=cangjieEscape
-syn region cangjieRune   start=/r"/ skip=/\\\\\|\\"/ end=/"/ oneline contains=cangjieEscape
-syn region cangjieRune   start=/b'/ skip=/\\\\\|\\'/ end=/'/ oneline contains=cangjieEscape
+syn match cangjieEscape /\v\\u\{[0-9a-fA-F]{1,8}\}|\\./ contained
+syn match cangjieRuneError /\v[rb]'([^'\\]|\\.)*'/
+syn match cangjieRuneError /\v[rb]"([^"\\]|\\.)*"/
+syn match cangjieRune /\vr'(\\u\{[0-9a-fA-F]{1,8}\}|\\.|[^'\\])'/ contains=cangjieEscape
+syn match cangjieRune /\vr"(\\u\{[0-9a-fA-F]{1,8}\}|\\.|[^"\\])"/ contains=cangjieEscape
+syn match cangjieRune /\vb'(\\u\{[0-9a-fA-F]{1,8}\}|\\.|[^'\\])'/ contains=cangjieEscape
 syn region cangjieString start=/"/ skip=/\\\\\|\\"/ end=/"/ oneline contains=cangjieInterpolation,cangjieEscape
 syn region cangjieString start=/'/ skip=/\\\\\|\\'/ end=/'/ oneline contains=cangjieInterpolation,cangjieEscape
 syn region cangjieString start=/"""/ skip=/\\\\\|\\"/ end=/"""/ contains=cangjieInterpolation,cangjieEscape keepend
@@ -139,6 +142,7 @@ if s:enabled('operator')
 endif
 if s:enabled('string')
 	hi def link cangjieRune			Character
+	hi def link cangjieRuneError		Error
 	hi def link cangjieString		String
 	hi def link cangjieRawString		String
 	hi def link cangjieEscape		SpecialChar
