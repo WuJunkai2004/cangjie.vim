@@ -48,8 +48,12 @@ syn keyword cangjieIdentlike	false init main this true
 syn keyword cangjieVariable	const let var
 syn keyword cangjieOption	Option Some None
 syn keyword cangjieDeclaration	func struct class enum import package nextgroup=cangjieTypeName skipwhite
-syn cluster cangjieKeywordCluster
-	\ contains=cangjieDeclaration,cangjieStatement,cangjieIdentlike,cangjieVariable,cangjieOption
+syn cluster cangjieKeywordCluster contains=
+	\ cangjieDeclaration,
+	\ cangjieStatement,
+	\ cangjieIdentlike,
+	\ cangjieVariable,
+	\ cangjieOption
 
 " 3. macro (e.g., @override)
 syn match cangjieMacro /@\h\w*/
@@ -68,12 +72,22 @@ syn keyword cangjieCommonType	Bool Byte Rune String
 syn keyword cangjieFloatType	Float16 Float32 Float64
 syn keyword cangjieIntType	Int8 Int16 Int32 Int64 IntNative
 syn keyword cangjieUIntType	UInt8 UInt16 UInt32 UInt64 UIntNative
-syn cluster cangjieTypeCluster
-	\ contains=cangjieSpType,cangjieArrayType,cangjieHashType,cangjieCommonType,cangjieFloatType,cangjieIntType,cangjieUIntType
+syn cluster cangjieTypeCluster contains=
+	\ cangjieSpType,
+	\ cangjieArrayType,
+	\ cangjieHashType,
+	\ cangjieCommonType,
+	\ cangjieFloatType,
+	\ cangjieIntType,
+	\ cangjieUIntType
 
 " 7. character and strings
-syn cluster cangjieInterpolatedPart
-	\ contains=@cangjieKeywordCluster,cangjieSpIdentifier,@cangjieTypeCluster,@cangjieNumberCluster,cangjieOperator
+syn cluster cangjieInterpolatedPart contains=
+	\ @cangjieKeywordCluster,
+	\ cangjieSpIdentifier,
+	\ @cangjieTypeCluster,
+	\ @cangjieNumberCluster,
+	\ cangjieOperator
 syn region  cangjieInterpolation contained keepend start=/\${/ end=/}/ contains=@cangjieInterpolatedPart
 syn match cangjieEscape /\v\\u\{[0-9a-fA-F]{1,8}\}|\\./ contained
 syn match cangjieRuneError /\v[rb]'([^'\\]|\\.)*'/
@@ -98,8 +112,14 @@ syn match cangjieHexNumber	/\v\c<0x[0-9a-f_]+([iu](8|16|32|64))?>/
 syn match cangjieOctalNumber	/\v\c<0o[0-7_]+([iu](8|16|32|64))?>/
 syn match cangjieBinaryNumber	/\v\c<0b[01_]+([iu](8|16|32|64))?>/
 syn match cangjieDecimalNumber	/\v\c<\d[0-9_]*([iu](8|16|32|64))?>/
-syn cluster cangjieNumberCluster
-	\ contains=cangjieHexFloatNumber,cangjieFloatNumber,cangjieScienceNumber,cangjieHexNumber,cangjieOctalNumber,cangjieBinaryNumber,cangjieDecimalNumber
+syn cluster cangjieNumberCluster contains=
+	\ cangjieHexFloatNumber,
+	\ cangjieFloatNumber,
+	\ cangjieScienceNumber,
+	\ cangjieHexNumber,
+	\ cangjieOctalNumber,
+	\ cangjieBinaryNumber,
+	\ cangjieDecimalNumber
 
 " 9. operators
 syn match cangjieOperator /[-+%<>!&|^*=]=\?/
