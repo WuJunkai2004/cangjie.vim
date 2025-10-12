@@ -110,6 +110,11 @@ syn match cangjieOperator /[:]/
 syn match cangjieOperator /\.\./
 syn match cangjieVarArgs  /\.\.\./
 
+" 10. folding
+syn region cangjieFoldBraces transparent fold start='{' end='}' contains=ALLBUT,cangjieComment
+syn region cangjieFoldParens transparent fold start='(' end=')' contains=ALLBUT,cangjieComment
+syn region cangjieFoldBrackets transparent fold start='\[' end='\]' contains=ALLBUT,cangjieComment
+
 " finally, link the syntax groups to the highlight groups
 if s:enabled('comment')
 	hi def link cangjieTodo			Todo
