@@ -70,6 +70,7 @@ let g:cangjie_type_color = 0
 |   | 文档符号 | not in plan, but may be supported in future |
 |   | 工作区符号 | not in plan |
 | √ | 签名帮助 | auto |
+|   | sign栏的错误提示 | in plan |  |
 
 #### 配置项与配置命令
 ##### 启动配置
