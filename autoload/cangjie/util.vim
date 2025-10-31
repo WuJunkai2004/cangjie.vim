@@ -154,8 +154,7 @@ function! cangjie#util#popup(text) abort
         return
     endif
     let s:lines = split(a:text, "\n", 1)
-    let s:max_width = max(map(s:lines, 'strwidth(v:val)'))
-    let s:lines = split(a:text, "\n", 1)
+    let s:max_width = max(map(copy(s:lines), 'strwidth(v:val)'))
     let s:opts = {
                 \ 'line': 'cursor+1',
                 \ 'col': 'cursor',
