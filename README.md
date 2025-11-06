@@ -27,7 +27,7 @@ Plugin 'https://gitcode.com/Neila/cangjie.vim.git'
 - [x] 插值字符串
 - [x] 注释
 - [x] 注释中的提示
-- [ ] 注释中的信息(e.g. @brief @author @date)
+- [x] 注释中的信息(e.g. @brief @author @date)
 - [x] 导入的包名
 - [x] 宏
 - [x] 带指数的数字

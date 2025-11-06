@@ -5,6 +5,7 @@
  * 这是一个多行注释的例子。
  * 它可以包含 TODO, FIXME, XXX 等关键字。
  * TODO: 实现更复杂的功能。
+ * @brief: 这是一个函数的注释。
  */
 package demo
 
@@ -61,7 +62,7 @@ main() {
     let m: Float64 = 0x.2p4
 
     // 4. 字符串和插值
-    // NOTE: 根据你的语法文件，${} 符号本身可能不会高亮，但内部的表达式会
+    // NOTE: 内部的表达式会高亮
     let message = "你好, ${name}! 你的年龄是 ${age}."
     let path = '/usr/local/bin'
     let multiline_string = """

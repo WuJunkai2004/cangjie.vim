@@ -33,9 +33,13 @@ endfunction
 syn case match
 
 " 1. comments
-syn keyword cangjieTodo	TODO FIXME XXX NOTE BUG contained
-syn match   cangjieComment /\v\/\/.*/			contains=cangjieTodo
-syn region  cangjieComment start=/\/\*/ end=/\*\//	contains=cangjieTodo,@Spell
+syn keyword	cangjieTodo	TODO FIXME XXX NOTE BUG contained
+syn match	cangjieDocKeyword /\v\c\@(brief|param|return|note|warning|deprecated)/ contained
+syn match	cangjieDocKeyword /\v\c\@(author|version|date|since|file|copyright)/ contained
+syn match	cangjieDocKeyword /\v\c\@(details|link|see|throws|exception|example)/ contained
+syn match	cangjieDocKeyword /\v\c\@(private|protected|public|internal)/ contained
+syn match	cangjieComment /\v\/\/.*/		contains=cangjieTodo,cangjieDocKeyword
+syn region	cangjieComment start=/\/\*/ end=/\*\//	contains=cangjieTodo,cangjieDocKeyword,@spell
 
 " 2. keywords
 syn keyword cangjieDeclaration	abstract extend macro foreign
@@ -139,6 +143,7 @@ syn region cangjieFoldBrackets transparent fold start='\[' end='\]' contains=ALL
 " finally, link the syntax groups to the highlight groups
 if s:enabled('comment')
 	hi def link cangjieTodo			Todo
+	hi def link cangjieDocKeyword		SpecialComment
 	hi def link cangjieComment		Comment
 endif
 if s:enabled('identifier')
