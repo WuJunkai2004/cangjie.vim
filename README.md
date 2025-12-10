@@ -59,20 +59,21 @@ let g:cangjie_type_color = 0
 ### LSP Server
 仅在高于`vim8.2`的版本中支持。  
 #### todolist
-| status | description | shortcut key | working function
-| ------ | --- | --- | ---
-| √ | 代码补全 | vim default shortcut, or after dot | cangjie#lsp#completion
-| √ | 跳转到定义 | gd | cangjie#lsp#definition
-| √ | 浏览定义 | work with 悬浮提示和签名帮助 | 
-| √ | 语法检查 | use `CangjieLSP check`, can view loclist for details |
-| √ | 代码格式化 | vim default shortcut | outer script `/plugin/fmt.py` 
-| √ | 重命名符号 | :CangjieLSP rename [new] | 
-| √ | 悬浮提示 | K, 鼠标悬浮 | cangjie#lsp#hover, cangjie#util#hover
-| √ | 查找引用 | gr | 
-|   | 文档符号 | not in plan, but may be supported in future |
-|   | 工作区符号 | not in plan |
-| √ | 签名帮助 | auto |
-|   | sign栏的错误提示 | in plan |  |
+| status | description | shortcut key
+| ------ | --- | ---
+| √ | 代码补全 | vim 默认补全键 `<C-x><C-o>`, 或输入`.`后自动补全
+| √ | 跳转到定义 | `gd`
+| √ | 浏览定义 | 配合悬浮提升和签名帮助使用
+| √ | 语法检查 | 使用命令 `:CangjieLSP check`，或开启自动检查功能; 使用 `:lopen` 查看错误列表
+| √ | 代码格式化 | vim 默认格式化键(如`gg=G`)
+| √ | 重命名符号 | 使用命令 `:CangjieLSP rename [new]`
+| √ | 悬浮提示 | `K`键查看详情; 鼠标悬浮查看语法错误提示
+| √ | 查找引用 | `gr`; 使用 `:popen` 查看引用列表
+|   | 文档符号 | 暂无计划，或许会在未来实现
+|   | 工作区符号 | 暂无计划
+| √ | 签名帮助 | 输入`(`或`,`时自动弹出签名帮助
+|   | sign栏的错误提示 | 计划中
+|   | 保存时自动格式化 | 计划中
 
 #### 配置项与配置命令
 ##### 启动配置
