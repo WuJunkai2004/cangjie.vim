@@ -9,6 +9,11 @@ function! cangjie#callback#completion(result) abort
     endif
     let s:line_str = getline('.')
     let s:col = col('.')
+    let s:start = s:col
+    while s:start > 1 && s:line_str[s:start - 2] =~ '\k'
+        let s:start -= 1
+    endwhile
+    let s:prefix = s:line_str[s:start - 1 : s:col - 1]
     let s:has_front_tick = (s:line_str[s:col - 2] == '`')
     let s:has_back_tick =  (s:line_str[s:col - 1] == '`')
     let s:complete_content = []
@@ -21,12 +26,20 @@ function! cangjie#callback#completion(result) abort
         if s:has_back_tick && matchstr(s:word, '.$') == '`'
             let s:word = s:word[:-2]
         endif
+        if stridx(s:word, s:prefix) != 0
+            continue
+        endif
         if s:item.insertTextFormat == 1 && !has_key(s:complete_content_dict, s:word)
-            call add(s:complete_content, s:word)
+            call add(s:complete_content, {
+            \   "word": s:word,
+            \   "abbr": s:item.label,
+            \   'menu': get(s:item, 'detail', ''),
+            \   "info": get(s:item, 'detail', ''),
+            \})
             let s:complete_content_dict[s:word] = 1
         endif
     endfor
-    call complete(col('.'), s:complete_content)
+    call complete(s:start, s:complete_content)
 endfunction
 
 
