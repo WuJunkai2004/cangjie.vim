@@ -217,19 +217,35 @@ function! cangjie#lsp#references() abort
 endfunction
 
 
-function! cangjie#lsp#completion() abort
+function! cangjie#lsp#completion(trigger_kind) abort
     call cangjie#lsp#didChange()
     call s:ch_send('textDocument/completion',
                 \ {
                 \   'textDocument': {
                 \     'uri': 'file://' . expand('%:p'),
                 \   },
+                \   'context': {
+                \     'triggerKind': a:trigger_kind
+                \   },
                 \   'position': {
                 \     'line': line('.') - 1,
                 \     'character': virtcol('.') - 1,
                 \   }
                 \ })
-    return []
+endfunction
+
+function! cangjie#lsp#omnifunc(findstart, base) abort
+    if a:findstart
+        let l:line = getline('.')
+        let l:start = col('.') - 1
+        while l:start > 0 && l:line[l:start - 1] =~ '\k'
+            let l:start -= 1
+        endwhile
+        return l:start
+    else
+        call cangjie#lsp#completion(1)
+        return ['Loading...']
+    endif
 endfunction
 
 
@@ -312,9 +328,6 @@ function! s:lsp_callback(channel, msg) abort
         let g:cj_lsp_buffer = s:response_text[s:length:]
         let s:response_text = s:response_text[:s:length - 1]
     endif
-    if exists('g:cj_lsp_debug') && g:cj_lsp_debug
-        call writefile([s:response_text], $HOME . '/.cache/cangjie/lsp.log', 'a')
-    endif
     let s:response_json = json_decode(s:response_text)
     if has_key(s:response_json, 'id')
         let s:method = g:cj_chat_response[s:response_json.id]
@@ -324,11 +337,14 @@ function! s:lsp_callback(channel, msg) abort
         let s:method = s:response_json.method
         let s:params = s:response_json.params
     endif
+    if exists('g:cj_lsp_debug') && g:cj_lsp_debug
+        call writefile([s:method, "  " . s:response_text], $HOME . '/.cache/cangjie/lsp.log', 'a')
+    endif
     if has_key(s:CallbackFuns, s:method)
         call s:CallbackFuns[s:method](s:params)
     else
-        echom 'LSP response for method ' . s:method . ' is not handled.'
-        echom 'response => ' . s:response_text
+        echoerr 'LSP response for method ' . s:method . ' is not handled.'
+        echoerr 'response => ' . s:response_text
     endif
 endfunction
 

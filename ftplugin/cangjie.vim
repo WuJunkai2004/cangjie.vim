@@ -16,7 +16,7 @@ setlocal comments=sr:/*,mb:*,ex:*/,://,b:#,b:>,b:+,b:-
 setlocal formatoptions=tcqjro
 
 " for completion (both omnifunc and keyword completion)
-setlocal omnifunc=cangjie#lsp#completion
+setlocal omnifunc=cangjie#lsp#omnifunc
 setlocal complete=.,w,t,i
 
 setlocal completeopt=menu,menuone,noselect

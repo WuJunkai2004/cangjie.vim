@@ -87,7 +87,7 @@ endfunction
 function! cangjie#util#trigger_shortkey() abort
     let l:char = v:char
     if l:char == '.' || l:char == '`'
-        call timer_start(0, { -> cangjie#lsp#completion() })
+        call timer_start(0, { -> cangjie#lsp#completion(2) })
     elseif l:char == '(' || l:char == ','
         call timer_start(0, { -> cangjie#lsp#signatureHelp(l:char) })
     endif
