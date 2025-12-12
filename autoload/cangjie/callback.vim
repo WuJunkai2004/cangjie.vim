@@ -14,29 +14,31 @@ function! cangjie#callback#completion(result) abort
         let s:start -= 1
     endwhile
     let s:prefix = s:line_str[s:start - 1 : s:col - 1]
-    let s:has_front_tick = (s:line_str[s:col - 2] == '`')
-    let s:has_back_tick =  (s:line_str[s:col - 1] == '`')
+    let s:ctx_has_front = (s:start > 1 && s:line_str[s:start - 2] == '`')
+    let s:ctx_has_back  = (s:col <= len(s:line_str) && s:line_str[s:col - 1] == '`')
+    let s:search_prefix = substitute(s:prefix, '`', '', 'g')
     let s:complete_content = []
     let s:complete_content_dict = {}
     for s:item in a:result
-        let s:word = s:item.insertText
-        if s:has_front_tick && s:word[0] == '`'
-            let s:word = s:word[1:]
-        endif
-        if s:has_back_tick && matchstr(s:word, '.$') == '`'
-            let s:word = s:word[:-2]
-        endif
-        if stridx(s:word, s:prefix) != 0
+        let s:raw_word = s:item.insertText
+        let s:search_word = substitute(s:raw_word, '`', '', 'g')
+        if stridx(s:search_word, s:search_prefix) != 0
             continue
         endif
-        if s:item.insertTextFormat == 1 && !has_key(s:complete_content_dict, s:word)
+        let s:insert_word = s:raw_word
+        if s:ctx_has_front && s:insert_word[0] == '`'
+             let s:insert_word = s:insert_word[1:]
+        endif
+        if s:ctx_has_back && s:insert_word[len(s:insert_word)-1] == '`'
+             let s:insert_word = s:insert_word[:-2]
+        endif
+        if s:item.insertTextFormat == 1 && !has_key(s:complete_content_dict, s:insert_word)
             call add(s:complete_content, {
-            \   "word": s:word,
+            \   "word": s:insert_word,
             \   "abbr": s:item.label,
             \   'menu': get(s:item, 'detail', ''),
-            \   "info": get(s:item, 'detail', ''),
             \})
-            let s:complete_content_dict[s:word] = 1
+            let s:complete_content_dict[s:insert_word] = 1
         endif
     endfor
     call complete(s:start, s:complete_content)

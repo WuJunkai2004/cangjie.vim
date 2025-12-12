@@ -4,7 +4,7 @@
 如果有帮助的话，请点个`star`吧~
 
 - [x] 语法高亮
-- [x] 简单的LSP Server
+- [x] Language Server Protocol (LSP) 支持
 
 ## 使用方法
 ### 使用插件管理器
@@ -63,7 +63,7 @@ let g:cangjie_type_color = 0
 | ------ | --- | ---
 | √ | 代码补全 | vim 默认补全键 `<C-x><C-o>`, 或输入`.`后自动补全
 | √ | 跳转到定义 | `gd`
-| √ | 浏览定义 | 配合悬浮提升和签名帮助使用
+| √ | 浏览定义 | 配合悬浮提示和签名帮助使用
 | √ | 语法检查 | 使用命令 `:CangjieLSP check`，或开启自动检查功能; 使用 `:lopen` 查看错误列表
 | √ | 代码格式化 | vim 默认格式化键(如`gg=G`)
 | √ | 重命名符号 | 使用命令 `:CangjieLSP rename [new]`
