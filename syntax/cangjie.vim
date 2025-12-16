@@ -74,8 +74,8 @@ syn keyword cangjieArrayType	Array ArrayList VArray
 syn keyword cangjieHashType	HashMap HashSet
 syn keyword cangjieCommonType	Bool Byte Rune String
 syn keyword cangjieFloatType	Float16 Float32 Float64
-syn keyword cangjieIntType	Int8 Int16 Int32 Int64 IntNative
-syn keyword cangjieUIntType	UInt8 UInt16 UInt32 UInt64 UIntNative
+syn keyword cangjieIntType	Int Int8 Int16 Int32 Int64 IntNative
+syn keyword cangjieUIntType	UInt UInt8 UInt16 UInt32 UInt64 UIntNative
 syn cluster cangjieTypeCluster contains=
 	\ cangjieSpType,
 	\ cangjieArrayType,
