@@ -52,12 +52,15 @@ syn keyword cangjieIdentlike	false init main this true
 syn keyword cangjieVariable	const let var
 syn keyword cangjieOption	Option Some None
 syn keyword cangjieDeclaration	func struct class enum import package nextgroup=cangjieTypeName skipwhite
+syn keyword cangjieBuiltinFunc	acquireArrayRawData alignOf eprint eprintln ifNone ifSome max min
+syn keyword cangjieBuiltinFunc	print println reqEq releaseArrayRawData sizeOf sleep zeroValue
 syn cluster cangjieKeywordCluster contains=
 	\ cangjieDeclaration,
 	\ cangjieStatement,
 	\ cangjieIdentlike,
 	\ cangjieVariable,
-	\ cangjieOption
+	\ cangjieOption,
+	\ cangjieBuiltinFunc
 
 " 3. macro (e.g., @override)
 syn match cangjieMacro /@\h\w*/
