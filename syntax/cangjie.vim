@@ -159,6 +159,9 @@ if s:enabled('keyword')
 	hi def link cangjieVariable		Keyword
 	hi def link cangjieOption		Keyword
 endif
+if s:enabled('function')
+	hi def link cangjieBuiltinFunc		Function
+endif
 if s:enabled('macro')
 	hi def link cangjieMacro		PreProc
 endif

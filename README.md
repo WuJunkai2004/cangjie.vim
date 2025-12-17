@@ -35,7 +35,7 @@ Plugin 'https://gitcode.com/Neila/cangjie.vim.git'
 - [x] 字符串内的转义字符
 - [x] 由双引号包裹的Rune字面量
 - [x] 在语法层面的代码折叠支持
-- [ ] 在`std.core`中的函数（这些函数默认导入）
+- [x] 在`std.core`中的函数（这些函数默认导入）
 - [ ] 待补充
 #### 不喜欢某些高亮？
 可以通过在`.vimrc`中添加如下如下代码来关闭某些高亮。
@@ -46,6 +46,7 @@ let g:cangjie_keyword_color = 0
 可以被关闭的高亮有：
 ```vim
 let g:cangjie_comment_color = 0
+let g:cangjie_function_color = 0
 let g:cangjie_identifier_color = 0
 let g:cangjie_keyword_color = 0
 let g:cangjie_macro_color = 0
