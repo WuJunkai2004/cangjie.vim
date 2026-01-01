@@ -72,13 +72,13 @@ syn match cangjieTypeName /\h\w*/ contained
 syn region cangjieSpIdentifier start=/`/ end=/`/ oneline
 
 " 6. types
-syn keyword cangjieSpType	Any Nothing Range Unit Iterable
-syn keyword cangjieArrayType	Array ArrayList VArray
+syn keyword cangjieSpType	Nothing Range Unit LibC Duration DefaultHasher
+syn keyword cangjieArrayType	Array VArray
 syn keyword cangjieCommonType	Bool Byte Rune String
 syn keyword cangjieFloatType	Float16 Float32 Float64
 syn keyword cangjieIntType	Int Int8 Int16 Int32 Int64 IntNative
 syn keyword cangjieUIntType	UInt UInt8 UInt16 UInt32 UInt64 UIntNative
-syn keyword cangjieFFIType	CPointer CString
+syn keyword cangjieFFIType	CPointer CPointerHandle CPointerResource CString CStringResource
 syn cluster cangjieTypeCluster contains=
 	\ cangjieSpType,
 	\ cangjieArrayType,
