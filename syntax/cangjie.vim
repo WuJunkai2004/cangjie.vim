@@ -53,7 +53,7 @@ syn keyword cangjieVariable	const let var
 syn keyword cangjieOption	Option Some None
 syn keyword cangjieDeclaration	func struct class enum import package nextgroup=cangjieTypeName skipwhite
 syn keyword cangjieBuiltinFunc	acquireArrayRawData alignOf eprint eprintln ifNone ifSome max min
-syn keyword cangjieBuiltinFunc	print println reqEq releaseArrayRawData sizeOf sleep zeroValue
+syn keyword cangjieBuiltinFunc	print println readln refEq releaseArrayRawData sizeOf sleep zeroValue
 syn cluster cangjieKeywordCluster contains=
 	\ cangjieDeclaration,
 	\ cangjieStatement,
@@ -74,7 +74,6 @@ syn region cangjieSpIdentifier start=/`/ end=/`/ oneline
 " 6. types
 syn keyword cangjieSpType	Any Nothing Range Unit Iterable
 syn keyword cangjieArrayType	Array ArrayList VArray
-syn keyword cangjieHashType	HashMap HashSet
 syn keyword cangjieCommonType	Bool Byte Rune String
 syn keyword cangjieFloatType	Float16 Float32 Float64
 syn keyword cangjieIntType	Int Int8 Int16 Int32 Int64 IntNative
@@ -83,7 +82,6 @@ syn keyword cangjieFFIType	CPointer CString
 syn cluster cangjieTypeCluster contains=
 	\ cangjieSpType,
 	\ cangjieArrayType,
-	\ cangjieHashType,
 	\ cangjieCommonType,
 	\ cangjieFloatType,
 	\ cangjieIntType,
@@ -191,7 +189,6 @@ if s:enabled('type')
 	hi def link cangjieTypeName		Type
 	hi def link cangjieSpType		Type
 	hi def link cangjieArrayType		Type
-	hi def link cangjieHashType		Type
 	hi def link cangjieCommonType		Type
 	hi def link cangjieFloatType		Type
 	hi def link cangjieIntType		Type
