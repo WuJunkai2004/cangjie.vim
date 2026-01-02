@@ -79,6 +79,9 @@ syn keyword cangjieFloatType	Float16 Float32 Float64
 syn keyword cangjieIntType	Int Int8 Int16 Int32 Int64 IntNative
 syn keyword cangjieUIntType	UInt UInt8 UInt16 UInt32 UInt64 UIntNative
 syn keyword cangjieFFIType	CPointer CPointerHandle CPointerResource CString CStringResource
+syn keyword cangjieInterface	Any Hasher ThreadContext Countable Collection Less Greater
+syn keyword cangjieInterface	LessOrEqual Greater Comparable Equal NotEqual Equatable
+syn keyword cangjieInterface	Hashable Iterable Resource ToString CType
 syn cluster cangjieTypeCluster contains=
 	\ cangjieSpType,
 	\ cangjieArrayType,
@@ -86,7 +89,8 @@ syn cluster cangjieTypeCluster contains=
 	\ cangjieFloatType,
 	\ cangjieIntType,
 	\ cangjieUIntType,
-	\ cangjieFFIType
+	\ cangjieFFIType,
+	\ cangjieInterface
 
 " 7. character and strings
 syn cluster cangjieInterpolatedPart contains=
@@ -194,6 +198,7 @@ if s:enabled('type')
 	hi def link cangjieIntType		Type
 	hi def link cangjieUIntType		Type
 	hi def link cangjieFFIType		Type
+	hi def link cangjieInterface		Type
 endif
 
 let b:current_syntax = "cangjie"
