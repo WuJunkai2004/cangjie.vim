@@ -2,7 +2,7 @@
 " Language: Cangjie
 " Maintainer: Wu Junkai <wu.junkai@qq.com>
 " URL: https://github.com/WuJunkai2004/cangjie.vim
-" Last Change: 2025 Oct 12
+" Last Change: 2026 Jan 5
 "
 " The Cangjie programming language is a new-generation programming
 " language oriented to full-scenario intelligence. It features
@@ -99,7 +99,7 @@ syn keyword cangjieCoreError	IncompatiblePackageException IndexOutOfBoundsExcept
 syn keyword cangjieCoreError	NegativeArraySizeException NoneValueException OutOfMemoryError
 syn keyword cangjieCoreError	OverflowException SpawnException StackOverflowError
 syn keyword cangjieCoreError	TimeoutException UnsupportedException
-syn cluster cangjieBuiltin contains=
+syn cluster cangjieBuiltinCluster contains=
 	\ cangjieCoreFunc,
 	\ cangjieCoreItf,
 	\ cangjieCoreClass,
@@ -110,6 +110,7 @@ syn cluster cangjieInterpolatedPart contains=
 	\ @cangjieKeywordCluster,
 	\ cangjieSpIdentifier,
 	\ @cangjieTypeCluster,
+	\ @cangjieBuiltinCluster,
 	\ @cangjieNumberCluster,
 	\ cangjieOperator
 syn region  cangjieInterpolation contained keepend start=/\${/ end=/}/ contains=@cangjieInterpolatedPart
