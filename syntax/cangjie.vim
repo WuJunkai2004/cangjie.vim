@@ -93,10 +93,17 @@ syn keyword cangjieCoreItf	LessOrEqual GreaterOrEqual Comparable Equal NotEqual 
 syn keyword cangjieCoreItf	Hashable Iterable Resource ToString CType
 syn keyword cangjieCoreClass	ArrayIterator Box Future Iterator Object RangeIterator
 syn keyword cangjieCoreClass	StackTraceElement StringBuilder Thread ThreadLocal
+syn keyword cangjieCoreError	ArithmeticException Error Exception IllegalArgumentException
+syn keyword cangjieCoreError	IllegalFormatException IllegalMemoryException IllegalStateException
+syn keyword cangjieCoreError	IncompatiblePackageException IndexOutOfBoundsException InternalError
+syn keyword cangjieCoreError	NegativeArraySizeException NoneValueException OutOfMemoryError
+syn keyword cangjieCoreError	OverflowException SpawnException StackOverflowError
+syn keyword cangjieCoreError	TimeoutException UnsupportedException
 syn cluster cangjieBuiltin contains=
 	\ cangjieCoreFunc,
 	\ cangjieCoreItf,
-	\ cangjieCoreClass
+	\ cangjieCoreClass,
+	\ cangjieCoreError
 
 " 7. character and strings
 syn cluster cangjieInterpolatedPart contains=
@@ -173,6 +180,7 @@ if s:enabled('builtin')
 	hi def link cangjieCoreFunc		Function
 	hi def link cangjieCoreItf		Type
 	hi def link cangjieCoreClass		Type
+	hi def link cangjieCoreError		Structure
 endif
 if s:enabled('macro')
 	hi def link cangjieMacro		PreProc
