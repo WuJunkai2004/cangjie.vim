@@ -45,8 +45,8 @@ let g:cangjie_keyword_color = 0
 示例代码中关闭了关键字的高亮。
 可以被关闭的高亮有：
 ```vim
+let g:cangjie_builtin_color = 0
 let g:cangjie_comment_color = 0
-let g:cangjie_function_color = 0
 let g:cangjie_identifier_color = 0
 let g:cangjie_keyword_color = 0
 let g:cangjie_macro_color = 0

@@ -52,15 +52,12 @@ syn keyword cangjieIdentlike	false init main this true
 syn keyword cangjieVariable	const let var
 syn keyword cangjieOption	Option Some None
 syn keyword cangjieDeclaration	func struct class enum import package nextgroup=cangjieTypeName skipwhite
-syn keyword cangjieBuiltinFunc	acquireArrayRawData alignOf eprint eprintln ifNone ifSome max min
-syn keyword cangjieBuiltinFunc	print println readln refEq releaseArrayRawData sizeOf sleep zeroValue
 syn cluster cangjieKeywordCluster contains=
 	\ cangjieDeclaration,
 	\ cangjieStatement,
 	\ cangjieIdentlike,
 	\ cangjieVariable,
-	\ cangjieOption,
-	\ cangjieBuiltinFunc
+	\ cangjieOption
 
 " 3. macro (e.g., @override)
 syn match cangjieMacro /@\h\w*/
@@ -79,11 +76,6 @@ syn keyword cangjieFloatType	Float16 Float32 Float64
 syn keyword cangjieIntType	Int Int8 Int16 Int32 Int64 IntNative
 syn keyword cangjieUIntType	UInt UInt8 UInt16 UInt32 UInt64 UIntNative
 syn keyword cangjieFFIType	CPointer CPointerHandle CPointerResource CString CStringResource
-syn keyword cangjieInterface	Any Hasher ThreadContext Countable Collection Less Greater
-syn keyword cangjieInterface	LessOrEqual Greater Comparable Equal NotEqual Equatable
-syn keyword cangjieInterface	Hashable Iterable Resource ToString CType
-syn keyword cangjieCoreClass	ArrayIterator Box Future Iterator Object RangeIterator
-syn keyword cangjieCoreClass	StackTraceElement StringBuilder Thread ThreadLocal
 syn cluster cangjieTypeCluster contains=
 	\ cangjieSpType,
 	\ cangjieArrayType,
@@ -91,8 +83,19 @@ syn cluster cangjieTypeCluster contains=
 	\ cangjieFloatType,
 	\ cangjieIntType,
 	\ cangjieUIntType,
-	\ cangjieFFIType,
-	\ cangjieInterface,
+	\ cangjieFFIType
+
+" 6.1. builtin function/interface/class
+syn keyword cangjieCoreFunc	acquireArrayRawData alignOf eprint eprintln ifNone ifSome max min
+syn keyword cangjieCoreFunc	print println readln refEq releaseArrayRawData sizeOf sleep zeroValue
+syn keyword cangjieCoreItf	Any Hasher ThreadContext Countable Collection Less Greater
+syn keyword cangjieCoreItf	LessOrEqual GreaterOrEqual Comparable Equal NotEqual Equatable
+syn keyword cangjieCoreItf	Hashable Iterable Resource ToString CType
+syn keyword cangjieCoreClass	ArrayIterator Box Future Iterator Object RangeIterator
+syn keyword cangjieCoreClass	StackTraceElement StringBuilder Thread ThreadLocal
+syn cluster cangjieBuiltin contains=
+	\ cangjieCoreFunc,
+	\ cangjieCoreItf,
 	\ cangjieCoreClass
 
 " 7. character and strings
@@ -166,8 +169,10 @@ if s:enabled('keyword')
 	hi def link cangjieVariable		Keyword
 	hi def link cangjieOption		Keyword
 endif
-if s:enabled('function')
-	hi def link cangjieBuiltinFunc		Function
+if s:enabled('builtin')
+	hi def link cangjieCoreFunc		Function
+	hi def link cangjieCoreItf		Type
+	hi def link cangjieCoreClass		Type
 endif
 if s:enabled('macro')
 	hi def link cangjieMacro		PreProc
@@ -201,8 +206,6 @@ if s:enabled('type')
 	hi def link cangjieIntType		Type
 	hi def link cangjieUIntType		Type
 	hi def link cangjieFFIType		Type
-	hi def link cangjieInterface		Type
-	hi def link cangjieCoreClass		Type
 endif
 
 let b:current_syntax = "cangjie"
