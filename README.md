@@ -6,6 +6,8 @@
 - [x] 语法高亮
 - [x] Language Server Protocol (LSP) 支持
 
+简体中文 | [English](./README.en.md)
+
 ## 使用方法
 ### 使用插件管理器
 ```vim
@@ -16,7 +18,7 @@ Plugin 'https://gitcode.com/Neila/cangjie.vim.git'
 
 ### 语法高亮
 目前已经支持`类型、关键字、符号`等基础高亮，和大量进阶高亮。  
-本项目的语法高亮文件`syntax/cangjie.vim`，于 `vim 9.1.1647` 版本开始在`vim`中内置。  
+本项目的语法高亮文件`syntax/cangjie.vim`，于 `vim 9.2` 版本开始在`vim`中内置。  
 并已经在`neovim`中被同步。  
 > 若有高亮缺失，请提交`issue`或`PR`。
 #### todolist
@@ -59,6 +61,7 @@ let g:cangjie_type_color = 0
 
 ### LSP Server
 仅在高于`vim8.2`的版本中支持。  
+> 若需要更多功能，请提交`issue`或`PR`。  
 #### todolist
 | status | description | shortcut key
 | ------ | --- | ---
