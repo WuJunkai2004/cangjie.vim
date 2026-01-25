@@ -8,11 +8,11 @@ function! cangjie#util#cmd(option) abort
     elseif a:option == 'check'
         call cangjie#lsp#semanticTokens_full()
     elseif a:option =~# '^rename\s'
-        let s:opts = split(a:option)
-        if len(s:opts) != 2
+        let l:opts = split(a:option)
+        if len(l:opts) != 2
             echoerr 'Invalid option: '. a:option
         endif
-        call cangjie#lsp#rename(s:opts[1])
+        call cangjie#lsp#rename(l:opts[1])
     else
         echoerr 'Unknown option: ' . a:option
     endif
@@ -111,41 +111,41 @@ function! cangjie#util#hover() abort
     if !exists('g:cj_diagnostics_by_buf')
         let g:cj_diagnostics_by_buf = {}
     endif
-    let s:bufnum = bufnr('%')
-    if !has_key(g:cj_diagnostics_by_buf, s:bufnum) || empty(g:cj_diagnostics_by_buf[s:bufnum])
+    let l:bufnum = bufnr('%')
+    if !has_key(g:cj_diagnostics_by_buf, l:bufnum) || empty(g:cj_diagnostics_by_buf[l:bufnum])
         return ''
     endif
 
-    let s:line_text = getline(v:beval_lnum)
+    let l:line_text = getline(v:beval_lnum)
 
-    let s:found_messages = []
-    for s:diag in g:cj_diagnostics_by_buf[s:bufnum]
-        let s:start = s:diag.range.start
-        let s:end = s:diag.range.end
+    let l:found_messages = []
+    for l:diag in g:cj_diagnostics_by_buf[l:bufnum]
+        let l:start = l:diag.range.start
+        let l:end = l:diag.range.end
 
         " check if the current line is within the diagnostic range
-        if (v:beval_lnum - 1) >= s:start.line && (v:beval_lnum - 1) <= s:end.line
-            let s:start_char = ((v:beval_lnum - 1) == s:start.line) ? s:start.character : 0
-            let s:end_char = ((v:beval_lnum - 1) == s:end.line) ? s:end.character : strchars(s:line_text)
+        if (v:beval_lnum - 1) >= l:start.line && (v:beval_lnum - 1) <= l:end.line
+            let l:start_char = ((v:beval_lnum - 1) == l:start.line) ? l:start.character : 0
+            let l:end_char = ((v:beval_lnum - 1) == l:end.line) ? l:end.character : strchars(l:line_text)
 
             " 将LSP的 0-based 字符列 转换为 Vim 的 1-based 字节列
-            let s:start_byte_col = byteidx(s:line_text, s:start_char) + 1
+            let l:start_byte_col = byteidx(l:line_text, l:start_char) + 1
             " LSP 的 end 是 exclusive (不包含), byteidx 正好需要这个值来获取结束位置
-            let s:end_byte_col = byteidx(s:line_text, s:end_char) + 1
+            let l:end_byte_col = byteidx(l:line_text, l:end_char) + 1
 
             " 如果结束位置超出本行，byteidx 返回 -1，我们将其修正到行尾
-            if s:end_byte_col <= 0
-                let s:end_byte_col = len(s:line_text) + 2
+            if l:end_byte_col <= 0
+                let l:end_byte_col = len(l:line_text) + 2
             endif
 
             " 判断悬停的字节列是否在诊断的字节范围内 [start, end)
-            if v:beval_col >= s:start_byte_col && v:beval_col <= s:end_byte_col
-                call add(s:found_messages, s:diag.message)
+            if v:beval_col >= l:start_byte_col && v:beval_col <= l:end_byte_col
+                call add(l:found_messages, l:diag.message)
             endif
         endif
     endfor
 
-    return join(s:found_messages, "\n")
+    return join(l:found_messages, "\n")
 endfunction
 
 
@@ -153,12 +153,12 @@ function! cangjie#util#popup(text) abort
     if empty(a:text)
         return
     endif
-    let s:lines = split(a:text, "\n", 1)
-    let s:max_width = max(map(copy(s:lines), 'strwidth(v:val)'))
-    let s:opts = {
+    let l:lines = split(a:text, "\n", 1)
+    let l:max_width = max(map(copy(l:lines), 'strwidth(v:val)'))
+    let l:opts = {
                 \ 'line': 'cursor+1',
                 \ 'col': 'cursor',
-                \ 'minwidth': s:max_width,
+                \ 'minwidth': l:max_width,
                 \ 'padding': [1, 1, 1, 1],
                 \ 'border':  [0, 0, 0, 0],
                 \ 'zindex': 200,
@@ -166,8 +166,8 @@ function! cangjie#util#popup(text) abort
                 \ 'moved': 'WORD',
                 \ 'close': 'click',
                 \ }
-    let s:popup_id = popup_create(s:lines, s:opts)
-    return s:popup_id
+    let l:popup_id = popup_create(l:lines, l:opts)
+    return l:popup_id
 endfunction
 
 
@@ -230,34 +230,34 @@ endfunction
 
 
 function! cangjie#util#redraw_highlight() abort
-    let s:bufnum = bufnr('%')
-    if !exists('g:cj_diagnostics_by_buf') || !has_key(g:cj_diagnostics_by_buf, s:bufnum)
+    let l:bufnum = bufnr('%')
+    if !exists('g:cj_diagnostics_by_buf') || !has_key(g:cj_diagnostics_by_buf, l:bufnum)
         return
     endif
 
-    for diag in g:cj_diagnostics_by_buf[s:bufnum]
+    for diag in g:cj_diagnostics_by_buf[l:bufnum]
         if has_key(diag, 'match_id')
             continue
         endif
-        let s:groups = ['', 'CJ_Error', 'CJ_Warning', '', 'CJ_Hint']
-        let s:group = get(s:groups, diag.severity, 'CJ_Error')
-        let s:win_id = win_getid()
-        let s:oid = cangjie#util#highlight(s:group,
+        let l:groups = ['', 'CJ_Error', 'CJ_Warning', '', 'CJ_Hint']
+        let l:group = get(l:groups, diag.severity, 'CJ_Error')
+        let l:win_id = win_getid()
+        let l:oid = cangjie#util#highlight(l:group,
             \ diag.range['start'].line, diag.range['start'].character,
             \ diag.range['end'].line, diag.range['end'].character)
-        let diag.match_id = s:oid
-        let diag.win_id = s:win_id
+        let diag.match_id = l:oid
+        let diag.win_id = l:win_id
     endfor
 endfunction
 
 
 function! cangjie#util#uri_to_path(uri) abort
-    let s:path = a:uri
-    if s:path =~# '^file://'
-        let s:path = s:path[7:]
-        if has('win32') && s:path =~# '/\a:'
-            let s:path = s:path[1:]
+    let l:path = a:uri
+    if l:path =~# '^file://'
+        let l:path = l:path[7:]
+        if has('win32') && l:path =~# '/\a:'
+            let l:path = l:path[1:]
         endif
     endif
-    return fnamemodify(s:path, ':.')
+    return fnamemodify(l:path, ':.')
 endfunction
