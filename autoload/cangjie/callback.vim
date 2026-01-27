@@ -115,20 +115,20 @@ function! cangjie#callback#publishDiagnostics(result) abort
     let l:diagnostics = a:result.diagnostics
     let l:loclist_items = []
 
-    for diag in l:diagnostics
-        let l:groups = ['', 'CJ_Error', 'CJ_Warning', '', 'CJ_Hint']
-        let l:group = get(l:groups, diag.severity, 'CJ_Error')
+    let l:groups = ['', 'CJ_Error', 'CJ_Warning', '', 'CJ_Hint']
+    for l:diag in l:diagnostics
+        let l:group = get(l:groups, l:diag.severity, 'CJ_Error')
         let l:win_id = win_getid()
         let l:oid = cangjie#util#highlight(l:group,
-            \ diag.range['start'].line, diag.range['start'].character,
-            \ diag.range['end'].line, diag.range['end'].character)
+            \ l:diag.range['start'].line, l:diag.range['start'].character,
+            \ l:diag.range['end'].line, l:diag.range['end'].character)
         if l:oid == -1
             continue
         endif
         let l:diag_entry = {
-            \ 'message': diag.message,
-            \ 'range': diag.range,
-            \ 'severity': diag.severity,
+            \ 'message': l:diag.message,
+            \ 'range': l:diag.range,
+            \ 'severity': l:diag.severity,
             \ 'match_id': l:oid,
             \ 'win_id': l:win_id,
             \ }
@@ -136,10 +136,10 @@ function! cangjie#callback#publishDiagnostics(result) abort
         let l:types = ['E', 'E', 'W', 'I', 'I']
         let l:loclist_item = {
             \ 'bufnr': l:bufnum,
-            \ 'lnum': diag.range.start.line + 1,
-            \ 'col': diag.range.start.character + 1,
-            \ 'text': diag.message,
-            \ 'type': get(l:types, diag.severity, 'E'),
+            \ 'lnum': l:diag.range.start.line + 1,
+            \ 'col': l:diag.range.start.character + 1,
+            \ 'text': l:diag.message,
+            \ 'type': get(l:types, l:diag.severity, 'E'),
             \ }
         call add(l:loclist_items, l:loclist_item)
     endfor
