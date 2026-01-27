@@ -235,11 +235,11 @@ function! cangjie#util#redraw_highlight() abort
         return
     endif
 
+    let l:groups = ['', 'CJ_Error', 'CJ_Warning', '', 'CJ_Hint']
     for diag in g:cj_diagnostics_by_buf[l:bufnum]
         if has_key(diag, 'match_id')
             continue
         endif
-        let l:groups = ['', 'CJ_Error', 'CJ_Warning', '', 'CJ_Hint']
         let l:group = get(l:groups, diag.severity, 'CJ_Error')
         let l:win_id = win_getid()
         let l:oid = cangjie#util#highlight(l:group,
