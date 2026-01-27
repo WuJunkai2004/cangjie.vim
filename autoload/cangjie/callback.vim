@@ -7,41 +7,41 @@ function! cangjie#callback#completion(result) abort
     if empty(a:result)
         return
     endif
-    let s:line_str = getline('.')
-    let s:col = col('.')
-    let s:start = s:col
-    while s:start > 1 && s:line_str[s:start - 2] =~ '\k'
-        let s:start -= 1
+    let l:line_str = getline('.')
+    let l:col = col('.')
+    let l:start = l:col
+    while l:start > 1 && l:line_str[l:start - 2] =~ '\k'
+        let l:start -= 1
     endwhile
-    let s:prefix = s:line_str[s:start - 1 : s:col - 1]
-    let s:ctx_has_front = (s:start > 1 && s:line_str[s:start - 2] == '`')
-    let s:ctx_has_back  = (s:col <= len(s:line_str) && s:line_str[s:col - 1] == '`')
-    let s:search_prefix = substitute(s:prefix, '`', '', 'g')
-    let s:complete_content = []
-    let s:complete_content_dict = {}
-    for s:item in a:result
-        let s:raw_word = s:item.insertText
-        let s:search_word = substitute(s:raw_word, '`', '', 'g')
-        if stridx(s:search_word, s:search_prefix) != 0
+    let l:prefix = l:line_str[l:start - 1 : l:col - 1]
+    let l:ctx_has_front = (l:start > 1 && l:line_str[l:start - 2] == '`')
+    let l:ctx_has_back  = (l:col <= len(l:line_str) && l:line_str[l:col - 1] == '`')
+    let l:search_prefix = substitute(l:prefix, '`', '', 'g')
+    let l:complete_content = []
+    let l:complete_content_dict = {}
+    for l:item in a:result
+        let l:raw_word = l:item.insertText
+        let l:search_word = substitute(l:raw_word, '`', '', 'g')
+        if stridx(l:search_word, l:search_prefix) != 0
             continue
         endif
-        let s:insert_word = s:raw_word
-        if s:ctx_has_front && s:insert_word[0] == '`'
-             let s:insert_word = s:insert_word[1:]
+        let l:insert_word = l:raw_word
+        if l:ctx_has_front && l:insert_word[0] == '`'
+             let l:insert_word = l:insert_word[1:]
         endif
-        if s:ctx_has_back && s:insert_word[len(s:insert_word)-1] == '`'
-             let s:insert_word = s:insert_word[:-2]
+        if l:ctx_has_back && l:insert_word[len(l:insert_word)-1] == '`'
+             let l:insert_word = l:insert_word[:-2]
         endif
-        if s:item.insertTextFormat == 1 && !has_key(s:complete_content_dict, s:insert_word)
-            call add(s:complete_content, {
-            \   "word": s:insert_word,
-            \   "abbr": s:item.label,
-            \   'menu': get(s:item, 'detail', ''),
+        if l:item.insertTextFormat == 1 && !has_key(l:complete_content_dict, l:insert_word)
+            call add(l:complete_content, {
+            \   "word": l:insert_word,
+            \   "abbr": l:item.label,
+            \   'menu': get(l:item, 'detail', ''),
             \})
-            let s:complete_content_dict[s:insert_word] = 1
+            let l:complete_content_dict[l:insert_word] = 1
         endif
     endfor
-    call complete(s:start, s:complete_content)
+    call complete(l:start, l:complete_content)
 endfunction
 
 
@@ -49,16 +49,16 @@ function! cangjie#callback#definition(result) abort
     if empty(a:result) || !has_key(a:result, 'range') || !has_key(a:result.range,'start')
         return
     endif
-    let s:start = a:result.range.start
-    let s:lin = s:start.line + 1
-    let s:col = s:start.character + 1
+    let l:start = a:result.range.start
+    let l:lin = l:start.line + 1
+    let l:col = l:start.character + 1
     normal! m'
     if mode() == 'i'
         stopinsert
-        call cursor(s:lin, s:col)
+        call cursor(l:lin, l:col)
         startinsert
     else
-        call cursor(s:lin, s:col)
+        call cursor(l:lin, l:col)
     endif
 endfunction
 
@@ -67,28 +67,28 @@ function! cangjie#callback#references(result) abort
     if empty(a:result)
         return
     endif
-    let s:ref_list = []
-    for s:item in a:result
-        let s:path = cangjie#util#uri_to_path(s:item.uri)
-        if bufadd(s:path) < 0
+    let l:ref_list = []
+    for l:item in a:result
+        let l:path = cangjie#util#uri_to_path(l:item.uri)
+        if bufadd(l:path) < 0
             continue
         endif
-        let s:str_line = getbufline(s:path, s:item.range.start.line + 1)
-        if empty(s:str_line)
+        let l:str_line = getbufline(l:path, l:item.range.start.line + 1)
+        if empty(l:str_line)
             if g:CJ_lsp_refer_current_file
                 continue
             endif
-            let s:str_line = ['']
+            let l:str_line = ['']
         endif
-        let s:ref_item = {
-            \ 'filename': s:path,
-            \ 'lnum': s:item.range.start.line + 1,
-            \ 'col': s:item.range.start.character + 1,
-            \ 'text': s:str_line[0]
+        let l:ref_item = {
+            \ 'filename': l:path,
+            \ 'lnum': l:item.range.start.line + 1,
+            \ 'col': l:item.range.start.character + 1,
+            \ 'text': l:str_line[0]
             \ }
-        call add(s:ref_list, s:ref_item)
+        call add(l:ref_list, l:ref_item)
     endfor
-    call setqflist(s:ref_list, 'r')
+    call setqflist(l:ref_list, 'r')
     if g:CJ_lsp_refer_open_qflist
         copen
     endif
@@ -102,49 +102,49 @@ function! cangjie#callback#publishDiagnostics(result) abort
     if !has_key(a:result, 'diagnostics')
         return
     endif
-    let s:bufnum = bufnr('%')
-    if has_key(g:cj_diagnostics_by_buf, s:bufnum)
-        for s:old_diag in g:cj_diagnostics_by_buf[s:bufnum]
-            if has_key(s:old_diag, 'match_id')
-                call matchdelete(s:old_diag.match_id)
+    let l:bufnum = bufnr('%')
+    if has_key(g:cj_diagnostics_by_buf, l:bufnum)
+        for l:old_diag in g:cj_diagnostics_by_buf[l:bufnum]
+            if has_key(l:old_diag, 'match_id')
+                call matchdelete(l:old_diag.match_id)
             endif
         endfor
     endif
 
-    let g:cj_diagnostics_by_buf[s:bufnum] = []
-    let s:diagnostics = a:result.diagnostics
-    let s:loclist_items = []
+    let g:cj_diagnostics_by_buf[l:bufnum] = []
+    let l:diagnostics = a:result.diagnostics
+    let l:loclist_items = []
 
-    for diag in s:diagnostics
-        let s:groups = ['', 'CJ_Error', 'CJ_Warning', '', 'CJ_Hint']
-        let s:group = get(s:groups, diag.severity, 'CJ_Error')
-        let s:win_id = win_getid()
-        let s:oid = cangjie#util#highlight(s:group,
+    for diag in l:diagnostics
+        let l:groups = ['', 'CJ_Error', 'CJ_Warning', '', 'CJ_Hint']
+        let l:group = get(l:groups, diag.severity, 'CJ_Error')
+        let l:win_id = win_getid()
+        let l:oid = cangjie#util#highlight(l:group,
             \ diag.range['start'].line, diag.range['start'].character,
             \ diag.range['end'].line, diag.range['end'].character)
-        if s:oid == -1
+        if l:oid == -1
             continue
         endif
-        let s:diag_entry = {
+        let l:diag_entry = {
             \ 'message': diag.message,
             \ 'range': diag.range,
             \ 'severity': diag.severity,
-            \ 'match_id': s:oid,
-            \ 'win_id': s:win_id,
+            \ 'match_id': l:oid,
+            \ 'win_id': l:win_id,
             \ }
-        call add(g:cj_diagnostics_by_buf[s:bufnum], s:diag_entry)
-        let s:types = ['E', 'E', 'W', 'I', 'I']
-        let s:loclist_item = {
-            \ 'bufnr': s:bufnum,
+        call add(g:cj_diagnostics_by_buf[l:bufnum], l:diag_entry)
+        let l:types = ['E', 'E', 'W', 'I', 'I']
+        let l:loclist_item = {
+            \ 'bufnr': l:bufnum,
             \ 'lnum': diag.range.start.line + 1,
             \ 'col': diag.range.start.character + 1,
             \ 'text': diag.message,
-            \ 'type': get(s:types, diag.severity, 'E'),
+            \ 'type': get(l:types, diag.severity, 'E'),
             \ }
-        call add(s:loclist_items, s:loclist_item)
+        call add(l:loclist_items, l:loclist_item)
     endfor
-    if !empty(s:loclist_items)
-        call setloclist(0, s:loclist_items, 'r')
+    if !empty(l:loclist_items)
+        call setloclist(0, l:loclist_items, 'r')
         if g:CJ_lsp_auto_open_loclist
             lopen
         endif
@@ -168,18 +168,18 @@ function! cangjie#callback#signatureHelp(result) abort
         return
     endif
 
-    let s:total_sigs = len(a:result.signatures)
-    let s:active_sig_index = get(a:result, 'activeSignature', 0)
-    let s:active_signature = a:result.signatures[s:active_sig_index]
-    let s:signature_label = s:active_signature.label
+    let l:total_sigs = len(a:result.signatures)
+    let l:active_sig_index = get(a:result, 'activeSignature', 0)
+    let l:active_signature = a:result.signatures[l:active_sig_index]
+    let l:signature_label = l:active_signature.label
 
-    let s:display_lines = []
-    call add(s:display_lines, s:signature_label)
-    if s:total_sigs > 1
-        call add(s:display_lines, printf("(%d/%d)", s:active_sig_index + 1, s:total_sigs))
+    let l:display_lines = []
+    call add(l:display_lines, l:signature_label)
+    if l:total_sigs > 1
+        call add(l:display_lines, printf("(%d/%d)", l:active_sig_index + 1, l:total_sigs))
     endif
 
-    call cangjie#util#popup(join(s:display_lines, "\n"))
+    call cangjie#util#popup(join(l:display_lines, "\n"))
 endfunction
 
 
@@ -188,41 +188,41 @@ function! cangjie#callback#rename(result) abort
         return
     endif
 
-    let s:all_edits_by_uri = {}
-    let s:total_edits = 0
-    for s:doc_edit in a:result.documentChanges
-        let s:uri = s:doc_edit.textDocument.uri
-        let s:edits = s:doc_edit.edits
-        let s:all_edits_by_uri[s:uri] = s:edits
-        let s:total_edits += len(s:edits)
+    let l:all_edits_by_uri = {}
+    let l:total_edits = 0
+    for l:doc_edit in a:result.documentChanges
+        let l:uri = l:doc_edit.textDocument.uri
+        let l:edits = l:doc_edit.edits
+        let l:all_edits_by_uri[l:uri] = l:edits
+        let l:total_edits += len(l:edits)
     endfor
-    let s:file_count = len(keys(s:all_edits_by_uri))
+    let l:file_count = len(keys(l:all_edits_by_uri))
 
-    for [s:uri, s:edits] in items(s:all_edits_by_uri)
-        let s:path = cangjie#util#uri_to_path(s:uri)
-        let s:bufnr = bufnr(s:path)
+    for [l:uri, l:edits] in items(l:all_edits_by_uri)
+        let l:path = cangjie#util#uri_to_path(l:uri)
+        let l:bufnr = bufnr(l:path)
 
-        if s:bufnr > 0 && bufloaded(s:bufnr)
-            let s:lines = getbufline(s:bufnr, 1, '$')
-            for s:edit in reverse(s:edits)
-                let s:start_line = s:edit.range.start.line
-                let s:start_byte = byteidx(s:lines[s:start_line], s:edit.range.start.character)
-                let s:end_byte = byteidx(s:lines[s:edit.range.start.line], s:edit.range.end.character)
-                let s:line_content = s:lines[s:start_line]
-                let s:lines[s:start_line] = s:line_content[:s:start_byte-1] . s:edit.newText . s:line_content[s:end_byte:]
+        if l:bufnr > 0 && bufloaded(l:bufnr)
+            let l:lines = getbufline(l:bufnr, 1, '$')
+            for l:edit in reverse(l:edits)
+                let l:start_line = l:edit.range.start.line
+                let l:start_byte = byteidx(l:lines[l:start_line], l:edit.range.start.character)
+                let l:end_byte = byteidx(l:lines[l:edit.range.start.line], l:edit.range.end.character)
+                let l:line_content = l:lines[l:start_line]
+                let l:lines[l:start_line] = l:line_content[:l:start_byte-1] . l:edit.newText . l:line_content[l:end_byte:]
             endfor
-            call setbufline(s:bufnr, 1, s:lines)
+            call setbufline(l:bufnr, 1, l:lines)
         else
-            if !filereadable(s:path) | continue | endif " 安全檢查
-            let s:lines = readfile(s:path)
-            for s:edit in reverse(s:edits)
-                let s:start_line = s:edit.range.start.line
-                let s:start_byte = byteidx(s:lines[s:start_line], s:edit.range.start.character)
-                let s:end_byte = byteidx(s:lines[s:edit.range.start.line], s:edit.range.end.character)
-                let s:line_content = s:lines[s:start_line]
-                let s:lines[s:start_line] = s:line_content[:s:start_byte-1] . s:edit.newText . s:line_content[s:end_byte:]
+            if !filereadable(l:path) | continue | endif " 安全檢查
+            let l:lines = readfile(l:path)
+            for l:edit in reverse(l:edits)
+                let l:start_line = l:edit.range.start.line
+                let l:start_byte = byteidx(l:lines[l:start_line], l:edit.range.start.character)
+                let l:end_byte = byteidx(l:lines[l:edit.range.start.line], l:edit.range.end.character)
+                let l:line_content = l:lines[l:start_line]
+                let l:lines[l:start_line] = l:line_content[:l:start_byte-1] . l:edit.newText . l:line_content[l:end_byte:]
             endfor
-            call writefile(s:lines, s:path)
+            call writefile(l:lines, l:path)
         endif
     endfor
 endfunction
