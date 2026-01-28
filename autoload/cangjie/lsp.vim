@@ -28,22 +28,22 @@ let g:cj_lsp_cache_dir = []
 let g:cj_lsp_buffer = ''
 
 function! s:ch_send(method, params) abort
-    let s:req = {}
-    let s:req.method = a:method
-    let s:req.jsonrpc = '2.0'
-    let s:req.params = a:params
+    let l:req = {}
+    let l:req.method = a:method
+    let l:req.jsonrpc = '2.0'
+    let l:req.params = a:params
     if(index(s:NoIdMethods, a:method) == -1)
         let g:cj_lsp_id = g:cj_lsp_id + 1
-        let s:req.id = g:cj_lsp_id
-        let g:cj_chat_response[s:req.id] = a:method
+        let l:req.id = g:cj_lsp_id
+        let g:cj_chat_response[l:req.id] = a:method
     endif
-    let s:json_req = json_encode(s:req)
+    let l:json_req = json_encode(l:req)
     if exists('g:CJ_lsp_debug') && g:CJ_lsp_debug
-        call writefile(["==> Server", s:json_req], $HOME . '/.cache/cangjie/lsp.log', 'a')
+        call writefile(["==> Server", l:json_req], $HOME . '/.cache/cangjie/lsp.log', 'a')
     endif
-    let s:header = 'Content-Length: ' . len(s:json_req) . "\r\n\r\n"
-    let s:raw = s:header . s:json_req
-    call ch_sendraw(g:cj_lsp_client, s:raw)
+    let l:header = 'Content-Length: ' . len(l:json_req) . "\r\n\r\n"
+    let l:raw = l:header . l:json_req
+    call ch_sendraw(g:cj_lsp_client, l:raw)
 endfunction
 
 
@@ -70,25 +70,25 @@ function! cangjie#lsp#start_server() abort
 
     let g:cj_lsp_workspace = expand('%:p:h')
 
-    let s:log_dir = $HOME . '/.cache/cangjie/'
-    if !isdirectory(s:log_dir)
-        call mkdir(s:log_dir, 'p')
+    let l:log_dir = $HOME . '/.cache/cangjie/'
+    if !isdirectory(l:log_dir)
+        call mkdir(l:log_dir, 'p')
     endif
 
     " Start the client
-    let s:cmd = ['LSPServer', '--enable-log=false']
-    let s:opts = {}
-    let s:opts['cwd']     = s:log_dir
-    let s:opts['in_io']   = 'pipe'
-    let s:opts['out_io']  = 'pipe'
-    let s:opts['err_io']  = 'pipe'
-    let s:opts['out_cb']  = function('s:lsp_callback')
-    let s:opts['exit_cb'] = function('cangjie#lsp#on_exit')
-    let s:opts['out_mode'] = 'raw'
-    let g:cj_lsp_client = job_start(s:cmd, s:opts)
+    let l:cmd = ['LSPServer', '--enable-log=false']
+    let l:opts = {}
+    let l:opts['cwd']     = l:log_dir
+    let l:opts['in_io']   = 'pipe'
+    let l:opts['out_io']  = 'pipe'
+    let l:opts['err_io']  = 'pipe'
+    let l:opts['out_cb']  = function('s:lsp_callback')
+    let l:opts['exit_cb'] = function('cangjie#lsp#on_exit')
+    let l:opts['out_mode'] = 'raw'
+    let g:cj_lsp_client = job_start(l:cmd, l:opts)
 
     " Post the initialize and initialized messages
-    let s:init_params = {
+    let l:init_params = {
                 \  'processId': getpid(),
                 \  'rootUri': 'file://' . expand(g:cj_lsp_workspace),
                 \  'capabilities': {
@@ -120,7 +120,7 @@ function! cangjie#lsp#start_server() abort
                 \    }
                 \  }
                 \}
-    call s:ch_send('initialize', s:init_params)
+    call s:ch_send('initialize', l:init_params)
     call s:ch_send('initialized', {})
 endfunction
 
@@ -133,19 +133,19 @@ endfunction
 
 
 function! cangjie#lsp#didOpen() abort
-    let s:file = 'file://' . expand('%:p')
+    let l:file = 'file://' . expand('%:p')
     call add(g:cj_lsp_cache_dir, expand('%:p:h').'/.cache')
-    if !has_key(g:cj_file_version, s:file)
-        let g:cj_file_version[s:file] = 1
+    if !has_key(g:cj_file_version, l:file)
+        let g:cj_file_version[l:file] = 1
     else
         return
     endif
     call s:ch_send('textDocument/didOpen',
                 \ {
                 \   'textDocument': {
-                \     'uri': s:file,
+                \     'uri': l:file,
                 \     'languageId': 'Cangjie',
-                \     'version': g:cj_file_version[s:file],
+                \     'version': g:cj_file_version[l:file],
                 \     'text': join(getline(1, '$'), "\n")
                 \   }
                 \ })
@@ -153,17 +153,17 @@ endfunction
 
 
 function! cangjie#lsp#didChange() abort
-    let s:file = 'file://' . expand('%:p')
-    if !has_key(g:cj_file_version, s:file)
-        let g:cj_file_version[s:file] = 1
+    let l:file = 'file://' . expand('%:p')
+    if !has_key(g:cj_file_version, l:file)
+        let g:cj_file_version[l:file] = 1
     else
-        let g:cj_file_version[s:file] = g:cj_file_version[s:file] + 1
+        let g:cj_file_version[l:file] = g:cj_file_version[l:file] + 1
     endif
     call s:ch_send('textDocument/didChange',
                 \ {
                 \   'textDocument': {
-                \     'uri': s:file,
-                \     'version': g:cj_file_version[s:file]
+                \     'uri': l:file,
+                \     'version': g:cj_file_version[l:file]
                 \   },
                 \   'contentChanges': [{
                 \     'text': join(getline(1, '$'), "\n")
@@ -173,11 +173,11 @@ endfunction
 
 
 function! cangjie#lsp#didSave() abort
-    let s:file = 'file://' . expand('%:p')
+    let l:file = 'file://' . expand('%:p')
     call s:ch_send('textDocument/didSave',
                 \ {
                 \   'textDocument': {
-                \     'uri': s:file
+                \     'uri': l:file
                 \   },
                 \   'text': join(getline(1, '$'), "\n")
                 \ })
@@ -312,34 +312,34 @@ function! s:lsp_callback(channel, msg) abort
     endif
     let g:cj_lsp_buffer .= a:msg
     " Get the length of the header
-    let s:length_str = matchstr(g:cj_lsp_buffer, '\zs\d\+\r\n\r\n')[:-4]
-    let s:length = str2nr(s:length_str)
-    let s:response_text = split(g:cj_lsp_buffer, "\r\n\r\n")[1]
-    if  len(s:response_text) < s:length
+    let l:length_str = matchstr(g:cj_lsp_buffer, '\zs\d\+\r\n\r\n')[:-4]
+    let l:length = str2nr(l:length_str)
+    let l:response_text = split(g:cj_lsp_buffer, "\r\n\r\n")[1]
+    if  len(l:response_text) < l:length
         " Not enough data, wait for more
         return
     else
         " Remove the processed part
-        let g:cj_lsp_buffer = s:response_text[s:length:]
-        let s:response_text = s:response_text[:s:length - 1]
+        let g:cj_lsp_buffer = l:response_text[l:length:]
+        let l:response_text = l:response_text[:l:length - 1]
     endif
-    let s:response_json = json_decode(s:response_text)
-    if has_key(s:response_json, 'id')
-        let s:method = g:cj_chat_response[s:response_json.id]
-        let s:params = s:response_json.result
-        call remove(g:cj_chat_response, s:response_json.id)
-    elseif has_key(s:response_json, 'method')
-        let s:method = s:response_json.method
-        let s:params = s:response_json.params
+    let l:response_json = json_decode(l:response_text)
+    if has_key(l:response_json, 'id')
+        let l:method = g:cj_chat_response[l:response_json.id]
+        let l:params = l:response_json.result
+        call remove(g:cj_chat_response, l:response_json.id)
+    elseif has_key(l:response_json, 'method')
+        let l:method = l:response_json.method
+        let l:params = l:response_json.params
     endif
     if exists('g:cj_lsp_debug') && g:cj_lsp_debug
-        call writefile([s:method, "  " . s:response_text], $HOME . '/.cache/cangjie/lsp.log', 'a')
+        call writefile([l:method, "  " . l:response_text], $HOME . '/.cache/cangjie/lsp.log', 'a')
     endif
-    if has_key(s:CallbackFuns, s:method)
-        call s:CallbackFuns[s:method](s:params)
+    if has_key(s:CallbackFuns, l:method)
+        call s:CallbackFuns[l:method](l:params)
     else
-        echoerr 'LSP response for method ' . s:method . ' is not handled.'
-        echoerr 'response => ' . s:response_text
+        echoerr 'LSP response for method ' . l:method . ' is not handled.'
+        echoerr 'response => ' . l:response_text
     endif
 endfunction
 
@@ -348,16 +348,16 @@ function! cangjie#lsp#on_exit(channel, msg) abort
         unlet g:cj_lsp_client
     endif
 
-    for s:dir in g:cj_lsp_cache_dir
-        if isdirectory(s:dir)
-            if isdirectory(s:dir . '/astdata')
-                call delete(s:dir . '/astdata', 'rf')
+    for l:dir in g:cj_lsp_cache_dir
+        if isdirectory(l:dir)
+            if isdirectory(l:dir . '/astdata')
+                call delete(l:dir . '/astdata', 'rf')
             endif
-            if isdirectory(s:dir . '/index')
-                call delete(s:dir . '/index', 'rf')
+            if isdirectory(l:dir . '/index')
+                call delete(l:dir . '/index', 'rf')
             endif
-            if len(glob(s:dir . '/*')) == 0
-                call delete(s:dir, 'rf')
+            if len(glob(l:dir . '/*')) == 0
+                call delete(l:dir, 'rf')
             endif
         endif
     endfor
