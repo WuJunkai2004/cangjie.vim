@@ -68,10 +68,21 @@ function! cangjie#util#setup_for_buffer() abort
     augroup cangjie_lsp_cmd
         autocmd!
         autocmd InsertCharPre <buffer> call cangjie#util#trigger_shortkey()
+        autocmd BufWritePre <buffer> call cangjie#util#auto_format()
         autocmd BufWritePost <buffer> call cangjie#lsp#didSave()
     augroup END
 
     call cangjie#util#open()
+endfunction
+
+function! cangjie#util#auto_format() abort
+    if !exists('g:CJ_lsp_auto_format_on_save') || g:CJ_lsp_auto_format_on_save == 0
+        return
+    endif
+    if empty(&l:equalprg)
+        return
+    endif
+    silent! undojoin | normal! gg=G
 endfunction
 
 function! cangjie#util#open() abort
