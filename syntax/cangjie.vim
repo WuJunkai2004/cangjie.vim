@@ -43,7 +43,7 @@ syn region	cangjieComment start=/\/\*/ end=/\*\//	contains=cangjieTodo,cangjieDo
 
 " 2. keywords
 syn keyword cangjieDeclaration	abstract extend macro foreign
-syn keyword cangjieDeclaration	interface open operator override private prop protected
+syn keyword cangjieDeclaration	interface mut open operator override private prop protected
 syn keyword cangjieDeclaration	public redef static type
 syn keyword cangjieStatement	as break case catch continue do else finally for in
 syn keyword cangjieStatement	if in is match quote return spawn super synchronized
@@ -86,7 +86,7 @@ syn cluster cangjieTypeCluster contains=
 	\ cangjieFFIType
 
 " 6.1. builtin function/interface/class
-syn keyword cangjieCoreFunc	acquireArrayRawData alignOf eprint eprintln ifNone ifSome max min
+syn keyword cangjieCoreFunc	acquireArrayRawData alignOf eprint eprintln exclusiveScope ifNone ifSome max min
 syn keyword cangjieCoreFunc	print println readln refEq releaseArrayRawData sizeOf sleep zeroValue
 syn keyword cangjieCoreItf	Any Hasher ThreadContext Countable Collection Less Greater
 syn keyword cangjieCoreItf	LessOrEqual GreaterOrEqual Comparable Equal NotEqual Equatable
