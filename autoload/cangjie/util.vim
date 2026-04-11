@@ -68,10 +68,23 @@ function! cangjie#util#setup_for_buffer() abort
     augroup cangjie_lsp_cmd
         autocmd!
         autocmd InsertCharPre <buffer> call cangjie#util#trigger_shortkey()
+        autocmd BufWritePre <buffer> call cangjie#util#auto_format()
         autocmd BufWritePost <buffer> call cangjie#lsp#didSave()
     augroup END
 
     call cangjie#util#open()
+endfunction
+
+function! cangjie#util#auto_format() abort
+    if g:CJ_lsp_auto_format_on_save == 0
+        return
+    endif
+    if empty(&l:equalprg)
+        return
+    endif
+    let l:view = winsaveview()
+    silent keepjumps normal! gg=G
+    call winrestview(l:view)
 endfunction
 
 function! cangjie#util#open() abort

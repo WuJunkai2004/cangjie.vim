@@ -36,6 +36,9 @@ let g:CJ_lsp_auto_open_loclist  = get(g:, 'CJ_lsp_auto_open_loclist', 0)
 let g:CJ_lsp_refer_open_qflist  = get(g:, 'CJ_lsp_refer_open_qflist', 1)
 let g:CJ_lsp_refer_current_file = get(g:, 'CJ_lsp_refer_current_file', 0)
 
+" The configurations of Cangjie's formatting
+let g:CJ_lsp_auto_format_on_save = get(g:, 'CJ_lsp_auto_format_on_save', 0)
+
 if g:CJ_lsp_config == 'always'
     call cangjie#util#start_lsp()
     augroup cangjie_lsp
