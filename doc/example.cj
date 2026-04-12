@@ -47,9 +47,9 @@ main() {
     let hex_num = 0xFF_AB
     let binary_num = 0b1010_0101
     let octal_num = 0o755
-    var a = 100i8  // a is 100 with type Int8
+    var a = 100i8 // a is 100 with type Int8
     var b = 0x10u64 // b is 16 with type UInt64
-    var c = 0o432i32  // c is 282 with type Int32
+    var c = 0o432i32 // c is 282 with type Int32
     var d = r'x' // d is 120 with type UInt8
     var e = r'\n' // e is 10 with type UInt8
     var f = r'\u{78}' // f is 120 with type UInt8
@@ -72,35 +72,30 @@ main() {
     let raw_string = #"原始字符串 C:\Users\Admin ${PI} 不会转义 \"#
 
     // 5. 控制流语句
-    if(age >= 18 && is_core) {
+    if (age >= 18 && is_core) {
         println("已成年")
     } else {
         println("未成年")
     }
 
     // for 循环和范围操作符
-    for(i in 0..5) {
+    for (i in 0..5) {
         // do something
     }
 
     // match 语句
     let color = Color.Red
-    match(color){
-        case Red =>
-            println("红色")
-        case Green =>
-            println("绿色")
-        case Blue =>
-            println("蓝色")
+    match (color) {
+        case Red => println("红色")
+        case Green => println("绿色")
+        case Blue => println("蓝色")
     }
 
     // 6. Option 类型
     var maybe_num: Option<Int32> = Some(42)
-    match(maybe_num){
-        case Some(num) =>
-            println("数字是: ${num}")
-        case None =>
-            println("没有数字")
+    match (maybe_num) {
+        case Some(num) => println("数字是: ${num}")
+        case None => println("没有数字")
     }
 
     // 7. 函数调用
@@ -114,4 +109,3 @@ func describe(p: Point): String {
     // BUG: 这里的格式化可能不正确
     return "Point at (${p.x}, ${p.y})"
 }
-
