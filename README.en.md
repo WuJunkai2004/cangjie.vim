@@ -76,7 +76,7 @@ Only supported in versions higher than `vim8.2`.
 |   | Workspace symbols | No plan yet
 | √ | Signature help | Automatically pop up signature help when typing `(` or `,`
 |   | Error signs in sign column | In planning
-|   | Auto-format on save | In planning
+| √ | Auto-format on save | Enable by configuration, runs automatically before save
 
 #### Configuration Options and Commands
 ##### Startup Configuration
@@ -101,6 +101,13 @@ let g:CJ_lsp_auto_check = 1
 " Whether to automatically open the loclist window during syntax check
 " Disabled by default, set to 1 to enable
 let g:CJ_lsp_auto_open_loclist = 1
+```
+
+##### Formatting Configuration
+```vim
+" Auto-format on save
+" Disabled by default, set to 1 to enable
+let g:CJ_lsp_auto_format_on_save = 1
 ```
 
 ##### Reference Find Configuration
