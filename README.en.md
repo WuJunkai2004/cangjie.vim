@@ -92,6 +92,27 @@ Option | Description
 
 The default configuration is `intime`.
 
+##### Custom LSP Command
+```vim
+" Customize the LSPServer startup command, accepts String or List
+" Default command is: ['LSPServer', '--enable-log=false']
+let g:CJ_lsp_cmd = 'LSPServer --enable-log=false'
+
+" When the command or path contains spaces, use the List form to avoid ambiguity
+let g:CJ_lsp_cmd = ['/path with spaces/LSPServer', '--enable-log=false']
+```
+
+###### Using with cangjie-lsp-wrapper
+[cangjie-lsp-wrapper](https://github.com/ystyle/cangjie-lsp-wrapper) is a Cangjie LSP wrapper that automatically parses `cjpm.toml` / `cjpm.lock` to generate LSP initialization parameters, saving you from maintaining the environment manually.
+
+Refer to its repository for installation and usage. Once ready, point `g:CJ_lsp_cmd` at it:
+```vim
+let g:CJ_lsp_cmd = ['cangjie-lsp-wrapper', '-V']
+
+" Use an absolute path if it is not on your PATH
+let g:CJ_lsp_cmd = ['/absolute/path/to/cangjie-lsp-wrapper', '-V']
+```
+
 ##### Syntax Check Configuration
 ```vim
 " Automatically trigger syntax check after the cursor is idle for 5 seconds

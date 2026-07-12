@@ -93,6 +93,27 @@ let g:CJ_lsp_config = 'always'
 
 默认配置为`intime`。
 
+##### 自定义 LSP 命令
+```vim
+" 自定义 LSPServer 启动命令，支持 String 或 List
+" 默认命令为: ['LSPServer', '--enable-log=false']
+let g:CJ_lsp_cmd = 'LSPServer --enable-log=false'
+
+" 当命令或路径中包含空格时，请使用 List 形式以避免歧义
+let g:CJ_lsp_cmd = ['/path with spaces/LSPServer', '--enable-log=false']
+```
+
+###### 配合 cangjie-lsp-wrapper 使用
+[cangjie-lsp-wrapper](https://github.com/ystyle/cangjie-lsp-wrapper) 是一个仓颉语言 LSP 包装器，会自动解析 `cjpm.toml` / `cjpm.lock` 生成 LSP 初始化参数，免去手动维护环境的麻烦。
+
+安装与使用方式请参考其仓库说明，配置完成后通过 `g:CJ_lsp_cmd` 指向它即可：
+```vim
+let g:CJ_lsp_cmd = ['cangjie-lsp-wrapper', '-V']
+
+" 若不在 PATH 中，可使用绝对路径
+let g:CJ_lsp_cmd = ['/absolute/path/to/cangjie-lsp-wrapper', '-V']
+```
+
 ##### 语法检查配置
 ```vim
 " 在光标静止5秒后，自动触发语法检查
