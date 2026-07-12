@@ -76,7 +76,20 @@ function! cangjie#lsp#start_server() abort
     endif
 
     " Start the client
-    let l:cmd = ['LSPServer', '--enable-log=false']
+    if exists('g:CJ_lsp_cmd')
+        let l:cmd = g:CJ_lsp_cmd
+        " If g:CJ_lsp_cmd is a string, split it into a list
+        if type(l:cmd) == type('')
+            let l:cmd = split(l:cmd)
+        endif
+        if type(l:cmd) != type([]) || empty(l:cmd)
+            echoerr 'g:CJ_lsp_cmd must be a non-empty String or List'
+            echoerr 'fallback to default command: LSPServer --enable-log=false'
+            let l:cmd = ['LSPServer', '--enable-log=false']
+        endif
+    else
+        let l:cmd = ['LSPServer', '--enable-log=false']
+    endif
     let l:opts = {}
     let l:opts['cwd']     = l:log_dir
     let l:opts['in_io']   = 'pipe'
