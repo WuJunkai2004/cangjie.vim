@@ -69,7 +69,7 @@ syn match cangjieTypeName /\h\w*/ contained
 syn region cangjieSpIdentifier start=/`/ end=/`/ oneline
 
 " 6. types
-syn keyword cangjieSpType	Nothing Range Unit LibC Duration DefaultHasher
+syn keyword cangjieSpType	Nothing Range Unit LibC Duration DefaultHasher This
 syn keyword cangjieArrayType	Array VArray
 syn keyword cangjieCommonType	Bool Byte Rune String
 syn keyword cangjieFloatType	Float16 Float32 Float64
@@ -92,10 +92,10 @@ syn keyword cangjieCoreItf	Any Hasher ThreadContext Countable Collection Less Gr
 syn keyword cangjieCoreItf	LessOrEqual GreaterOrEqual Comparable Equal NotEqual Equatable
 syn keyword cangjieCoreItf	Hashable Iterable Resource ToString CType
 syn keyword cangjieCoreClass	ArrayIterator Box Future Iterator Object RangeIterator
-syn keyword cangjieCoreClass	StackTraceElement StringBuilder Thread ThreadLocal
+syn keyword cangjieCoreClass	StackTraceElement StringBuilder Thread ThreadLocal ThreadSnapshot
 syn keyword cangjieCoreError	ArithmeticException Error Exception IllegalArgumentException
 syn keyword cangjieCoreError	IllegalFormatException IllegalMemoryException IllegalStateException
-syn keyword cangjieCoreError	IncompatiblePackageException IndexOutOfBoundsException InternalError
+syn keyword cangjieCoreError	IncompatiblePackageException IndexOutOfBoundsException
 syn keyword cangjieCoreError	NegativeArraySizeException NoneValueException OutOfMemoryError
 syn keyword cangjieCoreError	OverflowException SpawnException StackOverflowError
 syn keyword cangjieCoreError	TimeoutException UnsupportedException
