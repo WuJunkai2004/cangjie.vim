@@ -28,6 +28,9 @@ let g:cj_lsp_cache_dir = []
 let g:cj_lsp_buffer = ''
 
 function! s:ch_send(method, params) abort
+    if cangjie#lsp#status() != 'run'
+        return
+    endif
     let l:req = {}
     let l:req.method = a:method
     let l:req.jsonrpc = '2.0'
