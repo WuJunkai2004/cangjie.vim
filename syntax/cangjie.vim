@@ -2,7 +2,7 @@
 " Language: Cangjie
 " Maintainer: Wu Junkai <wu.junkai@qq.com>
 " URL: https://github.com/WuJunkai2004/cangjie.vim
-" Last Change: 2026 Jan 5
+" Last Change: 2026 Sep 23
 "
 " The Cangjie programming language is a new-generation programming
 " language oriented to full-scenario intelligence. It features
@@ -93,7 +93,8 @@ syn keyword cangjieCoreItf	LessOrEqual GreaterOrEqual Comparable Equal NotEqual 
 syn keyword cangjieCoreItf	Hashable Iterable Resource ToString CType
 syn keyword cangjieCoreClass	ArrayIterator Box Future Iterator Object RangeIterator
 syn keyword cangjieCoreClass	StackTraceElement StringBuilder Thread ThreadLocal ThreadSnapshot
-syn keyword cangjieCoreError	ArithmeticException Error Exception IllegalArgumentException
+syn keyword cangjieCoreError	ArithmeticException Error Exception
+syn keyword cangjieCoreError	ExclusiveScopeException IllegalArgumentException
 syn keyword cangjieCoreError	IllegalFormatException IllegalMemoryException IllegalStateException
 syn keyword cangjieCoreError	IncompatiblePackageException IndexOutOfBoundsException
 syn keyword cangjieCoreError	NegativeArraySizeException NoneValueException OutOfMemoryError
