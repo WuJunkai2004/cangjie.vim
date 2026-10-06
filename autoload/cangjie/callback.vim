@@ -228,5 +228,16 @@ function! cangjie#callback#rename(result) abort
 endfunction
 
 
+function! cangjie#callback#progress(result) abort
+    if !has_key(a:result, 'value')
+        return
+    endif
+    let l:value = a:result.value
+    if get(l:value, 'kind', '') ==# 'end' && has_key(l:value, 'message')
+        echo 'Cangjie LSP ' . l:value.message
+    endif
+endfunction
+
+
 function! cangjie#callback#noResponse(result) abort
 endfunction

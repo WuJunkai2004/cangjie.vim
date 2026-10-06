@@ -15,6 +15,8 @@ let s:CallbackFuns = {
     \ 'textDocument/references': function('cangjie#callback#references'),
     \ 'textDocument/semanticTokens/full': function('cangjie#callback#noResponse'),
     \ 'textDocument/rename': function('cangjie#callback#rename'),
+    \ 'window/workDoneProgress/create': function('cangjie#callback#noResponse'),
+    \ '$/progress': function('cangjie#callback#progress'),
 \}
 
 let g:cj_lsp_workspace = ''
