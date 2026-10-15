@@ -2,7 +2,7 @@
 " Language: Cangjie
 " Maintainer: Wu Junkai <wu.junkai@qq.com>
 " URL: https://github.com/WuJunkai2004/cangjie.vim
-" Last Change: 2026 Sep 23
+" Last Change: 2026 Oct 15
 "
 " The Cangjie programming language is a new-generation programming
 " language oriented to full-scenario intelligence. It features
@@ -158,9 +158,9 @@ syn match cangjieOperator /\.\./
 syn match cangjieVarArgs  /\.\.\./
 
 " 10. folding
-syn region cangjieFoldBraces transparent fold start='{' end='}' contains=ALLBUT,cangjieComment
-syn region cangjieFoldParens transparent fold start='(' end=')' contains=ALLBUT,cangjieComment
-syn region cangjieFoldBrackets transparent fold start='\[' end='\]' contains=ALLBUT,cangjieComment
+syn region cangjieFoldBraces transparent fold start='{' end='}' contains=TOP
+syn region cangjieFoldParens transparent fold start='(' end=')' contains=TOP
+syn region cangjieFoldBrackets transparent fold start='\[' end='\]' contains=TOP
 
 " finally, link the syntax groups to the highlight groups
 if s:enabled('comment')
