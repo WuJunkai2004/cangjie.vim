@@ -2,7 +2,7 @@
 " Language: Cangjie
 " Maintainer: Wu Junkai <wu.junkai@qq.com>
 " URL: https://github.com/WuJunkai2004/cangjie.vim
-" Last Change: 2026 Oct 15
+" Last Change: 2026 Nov 1
 "
 " The Cangjie programming language is a new-generation programming
 " language oriented to full-scenario intelligence. It features
@@ -217,6 +217,9 @@ if s:enabled('type')
 	hi def link cangjieUIntType		Type
 	hi def link cangjieFFIType		Type
 endif
+
+syn sync minlines=200
+syn sync maxlines=500
 
 let b:current_syntax = "cangjie"
 
