@@ -226,7 +226,6 @@ function! cangjie#util#highlight(group, start_line, start_char, end_line, end_ch
     endif
 endfunction
 
-
 function cangjie#util#clear_highlight(bufnum) abort
     if !exists('g:cj_diagnostics_by_buf') || !has_key(g:cj_diagnostics_by_buf, a:bufnum)
         return
@@ -240,7 +239,6 @@ function cangjie#util#clear_highlight(bufnum) abort
         silent! unlet diag.win_id
     endfor
 endfunction
-
 
 function! cangjie#util#redraw_highlight() abort
     let l:bufnum = bufnr('%')
@@ -261,6 +259,40 @@ function! cangjie#util#redraw_highlight() abort
         let diag.match_id = l:oid
         let diag.win_id = l:win_id
     endfor
+endfunction
+
+
+function! cangjie#util#is_test_file() abort
+    let l:name = fnamemodify(bufname('%'), ':t')
+    return l:name =~? '^test_.*\.cj$' || l:name =~? '_test\.cj$'
+endfunction
+
+
+function! s:in_comment(lnum, col) abort
+    return synIDattr(synIDtrans(synID(a:lnum, a:col, 1)), 'name') =~# 'Comment'
+endfunction
+
+function! s:has_import(pkg) abort
+    let l:pat = '^\s*import\s\+' . escape(a:pkg, '.') . '\%($\|\.\*\|\s\)'
+    let l:idx = match(getline(1, '$'), l:pat)
+    if l:idx < 0
+        return 0
+    endif
+    let l:raw = getline(l:idx + 1)
+    if trim(l:raw) =~# '^\%(//\|/\*\)'
+        return 0
+    endif
+    return !s:in_comment(l:idx + 1, match(l:raw, '\S') + 1)
+endfunction
+
+function! cangjie#util#get_missing_imports() abort
+    let l:missing = []
+    for l:pkg in ['std.unittest', 'std.unittest.testmacro']
+        if !s:has_import(l:pkg)
+            call add(l:missing, l:pkg)
+        endif
+    endfor
+    return l:missing
 endfunction
 
 
