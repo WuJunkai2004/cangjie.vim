@@ -102,7 +102,13 @@ function! cangjie#callback#publishDiagnostics(result) abort
     if !has_key(a:result, 'diagnostics')
         return
     endif
-    let l:bufnum = bufnr('%')
+    " Locate the buffer the diagnostics belong to (the user may have switched
+    " to another buffer while the server was compiling).
+    let l:path = cangjie#util#uri_to_path(get(a:result, 'uri', ''))
+    let l:bufnum = bufnr(l:path)
+    if l:bufnum < 0
+        let l:bufnum = bufnr('%')
+    endif
     if has_key(g:cj_diagnostics_by_buf, l:bufnum)
         for l:old_diag in g:cj_diagnostics_by_buf[l:bufnum]
             if has_key(l:old_diag, 'match_id')
