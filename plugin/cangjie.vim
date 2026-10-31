@@ -32,12 +32,15 @@ let g:CJ_lsp_config = tolower(g:CJ_lsp_config)
 let g:CJ_lsp_auto_check         = get(g:, 'CJ_lsp_auto_check', 0)
 let g:CJ_lsp_auto_open_loclist  = get(g:, 'CJ_lsp_auto_open_loclist', 0)
 
-" The configurations of Cangjie's refereces finding
+" The configurations of Cangjie's reference finding
 let g:CJ_lsp_refer_open_qflist  = get(g:, 'CJ_lsp_refer_open_qflist', 1)
 let g:CJ_lsp_refer_current_file = get(g:, 'CJ_lsp_refer_current_file', 0)
 
-" The configurations of Cangjie's formatting
+" The configuration of Cangjie's auto formatting
 let g:CJ_lsp_auto_format_on_save = get(g:, 'CJ_lsp_auto_format_on_save', 0)
+
+" The configuration of Cangjie's test file implicit import
+let g:CJ_lsp_test_implicit_import = get(g:, 'CJ_lsp_test_implicit_import', 1)
 
 if g:CJ_lsp_config == 'always'
     call cangjie#util#start_lsp()
