@@ -123,6 +123,11 @@ function! cangjie#callback#publishDiagnostics(result) abort
 
     let l:groups = ['', 'CJ_Error', 'CJ_Warning', '', 'CJ_Hint']
     for l:diag in l:diagnostics
+        " Skip diagnostics with a negative start line: they can never be
+        " positioned in a buffer and would make matchaddpos() fail.
+        if l:diag.range.start.line < 0
+            continue
+        endif
         let l:group = get(l:groups, l:diag.severity, 'CJ_Error')
         let l:win_id = win_getid()
         let l:oid = cangjie#util#highlight(l:group,
@@ -212,8 +217,11 @@ function! cangjie#callback#rename(result) abort
             let l:lines = getbufline(l:bufnr, 1, '$')
             for l:edit in reverse(l:edits)
                 let l:start_line = l:edit.range.start.line
+                if l:start_line < 0 || l:start_line >= len(l:lines)
+                    continue  " stale/out-of-range edit: indexing would raise E684
+                endif
                 let l:start_byte = byteidx(l:lines[l:start_line], l:edit.range.start.character)
-                let l:end_byte = byteidx(l:lines[l:edit.range.start.line], l:edit.range.end.character)
+                let l:end_byte = byteidx(l:lines[l:start_line], l:edit.range.end.character)
                 let l:line_content = l:lines[l:start_line]
                 let l:lines[l:start_line] = l:line_content[:l:start_byte-1] . l:edit.newText . l:line_content[l:end_byte:]
             endfor
@@ -223,8 +231,11 @@ function! cangjie#callback#rename(result) abort
             let l:lines = readfile(l:path)
             for l:edit in reverse(l:edits)
                 let l:start_line = l:edit.range.start.line
+                if l:start_line < 0 || l:start_line >= len(l:lines)
+                    continue  " stale/out-of-range edit: indexing would raise E684
+                endif
                 let l:start_byte = byteidx(l:lines[l:start_line], l:edit.range.start.character)
-                let l:end_byte = byteidx(l:lines[l:edit.range.start.line], l:edit.range.end.character)
+                let l:end_byte = byteidx(l:lines[l:start_line], l:edit.range.end.character)
                 let l:line_content = l:lines[l:start_line]
                 let l:lines[l:start_line] = l:line_content[:l:start_byte-1] . l:edit.newText . l:line_content[l:end_byte:]
             endfor
