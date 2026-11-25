@@ -2,7 +2,7 @@
 " Language: Cangjie
 " Maintainer: Wu Junkai <wu.junkai@qq.com>
 " URL: https://github.com/WuJunkai2004/cangjie.vim
-" Last Change: 2026 Nov 25
+" Last Change: 2026 Nov 26
 "
 " The Cangjie programming language is a new-generation programming
 " language oriented to full-scenario intelligence. It features
@@ -42,8 +42,9 @@ syn match	cangjieComment /\v\/\/.*/		contains=cangjieTodo,cangjieDocKeyword
 syn region	cangjieComment start=/\/\*/ end=/\*\//	contains=cangjieTodo,cangjieDocKeyword,@spell
 
 " 2. keywords
-syn keyword cangjieDeclaration	abstract extend macro foreign
-syn keyword cangjieDeclaration	interface mut open operator override private prop protected
+syn keyword cangjieDeclaration	abstract extend inout macro foreign
+syn keyword cangjieDeclaration	common interface internal mut open operator
+syn keyword cangjieDeclaration	override private prop protected sealed specific
 syn keyword cangjieDeclaration	public redef static type
 syn keyword cangjieStatement	as break case catch continue do else finally for in
 syn keyword cangjieStatement	if in is match quote return spawn super synchronized
@@ -51,7 +52,7 @@ syn keyword cangjieStatement	throw try unsafe where while
 syn keyword cangjieIdentlike	false init main this true
 syn keyword cangjieVariable	const let var
 syn keyword cangjieOption	Option Some None
-syn keyword cangjieDeclaration	func struct class enum import package nextgroup=cangjieTypeName skipwhite
+syn keyword cangjieDeclaration	func struct class enum import interface package nextgroup=cangjieTypeName skipwhite
 syn cluster cangjieKeywordCluster contains=
 	\ cangjieDeclaration,
 	\ cangjieStatement,
@@ -159,6 +160,7 @@ syn match cangjieOperator /:=\|||\|<-\|++\|--/
 syn match cangjieOperator /[~]/
 syn match cangjieOperator /[:]/
 syn match cangjieOperator /\.\./
+syn match cangjieOperator /??/
 syn match cangjieVarArgs  /\.\.\./
 
 " 10. folding
