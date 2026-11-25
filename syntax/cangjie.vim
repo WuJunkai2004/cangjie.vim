@@ -2,7 +2,7 @@
 " Language: Cangjie
 " Maintainer: Wu Junkai <wu.junkai@qq.com>
 " URL: https://github.com/WuJunkai2004/cangjie.vim
-" Last Change: 2026 Nov 1
+" Last Change: 2026 Nov 25
 "
 " The Cangjie programming language is a new-generation programming
 " language oriented to full-scenario intelligence. It features
