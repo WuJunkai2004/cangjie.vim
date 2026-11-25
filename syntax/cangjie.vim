@@ -118,9 +118,13 @@ syn region  cangjieInterpolation contained keepend start=/\${/ end=/}/ contains=
 syn match cangjieEscape /\v\\u\{[0-9a-fA-F]{1,8}\}|\\./ contained
 syn match cangjieRuneError /\v[rb]'([^'\\]|\\.)*'/
 syn match cangjieRuneError /\v[rb]"([^"\\]|\\.)*"/
+syn match cangjieRuneError /\v[rb]'(\\.|[^'])+$/
+syn match cangjieRuneError /\v[rb]"(\\.|[^"])+$/
 syn match cangjieRune /\vr'(\\u\{[0-9a-fA-F]{1,8}\}|\\.|[^'\\])'/ contains=cangjieEscape
 syn match cangjieRune /\vr"(\\u\{[0-9a-fA-F]{1,8}\}|\\.|[^"\\])"/ contains=cangjieEscape
-syn match cangjieRune /\vb'(\\u\{[0-9a-fA-F]{1,8}\}|\\.|[^'\\])'/ contains=cangjieEscape
+syn match cangjieRune /\vb'(\\u\{[0-9a-fA-F]{1,2}\}|\\.|[\x00-\x26\x28-\x5B\x5D-\x7F])'/ contains=cangjieEscape
+syn region cangjieStringError start=/"/ end=/$/ oneline
+syn region cangjieStringError start=/'/ end=/$/ oneline
 syn region cangjieString start=/"/ skip=/\\\\\|\\"/ end=/"/ oneline contains=cangjieInterpolation,cangjieEscape
 syn region cangjieString start=/'/ skip=/\\\\\|\\'/ end=/'/ oneline contains=cangjieInterpolation,cangjieEscape
 syn region cangjieString start=/"""/ skip=/\\\\\|\\"/ end=/"""/ contains=cangjieInterpolation,cangjieEscape keepend
@@ -205,6 +209,7 @@ if s:enabled('string')
 	hi def link cangjieRuneError		Error
 	hi def link cangjieString		String
 	hi def link cangjieRawString		String
+	hi def link cangjieStringError		Error
 	hi def link cangjieEscape		SpecialChar
 endif
 if s:enabled('type')
